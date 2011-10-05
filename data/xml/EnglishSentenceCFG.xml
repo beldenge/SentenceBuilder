@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContextFreeGrammar first-rule="Sentence" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="CFG.xsd">
+	<Rule non-terminal="Sentence">
+		<Expansion>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+			<Production symbol="VerbPhrase" type="NonTerminal"/>
+		</Expansion>
+	</Rule>
+	<Rule non-terminal="NounPhrase">
+		<Expansion>
+			<Production symbol="Article" type="Terminal"/>
+			<Production symbol="Noun" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="Noun" type="Terminal"/>
+		</Expansion>
+	</Rule>
+	<Rule non-terminal="VerbPhrase">
+		<Expansion>
+			<Production symbol="Verb_Transitive" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="Verb_Transitive" type="Terminal"/>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+	</Rule>
+</ContextFreeGrammar>
