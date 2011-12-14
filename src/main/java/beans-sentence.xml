@@ -9,13 +9,13 @@
  
  	<context:annotation-config/>
  	<context:component-scan base-package="com.ciphertool.sentencebuilder.dao"/>
- 	 
- 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
 			<value>classpath:sentencebuilder.properties</value>
 		</property>
 	</bean>
- 
+	
     <bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
