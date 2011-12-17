@@ -46,4 +46,11 @@ public class WordMapDao {
 		}
 		return byPartOfSpeech;
 	}
+
+	/**
+	 * @return the wordMap
+	 */
+	public HashMap<PartOfSpeech, ArrayList<Word>> getWordMap() {
+		return wordMap;
+	}
 }

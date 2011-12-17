@@ -3,12 +3,10 @@ package com.ciphertool.sentencebuilder.util;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
@@ -16,18 +14,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeech;
-import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.dao.WordMapDao;
-import com.ciphertool.sentencebuilder.entities.Word;
 
 public class SentenceHelperTest {
 
 	private static Logger log = Logger.getLogger(SentenceHelperTest.class);
+	private static ApplicationContext context;
 	private static BeanFactory factory;
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		ApplicationContext context = new ClassPathXmlApplicationContext("beans-test.xml");
+		context = new ClassPathXmlApplicationContext("beans-test.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
@@ -53,15 +50,19 @@ public class SentenceHelperTest {
 	
 	@Test
 	public void testWordMapDao () {
-		//this test will obviously change if a different word list is used or if the storage method is changed
-		WordDao wordDao = (WordDao) factory.getBean("wordDao");
-		ArrayList<Word> wordList = (ArrayList<Word>) wordDao.findAll();
-		assertEquals(wordList.size(), 322471);
-		
 		WordMapDao wordMapDao = (WordMapDao) factory.getBean("wordMapDao");
-		HashMap<PartOfSpeech, ArrayList<Word>> wordMap = wordMapDao.mapByPartOfSpeech(wordList);
-		for (PartOfSpeech key : wordMap.keySet()) {
-			log.info(key + "\t" + wordMap.get(key).size());
+		
+		for (PartOfSpeech key : wordMapDao.getWordMap().keySet()) {
+			log.info(key + "\t" +wordMapDao.getWordMap().get(key).size());
 		}
+	}
+	
+	/**
+	 * Without setting these to null, the humongous wordMap will not be garbage collected and subsequent unit tests may encounter an out of memory exception
+	 */
+	@AfterClass
+	public static void cleanUp() {
+		context = null;
+		factory = null;
 	}
 }

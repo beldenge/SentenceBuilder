@@ -3,12 +3,10 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
 //TODO: Should really make a DAOFactory so that the expensive findAll() method does not need to be called over and over again
-@Component
 public class WordListDao {
 	
 	private ArrayList<Word> wordList;
