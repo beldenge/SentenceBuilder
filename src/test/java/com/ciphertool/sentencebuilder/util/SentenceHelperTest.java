@@ -24,7 +24,7 @@ public class SentenceHelperTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		context = new ClassPathXmlApplicationContext("beans-test.xml");
+		context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
