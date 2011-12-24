@@ -26,7 +26,7 @@ public class FrequencyListImporter {
 	private static BeanFactory factory;
 	
 	private static void setUp() {
-		ApplicationContext context = new ClassPathXmlApplicationContext("beans-test.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
