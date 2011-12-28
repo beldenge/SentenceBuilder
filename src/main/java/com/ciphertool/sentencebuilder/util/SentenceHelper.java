@@ -31,9 +31,16 @@ public class SentenceHelper {
 		}
 	}
 	
+	/**
+	 * Generates a random context-free grammar production tree and then fills in the terminals with words from database
+	 * 
+	 * @return
+	 */
 	public Sentence generateRandomSentence () {
 		Tree<ProductionType> sentenceTree = cfgHelper.generateRandomSyntaxTree();
+
 		Sentence sentence = makeSentenceFromTree(sentenceTree);
+		
 		return sentence;
 	}
 	
@@ -47,16 +54,23 @@ public class SentenceHelper {
 		return s;
 	}
 	
+	/**
+	 * Fills in terminal symbols with random words from database based on the part of speech.  The terminal symbols are case-sensitive when matching to the PartOfSpeech enum.
+	 * 
+	 * @param sentenceTree
+	 * @return
+	 */
 	public Sentence makeSentenceFromTree(Tree<ProductionType> sentenceTree) {
 		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree.toList();
-		Sentence s = new Sentence();
+		Sentence sentence = new Sentence();
+		PartOfSpeech pos = null;
 		for (Node<ProductionType> n: sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
-				PartOfSpeech pos = PartOfSpeech.valueOf(n.getData().getSymbol().toUpperCase());
-				s.getWords().add(wordMapDao.findRandomWordByPartOfSpeech(pos));
+				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
+				sentence.append(wordMapDao.findRandomWordByPartOfSpeech(pos));
 			}
 		}
-		return s;
+		return sentence;
 	}
 	
 	@Autowired

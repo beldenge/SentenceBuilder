@@ -7,23 +7,86 @@
 			<Production symbol="NounPhrase" type="NonTerminal"/>
 			<Production symbol="VerbPhrase" type="NonTerminal"/>
 		</Expansion>
+		<!-- This produces one-word command sentences, such as "Go.", "Stop.", or "Wait.". -->
+		<!-- They are so infrequent as to be negligible for the Zodiac 340 cipher. --> 
+		<!-- <Expansion>
+			<Production symbol="VERB_INTRANSITIVE" type="Terminal"/>
+		</Expansion> -->
 	</Rule>
 	<Rule non-terminal="NounPhrase">
+		<!--  NOUN_PHRASE is mainly odd groups of words like the scientific names for plant species, and should be covered by the other Terminal types. So, we can comment it out. -->
+		<!-- <Expansion>
+			<Production symbol="NOUN_PHRASE" type="Terminal"/>
+		</Expansion> -->
 		<Expansion>
-			<Production symbol="Article" type="Terminal"/>
-			<Production symbol="Noun" type="Terminal"/>
+			<Production symbol="ARTICLE" type="Terminal"/>
+			<Production symbol="NOUN" type="Terminal"/>
 		</Expansion>
 		<Expansion>
-			<Production symbol="Noun" type="Terminal"/>
+			<Production symbol="ARTICLE" type="Terminal"/>
+			<Production symbol="Adjectives" type="NonTerminal"/>
+			<Production symbol="NOUN" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="NOUN" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="PLURAL" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="PRONOUN" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="Adjectives" type="NonTerminal"/>
+			<Production symbol="NOUN" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+			<Production symbol="PrepositionalPhrase" type="NonTerminal"/>
 		</Expansion>
 	</Rule>
 	<Rule non-terminal="VerbPhrase">
 		<Expansion>
-			<Production symbol="Verb_Transitive" type="Terminal"/>
+			<Production symbol="VERB_INTRANSITIVE" type="Terminal"/>
 		</Expansion>
 		<Expansion>
-			<Production symbol="Verb_Transitive" type="Terminal"/>
+			<Production symbol="ADVERB" type="Terminal"/>
+			<Production symbol="VERB_INTRANSITIVE" type="Terminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="VERB_TRANSITIVE" type="Terminal"/>
 			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="VERB_PARTICIPLE" type="Terminal"/>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="ADVERB" type="Terminal"/>
+			<Production symbol="VERB_TRANSITIVE" type="Terminal"/>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+		<Expansion>
+			<Production symbol="ADVERB" type="Terminal"/>
+			<Production symbol="VERB_PARTICIPLE" type="Terminal"/>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+	</Rule>
+	<Rule non-terminal="PrepositionalPhrase">
+		<Expansion>
+			<Production symbol="PREPOSITION" type="Terminal"/>
+			<Production symbol="NounPhrase" type="NonTerminal"/>
+		</Expansion>
+	</Rule>
+	<!-- This just produces series of adjectives such as in "The large, scary, furry dog barked." -->
+	<Rule non-terminal="Adjectives">
+		<!-- It is very highly improbable that the Zodiac killer used adjective series in his cipher, so we can comment it out. -->
+		<!--  <Expansion>
+			<Production symbol="Adjectives" type="NonTerminal"/>
+			<Production symbol="ADJECTIVE" type="Terminal"/>
+		</Expansion> -->
+		<Expansion>
+			<Production symbol="ADJECTIVE" type="Terminal"/>
 		</Expansion>
 	</Rule>
 </ContextFreeGrammar>

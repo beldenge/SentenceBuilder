@@ -20,6 +20,8 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
+    <bean class="com.ciphertool.sentencebuilder.common.ZodiacWordFilter" id="wordFilter" />
+    
     <bean class="com.ciphertool.sentencebuilder.util.SentenceHelper" id="sentenceHelper">
     	<constructor-arg index="0" type="java.lang.String" value="${grammar.file.location}"/>
     </bean>
@@ -51,7 +53,7 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 			</props>
 		</property>
 	</bean>

@@ -68,11 +68,27 @@ public class FrequencyListImporter {
 			line = nextWord.split("\t");
 			word = line[0];
 			frequency = Long.parseLong(line[1]);
-			words = wordDao.findByWordString(word);
+			
+			/*
+			 * Unfortunately there are a decent number of regular nouns which start with capital letters, so we need to convert the word from file to lowercase.
+			 */
+			words = wordDao.findByWordString(word.toLowerCase());
+			
+			/*
+			 * We need to catch case-sensitive matches if the conversion to lowercase did not match.
+			 * This may still not catch all cases.  
+			 * 
+			 * TODO: What if there are both a valid lowercase match and a valid case-sensitive match?
+			 */
+			if(words == null || words.size() == 0) {
+				words = wordDao.findByWordString(word);
+				log.info("Couldn't find lowercase match, but found case-sensitive match for word: " + word);
+			}
 			
 			//If word is not found, log at info level
-			if (words == null || words.size() == 0)
+			if (words == null || words.size() == 0) {
 				log.info("No frequency matches found in part_of_speech table for word: " + word);
+			}
 			
 			//Loop over the list and update each word with the frequency
 			for (Word w : words) {

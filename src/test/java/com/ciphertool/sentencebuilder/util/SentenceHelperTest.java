@@ -36,7 +36,7 @@ public class SentenceHelperTest {
 		long start = System.currentTimeMillis();
 		
 		int i;
-		for (i = 0; i < 100; i ++)
+		for (i = 0; i < 1000; i ++)
 			log.info(sentenceHelper.generateRandomSentence());
 		
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate " + i + " sentences.");

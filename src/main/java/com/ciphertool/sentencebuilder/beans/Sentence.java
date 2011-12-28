@@ -25,6 +25,15 @@ public class Sentence {
 		this.words = words;
 	}
 	
+	/**
+	 * Appends a Word to the end of this Sentence
+	 * 
+	 * @param w
+	 */
+	public void append(Word word) {
+		this.words.add(word);
+	}
+	
 	public String toString() {
 		String s = "";
 		boolean first = true;
