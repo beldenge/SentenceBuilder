@@ -22550,7 +22550,7 @@ Hf	N
 Hfgel	N
 Hfther	N
 Hg	N
-Hi	N
+Hi	N!
 Hialeah	N
 Hiawatha	N
 Hibben	N
@@ -52548,7 +52548,7 @@ Zworykin	N
 Zyrian	NA
 Zysk	N
 Zz	N
-a	DNVP
+a	D
 a battery	|h
 a billion	|A
 a bit	|v
@@ -79751,7 +79751,7 @@ byzantine empire	|h
 byzantine greek	|h
 byzantinism	|N
 byzantium	|N
-c	NA
+c	N
 c battery	|h
 c clef	|h
 c compiler	|h
@@ -97823,7 +97823,7 @@ cow-tongue	h
 cow-tongue fern	|h
 cowage	N
 coward	NA
-cowardic	Ne
+cowardic	N
 cowardice	N
 cowardliness	N
 cowardly	A
@@ -101381,7 +101381,7 @@ czechoslavakian	|A
 czechoslovakia	|N
 czechoslovakian	|N
 czechoslovakian monetary unit	|h
-d	NA
+d	N
 d and c	|h
 d in p aeq	h
 d region	|h
@@ -120845,7 +120845,7 @@ eyrir	N
 eyry	|N
 ezo	|N
 ezo-yama-hagi	|N
-f	NA
+f	N
 f clef	|h
 f layer	|h
 f number	h
@@ -150935,7 +150935,7 @@ hyte	A
 hythergraph	N
 hyzone	N
 hz	|N
-i	NA
+i	N
 i-beam	|N
 i-type semiconductor	h
 i.d.	|N
@@ -161030,7 +161030,7 @@ juxtaposing	t
 juxtaposition	N
 juxtapositional	A
 jynx	|N
-k	NA
+k	N
 k particle	|h
 k ration	|h
 k'ai shu	h
@@ -163113,7 +163113,7 @@ kything	ti
 kytoon	N
 kyu	N
 kyushu	|N
-l	NA
+l	N
 l'aquila	|N
 l'atat c'est moi	h
 l'atoile du nord	h
@@ -170560,7 +170560,7 @@ lythrum hyssopifolia	|h
 lythrum salicaria	|h
 lytic	A
 lytta	N
-m	NA
+m	N
 m-1	|N
 m-1 rifle	|h
 m.m.	|N
@@ -181552,7 +181552,7 @@ myxosporidian	|N
 myxovirus	N
 mzee	NA
 mzungu	N
-n	ND
+n	N
 n'djamena	|N
 n'est-ce pas	h
 n'gana	N
@@ -194713,7 +194713,7 @@ opuses	p
 opv	|N
 oquassa	N
 oquassas	p
-or	NA
+or	NAC
 or circuit	h
 or else	|v
 or gate	|h
@@ -258950,7 +258950,7 @@ syzygium aromaticum	|h
 syzygy	N
 szechuan	|N
 szechwan	|N
-t	ANv
+t	N
 t cell	|h
 t distribution	h
 t hinge	|h
@@ -269383,7 +269383,7 @@ tzetze	|N
 tzetze fly	h
 tzimmes	N
 tzitzith	N
-u	NA
+u	N
 u lc	h
 u-boat	|N
 u-shaped plate	|h
@@ -284922,7 +284922,7 @@ uzbek	|N
 uzbekistan	|N
 uzbekiston	|N
 uzi	|N
-v	NA
+v	N
 v aux	h
 v chgs	h
 v imp	h
@@ -293781,7 +293781,7 @@ wyte	VN
 wyted	V
 wyting	V
 wyvern	N
-x	NtA
+x	N
 x chromosome	|h
 x in	h
 x pr	h
@@ -294007,7 +294007,7 @@ xyris operculata	|h
 xyst	N
 xyster	N
 xystum	N
-y	NA
+y	N
 y chromosome	|h
 y-axis	N
 y-blennies	p

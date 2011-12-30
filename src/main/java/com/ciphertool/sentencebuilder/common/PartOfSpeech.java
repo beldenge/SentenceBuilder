@@ -18,8 +18,7 @@ public enum PartOfSpeech {
 	INTERJECTION ('!'),
 	PRONOUN ('r'),
 	ARTICLE ('D'),
-	NOMINATIVE ('o'),
-	UNKNOWN('e');
+	NOMINATIVE ('o');
 	
 	private final char tag;
 	

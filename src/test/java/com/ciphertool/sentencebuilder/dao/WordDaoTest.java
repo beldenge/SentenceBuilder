@@ -47,7 +47,7 @@ public class WordDaoTest {
 		assertFalse(words.isEmpty());
 		log.info("Number of matches on " + word + ": " + words.size());
 		
-		long tempFrequency;
+		int tempFrequency;
 		
 		for (Word w : words) {
 			tempFrequency = w.getFrequencyWeight();

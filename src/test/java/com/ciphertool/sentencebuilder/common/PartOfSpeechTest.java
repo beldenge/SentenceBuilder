@@ -17,5 +17,4 @@ public class PartOfSpeechTest {
 	public void testEnumValueOf() {
 		log.info(PartOfSpeech.valueOf("Pronoun".toUpperCase()).getTag());
 	}
-	
 }

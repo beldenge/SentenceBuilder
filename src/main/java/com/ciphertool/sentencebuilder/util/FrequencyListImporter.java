@@ -21,6 +21,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public class FrequencyListImporter {
 	private String fileName;
 	private WordDao wordDao;
+	private int batchSize;
 	
 	private static Logger log = Logger.getLogger(FrequencyListImporter.class);
 	private static BeanFactory factory;
@@ -53,7 +54,7 @@ public class FrequencyListImporter {
 		}
 		String [] line = null;
 		String word = null;
-		long frequency = 1;
+		int frequency = 1;
 		String nextWord = input.readLine();
 		
 		//skip to the second record because the first record contains columns names
@@ -64,26 +65,18 @@ public class FrequencyListImporter {
         log.info("Starting import...");
 		long start = System.currentTimeMillis();
 		List<Word> words = new ArrayList<Word>();
+		List<Word> wordBatch = new ArrayList<Word>();
+		
 		while (nextWord!=null) {
 			line = nextWord.split("\t");
 			word = line[0];
-			frequency = Long.parseLong(line[1]);
+			frequency = Integer.parseInt(line[1]);
 			
 			/*
-			 * Unfortunately there are a decent number of regular nouns which start with capital letters, so we need to convert the word from file to lowercase.
+			 * Unfortunately the frequency data has mixed case, so this query may not return the results we would expect.
+			 * Rather than modify our logic here to account for this, it is better to fix the data.
 			 */
-			words = wordDao.findByWordString(word.toLowerCase());
-			
-			/*
-			 * We need to catch case-sensitive matches if the conversion to lowercase did not match.
-			 * This may still not catch all cases.  
-			 * 
-			 * TODO: What if there are both a valid lowercase match and a valid case-sensitive match?
-			 */
-			if(words == null || words.size() == 0) {
-				words = wordDao.findByWordString(word);
-				log.info("Couldn't find lowercase match, but found case-sensitive match for word: " + word);
-			}
+			words = wordDao.findByWordString(word);
 			
 			//If word is not found, log at info level
 			if (words == null || words.size() == 0) {
@@ -95,16 +88,27 @@ public class FrequencyListImporter {
 				//Don't update if the frequency weight from file is the same as what's already in the database.  It's pointless.
 				if (w.getFrequencyWeight() != frequency) {
 					w.setFrequencyWeight(frequency);
-					rowCount += wordDao.update(w) ? 1 : 0;
+					
+					wordBatch.add(w);
+					
+					rowCount++;
 				}
+			}
+			/*
+			 * Since the above loop adds a word several times depending on how many parts of speech it
+			 * is related to, the batch size may be exceeded by a handful, and this is fine.
+			 */
+			if (wordBatch.size() >= batchSize) {
+				wordDao.updateBatch(wordBatch);
+				
+				wordBatch.clear();
 			}
 			
 			nextWord = input.readLine();
 		}
-		long end = System.currentTimeMillis();
 		
 		log.info("Rows updated: " + rowCount);
-		log.info("Time elapsed: " + (end-start) + "ms");
+		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	@Required
@@ -116,4 +120,13 @@ public class FrequencyListImporter {
 	public void setWordDao(WordDao wordDao) {
 		this.wordDao = wordDao;
 	}
+
+	/**
+	 * @param batchSize the batchSize to set
+	 */
+	@Required
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
+	}
 }
+

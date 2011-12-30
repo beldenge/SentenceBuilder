@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
@@ -20,6 +22,7 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 public class WordListImporter {
 	private String fileName;
 	private WordDao wordDao;
+	private int batchSize;
 	
 	private static Logger log = Logger.getLogger(WordListImporter.class);
 	private static BeanFactory factory;
@@ -58,21 +61,44 @@ public class WordListImporter {
 		
         log.info("Starting import...");
 		long start = System.currentTimeMillis();
+		
+		List<Word> wordBatch = new ArrayList<Word>();
+		
 		while (nextWord!=null) {
+			/*
+			 * The fields are tab-delimited in the file.
+			 */
 			line = nextWord.split("\t");
+			
 			word = line[0];
-			//the pipe character is just informational in the word list
+			
 			partOfSpeech = line[1].toCharArray();
+			
 			for (int i = 0; i < partOfSpeech.length; i++) {
-				if (partOfSpeech[i]!='|')
-					rowCount += wordDao.insert(new Word(new WordId(word, partOfSpeech[i]), 1)) ? 1 : 0;
+				/*
+				 * The pipe character is just informational in the word list, so we don't add it as a part of speech.
+				 */
+				if (partOfSpeech[i]!='|') {
+					wordBatch.add(new Word(new WordId(word, partOfSpeech[i]), 1));
+					
+					rowCount ++;
+				}
 			}
+			/*
+			 * Since the above loop adds a word several times depending on how many parts of speech it
+			 * is related to, the batch size may be exceeded by a handful, and this is fine.
+			 */
+			if (wordBatch.size() >= batchSize) {
+				wordDao.insertBatch(wordBatch);
+				
+				wordBatch.clear();
+			}
+			
 			nextWord = input.readLine();
 		}
-		long end = System.currentTimeMillis();
-		
+	
 		log.info("Rows inserted: " + rowCount);
-		log.info("Time elapsed: " + (end-start) + "ms");
+		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	@Required
@@ -83,5 +109,13 @@ public class WordListImporter {
 	@Autowired
 	public void setWordDao(WordDao wordDao) {
 		this.wordDao = wordDao;
+	}
+
+	/**
+	 * @param batchSize the batchSize to set
+	 */
+	@Required
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
 	}
 }

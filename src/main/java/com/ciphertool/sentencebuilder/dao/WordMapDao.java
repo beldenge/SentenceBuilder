@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeech;
-import com.ciphertool.sentencebuilder.common.WordFilter;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 //TODO: Should possibly make a DAOFactory in case the expensive findAll() method is called over and over again
@@ -16,12 +15,10 @@ public class WordMapDao {
 	
 	private HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
 	private WordDao wordDao;
-	private WordFilter wordFilter;
 	
 	@Autowired
-	public WordMapDao (WordDao wordDao, WordFilter wordFilter) {
+	public WordMapDao (WordDao wordDao) {
 		this.wordDao=wordDao;
-		this.wordFilter=wordFilter;
 		wordMap = this.mapByPartOfSpeech((ArrayList<Word>) this.wordDao.findAll());
 	}
 	
@@ -41,11 +38,8 @@ public class WordMapDao {
 				byPartOfSpeech.put(pos, new ArrayList<Word>());
 			}
 			
-			if(wordFilter.filter(w)) {
-				//Add the word by reference a number of times equal to the frequency weight from the database
-				for (long i = 0; i < w.getFrequencyWeight(); i++) {
-					byPartOfSpeech.get(pos).add(w);
-				}
+			for (int i = 0; i < w.getFrequencyWeight(); i++) {
+				byPartOfSpeech.get(pos).add(w);
 			}
 		}
 		return byPartOfSpeech;

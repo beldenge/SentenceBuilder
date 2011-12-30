@@ -34,25 +34,10 @@ public class ZodiacWordFilter implements WordFilter {
 		PartOfSpeech pos = PartOfSpeech.typeOf(word.getWordId().getPartOfSpeech());
 		String letters = word.getWordId().getWord();
 		if (word.getWordId().getWord().length() < 3) {
-			if (letters.equalsIgnoreCase("s") && pos == PartOfSpeech.NOUN) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("a") && pos != PartOfSpeech.ARTICLE) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("t")) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("in") && pos != PartOfSpeech.PREPOSITION) {
+			if (letters.equalsIgnoreCase("in") && pos != PartOfSpeech.PREPOSITION) {
 				return true;
 			}
 			else if (letters.equalsIgnoreCase("on") && (pos == PartOfSpeech.NOUN || pos == PartOfSpeech.ADVERB)) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("m")) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("re")) {
 				return true;
 			}
 			else if (letters.equalsIgnoreCase("do") && pos == PartOfSpeech.NOUN) {
@@ -83,9 +68,6 @@ public class ZodiacWordFilter implements WordFilter {
 				return true;
 			}
 			else if (letters.equalsIgnoreCase("as") && (pos == PartOfSpeech.NOUN)) {
-				return true;
-			}
-			else if (letters.equalsIgnoreCase("d")) {
 				return true;
 			}
 			else if (letters.equalsIgnoreCase("an") && (pos == PartOfSpeech.NOUN || pos == PartOfSpeech.CONJUNCTION)) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +46,17 @@ public class WordDao {
 		session.getTransaction().commit();
 		session.close();
 		return true;
-		//remember to add the frequency weight somehow; for now just let it default to 1
+	}
+
+	public boolean insertBatch(List<Word> wordBatch) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		for (Word word : wordBatch) {
+			session.save(word);
+		}
+		transaction.commit();
+		session.close();
+		return true;
 	}
 	
 	public boolean update(Word w) {
@@ -55,7 +66,17 @@ public class WordDao {
 		session.getTransaction().commit();
 		session.close();
 		return true;
-		//remember to add the frequency weight somehow; for now just let it default to 1
+	}
+	
+	public boolean updateBatch(List<Word> wordBatch) {
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		for (Word word : wordBatch) {
+			session.update(word);	
+		}
+		transaction.commit();
+		session.close();
+		return true;
 	}
 
 	@Required

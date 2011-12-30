@@ -20,18 +20,18 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
-    <bean class="com.ciphertool.sentencebuilder.common.ZodiacWordFilter" id="wordFilter" />
-    
     <bean class="com.ciphertool.sentencebuilder.util.SentenceHelper" id="sentenceHelper">
     	<constructor-arg index="0" type="java.lang.String" value="${grammar.file.location}"/>
     </bean>
  
     <bean class="com.ciphertool.sentencebuilder.util.WordListImporter" id="wordListImporter">
     	<property name="fileName" value="${wordlist.file.location}"/>
+    	<property name="batchSize" value="${persistence.batchSize}"/>
     </bean>
     
     <bean class="com.ciphertool.sentencebuilder.util.FrequencyListImporter" id="frequencyListImporter">
     	<property name="fileName" value="${frequency.file.location}"/>
+    	<property name="batchSize" value="${persistence.batchSize}"/>
     </bean>
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

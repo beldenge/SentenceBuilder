@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Table(name="parts_of_speech")
 public class Word {
 	private WordId wordId;
-	private long frequencyWeight;
+	private int frequencyWeight;
 	
 	public Word() {}
 	
@@ -33,11 +33,11 @@ public class Word {
 	}
 	
 	@Column(name="frequency_weight")
-	public long getFrequencyWeight() {
+	public int getFrequencyWeight() {
 		return frequencyWeight;
 	}
 	
-	public void setFrequencyWeight(long frequencyWeight) {
+	public void setFrequencyWeight(int frequencyWeight) {
 		this.frequencyWeight = frequencyWeight;
 	}
 
