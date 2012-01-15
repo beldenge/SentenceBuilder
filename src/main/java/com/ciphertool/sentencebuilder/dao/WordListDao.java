@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
-//TODO: Should really make a DAOFactory so that the expensive findAll() method does not need to be called over and over again
 public class WordListDao {
 	
 	private ArrayList<Word> wordList;

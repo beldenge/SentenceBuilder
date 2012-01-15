@@ -50,7 +50,12 @@ public class SentenceHelperTest {
 	
 	@Test
 	public void testWordMapDao () {
-		WordMapDao wordMapDao = (WordMapDao) factory.getBean("wordMapDao");
+		/*
+		 * We have to find the beanName from the interface type since the implementation is autowired
+		 */
+		String [] beanNames = context.getBeanNamesForType(com.ciphertool.sentencebuilder.dao.WordMapDao.class);
+		
+		WordMapDao wordMapDao = (WordMapDao) factory.getBean(beanNames[0]);
 		
 		for (PartOfSpeech key : wordMapDao.getWordMap().keySet()) {
 			log.info(key + "\t" +wordMapDao.getWordMap().get(key).size());

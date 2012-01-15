@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.cfgreader.datastructures.Node;
 import com.ciphertool.cfgreader.datastructures.Tree;
@@ -64,6 +64,10 @@ public class SentenceHelper {
 		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree.toList();
 		Sentence sentence = new Sentence();
 		PartOfSpeech pos = null;
+		/*
+		 * TODO: We may be able to improve performance a tiny bit by returning only the Terminal 
+		 * nodes from the sentenceTree above, instead of filtering them in this loop.
+		 */
 		for (Node<ProductionType> n: sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
@@ -73,7 +77,7 @@ public class SentenceHelper {
 		return sentence;
 	}
 	
-	@Autowired
+	@Required
 	public void setWordMapDao(WordMapDao wordMapDao) {
 		this.wordMapDao = wordMapDao;
 	}
