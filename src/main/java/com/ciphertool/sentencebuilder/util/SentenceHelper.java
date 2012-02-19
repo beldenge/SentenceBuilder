@@ -45,13 +45,14 @@ public class SentenceHelper {
 	}
 	
 	public String makeSentenceString(ArrayList<Node<ProductionType>> sentenceList) {
-		String s = "";
+		StringBuilder sb = new StringBuilder();
 		for (Node<ProductionType> n: sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
-				s += " " + n.getData().getSymbol();
+				sb.append(" ");
+				sb.append(n.getData().getSymbol());
 			}
 		}
-		return s;
+		return sb.toString();
 	}
 	
 	/**

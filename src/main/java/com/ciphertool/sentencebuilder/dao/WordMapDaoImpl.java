@@ -10,7 +10,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordMapDaoImpl implements WordMapDao {
 	
-	private static HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
+	private HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
 	private WordDao wordDao;
 	
 	@Autowired

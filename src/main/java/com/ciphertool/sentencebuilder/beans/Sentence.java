@@ -35,21 +35,22 @@ public class Sentence {
 	}
 	
 	public String toString() {
-		String s = "";
+		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		for (Word w : words) {
 			if (first) {
 				//Make first word in proper case
 				String firstWord = w.getWordId().getWord();
-				s += firstWord.substring(0, 1).toUpperCase() + firstWord.substring(1, firstWord.length());
+				sb.append(firstWord.substring(0, 1).toUpperCase() + firstWord.substring(1, firstWord.length()));
 				first = false;
 			}
 			else {
-				s += " " + w.getWordId().getWord();
+				sb.append(" ");
+				sb.append(w.getWordId().getWord());
 			}
 		}
-		s += ".";
-		return s;
+		sb.append(".");
+		return sb.toString();
 	}
 	
 	public int length() {

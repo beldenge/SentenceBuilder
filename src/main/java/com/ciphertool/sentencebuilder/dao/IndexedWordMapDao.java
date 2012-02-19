@@ -2,6 +2,7 @@ package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,8 +16,8 @@ import com.ciphertool.sentencebuilder.entities.Word;
  */
 public class IndexedWordMapDao implements WordMapDao {
 	
-	private static HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
-	private static HashMap<PartOfSpeech, int []> frequencyMap;
+	private HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
+	private HashMap<PartOfSpeech, int []> frequencyMap;
 	private WordDao wordDao;
 	
 	@Autowired
@@ -72,14 +73,14 @@ public class IndexedWordMapDao implements WordMapDao {
 		/*
 		 *  Loop through each pos, add up the frequencyWeights, and create an int array of the resulting length
 		 */
-		for (PartOfSpeech pos : byPartOfSpeech.keySet()) {
+		for (Map.Entry<PartOfSpeech, ArrayList<Word>> pos : byPartOfSpeech.entrySet()) {
 			frequencySum = 0;
 			
-			for (Word w : byPartOfSpeech.get(pos)) {
+			for (Word w : byPartOfSpeech.get(pos.getKey())) {
 				frequencySum += w.getFrequencyWeight();
 			}
 			
-			byFrequency.put(pos, new int [frequencySum]);
+			byFrequency.put(pos.getKey(), new int [frequencySum]);
 		}
 		
 		int frequencyIndex;
@@ -88,13 +89,13 @@ public class IndexedWordMapDao implements WordMapDao {
 		/*
 		 *  Loop through each pos and word, and add the index to the frequencyMap a number of times equal to the word's frequency weight
 		 */
-		for (PartOfSpeech pos : byPartOfSpeech.keySet()) {
+		for (Map.Entry<PartOfSpeech, ArrayList<Word>> pos : byPartOfSpeech.entrySet()) {
 			frequencyIndex = 0;
 			wordIndex = 0;
 			
-			for (Word w : byPartOfSpeech.get(pos)) {
+			for (Word w : byPartOfSpeech.get(pos.getKey())) {
 				for (int i = 0; i < w.getFrequencyWeight(); i++) {
-					byFrequency.get(pos) [frequencyIndex] = wordIndex;
+					byFrequency.get(pos.getKey()) [frequencyIndex] = wordIndex;
 					
 					frequencyIndex ++;
 				}

@@ -51,6 +51,8 @@ public class FrequencyListImporter {
 		} catch (FileNotFoundException e) {
 			log.error("File: " + fileName + " not found.");
 			e.printStackTrace();
+			
+			return;
 		}
 		String [] line = null;
 		String word = null;
@@ -64,7 +66,7 @@ public class FrequencyListImporter {
 		
         log.info("Starting import...");
 		long start = System.currentTimeMillis();
-		List<Word> words = new ArrayList<Word>();
+		List<Word> words;
 		List<Word> wordBatch = new ArrayList<Word>();
 		
 		while (nextWord!=null) {
@@ -82,26 +84,27 @@ public class FrequencyListImporter {
 			if (words == null || words.size() == 0) {
 				log.info("No frequency matches found in part_of_speech table for word: " + word);
 			}
-			
-			//Loop over the list and update each word with the frequency
-			for (Word w : words) {
-				//Don't update if the frequency weight from file is the same as what's already in the database.  It's pointless.
-				if (w.getFrequencyWeight() != frequency) {
-					w.setFrequencyWeight(frequency);
-					
-					wordBatch.add(w);
-					
-					rowCount++;
+			else {
+				//Loop over the list and update each word with the frequency
+				for (Word w : words) {
+					//Don't update if the frequency weight from file is the same as what's already in the database.  It's pointless.
+					if (w.getFrequencyWeight() != frequency) {
+						w.setFrequencyWeight(frequency);
+						
+						wordBatch.add(w);
+						
+						rowCount++;
+					}
 				}
-			}
-			/*
-			 * Since the above loop adds a word several times depending on how many parts of speech it
-			 * is related to, the batch size may be exceeded by a handful, and this is fine.
-			 */
-			if (wordBatch.size() >= batchSize) {
-				wordDao.updateBatch(wordBatch);
-				
-				wordBatch.clear();
+				/*
+				 * Since the above loop adds a word several times depending on how many parts of speech it
+				 * is related to, the batch size may be exceeded by a handful, and this is fine.
+				 */
+				if (wordBatch.size() >= batchSize) {
+					wordDao.updateBatch(wordBatch);
+					
+					wordBatch.clear();
+				}
 			}
 			
 			nextWord = input.readLine();
@@ -109,6 +112,8 @@ public class FrequencyListImporter {
 		
 		log.info("Rows updated: " + rowCount);
 		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
+		
+		input.close();
 	}
 
 	@Required

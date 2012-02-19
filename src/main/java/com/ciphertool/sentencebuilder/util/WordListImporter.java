@@ -52,6 +52,8 @@ public class WordListImporter {
 		} catch (FileNotFoundException e) {
 			log.error("File: " + fileName + " not found.");
 			e.printStackTrace();
+			
+			return;
 		}
 		String [] line = null;
 		String word = null;
@@ -99,6 +101,8 @@ public class WordListImporter {
 	
 		log.info("Rows inserted: " + rowCount);
 		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
+		
+		input.close();
 	}
 
 	@Required
