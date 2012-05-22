@@ -11,7 +11,7 @@ public class Sentence {
 	public Sentence() {
 		this.words = new ArrayList<Word>();
 	}
-	
+
 	public Sentence(List<Word> words) {
 		super();
 		this.words = words;
@@ -24,7 +24,7 @@ public class Sentence {
 	public void setWords(List<Word> words) {
 		this.words = words;
 	}
-	
+
 	/**
 	 * Appends a Word to the end of this Sentence
 	 * 
@@ -33,18 +33,18 @@ public class Sentence {
 	public void append(Word word) {
 		this.words.add(word);
 	}
-	
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		for (Word w : words) {
 			if (first) {
-				//Make first word in proper case
+				// Make first word in proper case
 				String firstWord = w.getWordId().getWord();
-				sb.append(firstWord.substring(0, 1).toUpperCase() + firstWord.substring(1, firstWord.length()));
+				sb.append(firstWord.substring(0, 1).toUpperCase()
+						+ firstWord.substring(1, firstWord.length()));
 				first = false;
-			}
-			else {
+			} else {
 				sb.append(" ");
 				sb.append(w.getWordId().getWord());
 			}
@@ -52,7 +52,7 @@ public class Sentence {
 		sb.append(".");
 		return sb.toString();
 	}
-	
+
 	public int length() {
 		int length = 0;
 		for (Word w : words) {

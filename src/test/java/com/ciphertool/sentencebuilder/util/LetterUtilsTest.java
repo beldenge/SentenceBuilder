@@ -8,13 +8,13 @@ import org.junit.Test;
 
 public class LetterUtilsTest {
 	private static Logger log = Logger.getLogger(LetterUtilsTest.class);
-	
+
 	@Test
 	public void testGetCharacterByAsciiValue() {
 		assertEquals(LetterUtils.getLetterByAsciiValue(97), 'a');
 		assertEquals(LetterUtils.getLetterByAsciiValue(122), 'z');
 	}
-	
+
 	@Test
 	public void testGetRandomCharacter() {
 		char c;

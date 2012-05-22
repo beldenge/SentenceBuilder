@@ -1,6 +1,5 @@
 package com.ciphertool.sentencebuilder.util;
 
-
 import static org.junit.Assert.assertEquals;
 
 import javax.xml.bind.JAXBException;
@@ -21,49 +20,54 @@ public class SentenceHelperTest {
 	private static Logger log = Logger.getLogger(SentenceHelperTest.class);
 	private static ApplicationContext context;
 	private static BeanFactory factory;
-	
+
 	@BeforeClass
 	public static void setUp() throws Exception {
 		context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
-	
+
 	@Test
 	public void testMakeSentence() throws JAXBException {
 		SentenceHelper sentenceHelper = (SentenceHelper) factory.getBean("sentenceHelper");
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		int i;
-		for (i = 0; i < 1000; i ++)
+		for (i = 0; i < 1000; i++)
 			log.info(sentenceHelper.generateRandomSentence());
-		
-		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate " + i + " sentences.");
+
+		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate " + i
+				+ " sentences.");
 	}
-	
+
 	@Test
 	public void testEnumTypeOf() {
 		PartOfSpeech pos = PartOfSpeech.typeOf('h');
-		assertEquals(pos,PartOfSpeech.valueOf("NOUN_PHRASE"));
+		assertEquals(pos, PartOfSpeech.valueOf("NOUN_PHRASE"));
 	}
-	
+
 	@Test
-	public void testWordMapDao () {
+	public void testWordMapDao() {
 		/*
-		 * We have to find the beanName from the interface type since the implementation is autowired
+		 * We have to find the beanName from the interface type since the
+		 * implementation is autowired
 		 */
-		String [] beanNames = context.getBeanNamesForType(com.ciphertool.sentencebuilder.dao.WordMapDao.class);
-		
+		String[] beanNames = context
+				.getBeanNamesForType(com.ciphertool.sentencebuilder.dao.WordMapDao.class);
+
 		WordMapDao wordMapDao = (WordMapDao) factory.getBean(beanNames[0]);
-		
+
 		for (PartOfSpeech key : wordMapDao.getWordMap().keySet()) {
-			log.info(key + "\t" +wordMapDao.getWordMap().get(key).size());
+			log.info(key + "\t" + wordMapDao.getWordMap().get(key).size());
 		}
 	}
-	
+
 	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage collected and subsequent unit tests may encounter an out of memory exception
+	 * Without setting these to null, the humongous wordMap will not be garbage
+	 * collected and subsequent unit tests may encounter an out of memory
+	 * exception
 	 */
 	@AfterClass
 	public static void cleanUp() {

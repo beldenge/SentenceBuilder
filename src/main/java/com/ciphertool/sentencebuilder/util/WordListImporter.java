@@ -23,85 +23,87 @@ public class WordListImporter {
 	private String fileName;
 	private WordDao wordDao;
 	private int batchSize;
-	
+
 	private static Logger log = Logger.getLogger(WordListImporter.class);
 	private static BeanFactory factory;
-	
+
 	private static void setUp() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
 
-	public static void main(String [] args) throws IOException, SQLException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
 		setUp();
 		WordListImporter wordListImporter = (WordListImporter) factory.getBean("wordListImporter");
 		wordListImporter.importWordList();
 	}
-	
+
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	private void importWordList() throws IOException, SQLException, ClassNotFoundException {
 		BufferedReader input = null;
 		try {
-			input =  new BufferedReader(new FileReader(fileName));
+			input = new BufferedReader(new FileReader(fileName));
 		} catch (FileNotFoundException e) {
 			log.error("File: " + fileName + " not found.");
 			e.printStackTrace();
-			
+
 			return;
 		}
-		String [] line = null;
+		String[] line = null;
 		String word = null;
-		char [] partOfSpeech = null;
+		char[] partOfSpeech = null;
 		String nextWord = input.readLine();
 		int rowCount = 0;
-		
-        log.info("Starting import...");
+
+		log.info("Starting import...");
 		long start = System.currentTimeMillis();
-		
+
 		List<Word> wordBatch = new ArrayList<Word>();
-		
-		while (nextWord!=null) {
+
+		while (nextWord != null) {
 			/*
 			 * The fields are tab-delimited in the file.
 			 */
 			line = nextWord.split("\t");
-			
+
 			word = line[0];
-			
+
 			partOfSpeech = line[1].toCharArray();
-			
+
 			for (int i = 0; i < partOfSpeech.length; i++) {
 				/*
-				 * The pipe character is just informational in the word list, so we don't add it as a part of speech.
+				 * The pipe character is just informational in the word list, so
+				 * we don't add it as a part of speech.
 				 */
-				if (partOfSpeech[i]!='|') {
+				if (partOfSpeech[i] != '|') {
 					wordBatch.add(new Word(new WordId(word, partOfSpeech[i]), 1));
-					
-					rowCount ++;
+
+					rowCount++;
 				}
 			}
 			/*
-			 * Since the above loop adds a word several times depending on how many parts of speech it
-			 * is related to, the batch size may be exceeded by a handful, and this is fine.
+			 * Since the above loop adds a word several times depending on how
+			 * many parts of speech it is related to, the batch size may be
+			 * exceeded by a handful, and this is fine.
 			 */
 			if (wordBatch.size() >= batchSize) {
 				wordDao.insertBatch(wordBatch);
-				
+
 				wordBatch.clear();
 			}
-			
+
 			nextWord = input.readLine();
 		}
-	
+
 		log.info("Rows inserted: " + rowCount);
 		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
-		
+
 		input.close();
 	}
 
@@ -116,7 +118,8 @@ public class WordListImporter {
 	}
 
 	/**
-	 * @param batchSize the batchSize to set
+	 * @param batchSize
+	 *            the batchSize to set
 	 */
 	@Required
 	public void setBatchSize(int batchSize) {

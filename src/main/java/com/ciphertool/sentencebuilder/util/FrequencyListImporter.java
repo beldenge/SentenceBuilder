@@ -22,97 +22,101 @@ public class FrequencyListImporter {
 	private String fileName;
 	private WordDao wordDao;
 	private int batchSize;
-	
+
 	private static Logger log = Logger.getLogger(FrequencyListImporter.class);
 	private static BeanFactory factory;
-	
+
 	private static void setUp() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
 
-	public static void main(String [] args) throws IOException, SQLException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
 		setUp();
-		FrequencyListImporter frequencyListImporter = (FrequencyListImporter) factory.getBean("frequencyListImporter");
+		FrequencyListImporter frequencyListImporter = (FrequencyListImporter) factory
+				.getBean("frequencyListImporter");
 		frequencyListImporter.importFrequencyList();
 	}
-	
+
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
 	 */
 	private void importFrequencyList() throws IOException, SQLException, ClassNotFoundException {
 		BufferedReader input = null;
 		try {
-			input =  new BufferedReader(new FileReader(fileName));
+			input = new BufferedReader(new FileReader(fileName));
 		} catch (FileNotFoundException e) {
 			log.error("File: " + fileName + " not found.");
 			e.printStackTrace();
-			
+
 			return;
 		}
-		String [] line = null;
+		String[] line = null;
 		String word = null;
 		int frequency = 1;
 		String nextWord = input.readLine();
-		
-		//skip to the second record because the first record contains columns names
+
+		// skip to the second record because the first record contains columns
+		// names
 		nextWord = input.readLine();
-		
+
 		int rowCount = 0;
-		
-        log.info("Starting import...");
+
+		log.info("Starting import...");
 		long start = System.currentTimeMillis();
 		List<Word> words;
 		List<Word> wordBatch = new ArrayList<Word>();
-		
-		while (nextWord!=null) {
+
+		while (nextWord != null) {
 			line = nextWord.split("\t");
 			word = line[0];
 			frequency = Integer.parseInt(line[1]);
-			
+
 			/*
-			 * Unfortunately the frequency data has mixed case, so this query may not return the results we would expect.
-			 * Rather than modify our logic here to account for this, it is better to fix the data.
+			 * Unfortunately the frequency data has mixed case, so this query
+			 * may not return the results we would expect. Rather than modify
+			 * our logic here to account for this, it is better to fix the data.
 			 */
 			words = wordDao.findByWordString(word);
-			
-			//If word is not found, log at info level
+
+			// If word is not found, log at info level
 			if (words == null || words.size() == 0) {
 				log.info("No frequency matches found in part_of_speech table for word: " + word);
-			}
-			else {
-				//Loop over the list and update each word with the frequency
+			} else {
+				// Loop over the list and update each word with the frequency
 				for (Word w : words) {
-					//Don't update if the frequency weight from file is the same as what's already in the database.  It's pointless.
+					// Don't update if the frequency weight from file is the
+					// same as what's already in the database. It's pointless.
 					if (w.getFrequencyWeight() != frequency) {
 						w.setFrequencyWeight(frequency);
-						
+
 						wordBatch.add(w);
-						
+
 						rowCount++;
 					}
 				}
 				/*
-				 * Since the above loop adds a word several times depending on how many parts of speech it
-				 * is related to, the batch size may be exceeded by a handful, and this is fine.
+				 * Since the above loop adds a word several times depending on
+				 * how many parts of speech it is related to, the batch size may
+				 * be exceeded by a handful, and this is fine.
 				 */
 				if (wordBatch.size() >= batchSize) {
 					wordDao.updateBatch(wordBatch);
-					
+
 					wordBatch.clear();
 				}
 			}
-			
+
 			nextWord = input.readLine();
 		}
-		
+
 		log.info("Rows updated: " + rowCount);
 		log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
-		
+
 		input.close();
 	}
 
@@ -127,11 +131,11 @@ public class FrequencyListImporter {
 	}
 
 	/**
-	 * @param batchSize the batchSize to set
+	 * @param batchSize
+	 *            the batchSize to set
 	 */
 	@Required
 	public void setBatchSize(int batchSize) {
 		this.batchSize = batchSize;
 	}
 }
-

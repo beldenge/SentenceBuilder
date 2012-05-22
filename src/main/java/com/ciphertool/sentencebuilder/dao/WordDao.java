@@ -16,29 +16,28 @@ public class WordDao {
 
 	public List<Word> findAll() {
 		Session session = sessionFactory.openSession();
-	    session.beginTransaction();
+		session.beginTransaction();
 		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery( "from Word" ).list();
-	    session.getTransaction().commit();
-	    session.close();
-	    
+		List<Word> result = (List<Word>) session.createQuery("from Word").list();
+		session.getTransaction().commit();
+		session.close();
+
 		return result;
 	}
-	
+
 	public List<Word> findByWordString(String word) {
-		
+
 		Session session = sessionFactory.openSession();
-	    session.beginTransaction();
+		session.beginTransaction();
 		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery( "from Word where word = ?" )
-					.setString(0, word)
-					.list();
-	    session.getTransaction().commit();
-	    session.close();
-	    
+		List<Word> words = (List<Word>) session.createQuery("from Word where word = ?").setString(
+				0, word).list();
+		session.getTransaction().commit();
+		session.close();
+
 		return words;
 	}
-	
+
 	public boolean insert(Word w) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -58,7 +57,7 @@ public class WordDao {
 		session.close();
 		return true;
 	}
-	
+
 	public boolean update(Word w) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -67,12 +66,12 @@ public class WordDao {
 		session.close();
 		return true;
 	}
-	
+
 	public boolean updateBatch(List<Word> wordBatch) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
 		for (Word word : wordBatch) {
-			session.update(word);	
+			session.update(word);
 		}
 		transaction.commit();
 		session.close();

@@ -11,28 +11,29 @@ public class WordId implements Serializable {
 	private static final long serialVersionUID = 8960135451615360512L;
 	private String word;
 	private char partOfSpeech;
-	
-	public WordId() {}
-	
+
+	public WordId() {
+	}
+
 	public WordId(String word, char partOfSpeech) {
 		this.word = word;
 		this.partOfSpeech = partOfSpeech;
 	}
-	
-	@Column(name="word")
+
+	@Column(name = "word")
 	public String getWord() {
 		return word;
 	}
-	
+
 	public void setWord(String word) {
 		this.word = word;
 	}
 
-	@Column(name="part_of_speech")
+	@Column(name = "part_of_speech")
 	public char getPartOfSpeech() {
 		return partOfSpeech;
 	}
-	
+
 	public void setPartOfSpeech(char partOfSpeech) {
 		this.partOfSpeech = partOfSpeech;
 	}
@@ -67,7 +68,6 @@ public class WordId implements Serializable {
 
 	@Override
 	public String toString() {
-		return "WordId [word=" + word + ", partOfSpeech="
-				+ partOfSpeech + "]";
+		return "WordId [word=" + word + ", partOfSpeech=" + partOfSpeech + "]";
 	}
 }

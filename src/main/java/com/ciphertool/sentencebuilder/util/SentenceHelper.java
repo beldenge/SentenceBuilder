@@ -21,32 +21,31 @@ public class SentenceHelper {
 	private WordMapDao wordMapDao;
 	private ContextFreeGrammarHelper cfgHelper;
 
-	
-	public SentenceHelper(String grammarFile)
-	{
+	public SentenceHelper(String grammarFile) {
 		try {
 			cfgHelper = new ContextFreeGrammarHelper(new File(grammarFile));
 		} catch (JAXBException e) {
 			log.error("Could not parse grammar file: " + grammarFile, e);
 		}
 	}
-	
+
 	/**
-	 * Generates a random context-free grammar production tree and then fills in the terminals with words from database
+	 * Generates a random context-free grammar production tree and then fills in
+	 * the terminals with words from database
 	 * 
 	 * @return
 	 */
-	public Sentence generateRandomSentence () {
+	public Sentence generateRandomSentence() {
 		Tree<ProductionType> sentenceTree = cfgHelper.generateRandomSyntaxTree();
 
 		Sentence sentence = makeSentenceFromTree(sentenceTree);
-		
+
 		return sentence;
 	}
-	
+
 	public String makeSentenceString(ArrayList<Node<ProductionType>> sentenceList) {
 		StringBuilder sb = new StringBuilder();
-		for (Node<ProductionType> n: sentenceList) {
+		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				sb.append(" ");
 				sb.append(n.getData().getSymbol());
@@ -54,22 +53,26 @@ public class SentenceHelper {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
-	 * Fills in terminal symbols with random words from database based on the part of speech.  The terminal symbols are case-sensitive when matching to the PartOfSpeech enum.
+	 * Fills in terminal symbols with random words from database based on the
+	 * part of speech. The terminal symbols are case-sensitive when matching to
+	 * the PartOfSpeech enum.
 	 * 
 	 * @param sentenceTree
 	 * @return
 	 */
 	public Sentence makeSentenceFromTree(Tree<ProductionType> sentenceTree) {
-		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree.toList();
+		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree
+				.toList();
 		Sentence sentence = new Sentence();
 		PartOfSpeech pos = null;
 		/*
-		 * TODO: We may be able to improve performance a tiny bit by returning only the Terminal 
-		 * nodes from the sentenceTree above, instead of filtering them in this loop.
+		 * TODO: We may be able to improve performance a tiny bit by returning
+		 * only the Terminal nodes from the sentenceTree above, instead of
+		 * filtering them in this loop.
 		 */
-		for (Node<ProductionType> n: sentenceList) {
+		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
 				sentence.append(wordMapDao.findRandomWordByPartOfSpeech(pos));
@@ -77,7 +80,7 @@ public class SentenceHelper {
 		}
 		return sentence;
 	}
-	
+
 	@Required
 	public void setWordMapDao(WordMapDao wordMapDao) {
 		this.wordMapDao = wordMapDao;

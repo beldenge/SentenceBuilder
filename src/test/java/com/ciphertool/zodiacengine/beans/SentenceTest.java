@@ -13,7 +13,7 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class SentenceTest {
 	Sentence sent = null;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		ArrayList<Word> wordList = new ArrayList<Word>();
