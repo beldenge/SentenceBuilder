@@ -5,8 +5,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.apache.log4j.Logger;
+
 @Embeddable
-public class WordId implements Serializable {
+public class WordId implements Serializable, Cloneable {
+
+	private static Logger log = Logger.getLogger(WordId.class);
 
 	private static final long serialVersionUID = 8960135451615360512L;
 	private String word;
@@ -36,6 +40,19 @@ public class WordId implements Serializable {
 
 	public void setPartOfSpeech(char partOfSpeech) {
 		this.partOfSpeech = partOfSpeech;
+	}
+
+	@Override
+	public WordId clone() {
+		WordId copyId = null;
+
+		try {
+			copyId = (WordId) super.clone();
+		} catch (CloneNotSupportedException cnse) {
+			log.error("Caught CloneNoteSupportedException while attempting to clone WordId.", cnse);
+		}
+
+		return copyId;
 	}
 
 	@Override

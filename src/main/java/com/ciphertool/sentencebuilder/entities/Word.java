@@ -8,8 +8,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "parts_of_speech")
 public class Word {
-	private WordId wordId;
-	private int frequencyWeight;
+	protected WordId wordId;
+	protected int frequencyWeight;
 
 	public Word() {
 	}
