@@ -8,7 +8,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordListDao {
 
-	private ArrayList<Word> wordList;
+	protected ArrayList<Word> wordList;
 	private WordDao wordDao;
 
 	@Autowired
