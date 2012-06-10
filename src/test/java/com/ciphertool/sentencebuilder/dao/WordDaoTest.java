@@ -20,17 +20,19 @@ public class WordDaoTest {
 	private static Logger log = Logger.getLogger(WordDaoTest.class);
 	private static ApplicationContext context;
 	private static BeanFactory factory;
+	private static WordDao wordDao;
 
 	@BeforeClass
 	public static void setUp() throws Exception {
 		context = new ClassPathXmlApplicationContext("beans-sentence.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
+
+		wordDao = (WordDao) factory.getBean("wordDao");
 	}
 
 	@Test
-	public void testFindBywordString() {
-		WordDao wordDao = (WordDao) factory.getBean("wordDao");
+	public void testFindByWordString() {
 		String word = "zoom in";
 		List<Word> words = wordDao.findByWordString(word);
 		assertFalse(words.isEmpty());
@@ -41,7 +43,6 @@ public class WordDaoTest {
 
 	@Test
 	public void testUpdateWord() {
-		WordDao wordDao = (WordDao) factory.getBean("wordDao");
 		String word = "apple";
 		List<Word> words = wordDao.findByWordString(word);
 		assertFalse(words.isEmpty());
@@ -66,6 +67,15 @@ public class WordDaoTest {
 			// Verify once more
 			assertEquals(w.getFrequencyWeight(), tempFrequency);
 		}
+	}
+
+	@Test
+	public void testFindAllUniqueWords() {
+		List<Word> words = wordDao.findAllUniqueWords();
+
+		assertFalse(words.isEmpty());
+
+		log.info("Unique words found: " + words.size());
 	}
 
 	/**

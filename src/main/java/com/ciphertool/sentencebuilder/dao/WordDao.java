@@ -14,11 +14,30 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public class WordDao {
 	private SessionFactory sessionFactory;
 
+	/*
+	 * This returns a list of all Words, so words will be duplicated if they
+	 * have multiple parts of speech.
+	 */
 	public List<Word> findAll() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
 		List<Word> result = (List<Word>) session.createQuery("from Word").list();
+		session.getTransaction().commit();
+		session.close();
+
+		return result;
+	}
+
+	/*
+	 * This returns a list of all unique Words, irrespective of parts of speech.
+	 */
+	public List<Word> findAllUniqueWords() {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		@SuppressWarnings("unchecked")
+		List<Word> result = (List<Word>) session.createQuery(
+				"select distinct new Word(id.word, frequencyWeight) from Word").list();
 		session.getTransaction().commit();
 		session.close();
 
@@ -82,5 +101,4 @@ public class WordDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
 }

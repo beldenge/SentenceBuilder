@@ -24,6 +24,15 @@ public class Word {
 		this.frequencyWeight = frequencyWeight;
 	}
 
+	/*
+	 * This constructor is used for getting unique words from database
+	 * irrespective of parts of speech
+	 */
+	public Word(String word, int frequencyWeight) {
+		this.wordId = new WordId(word, ' ');
+		this.frequencyWeight = frequencyWeight;
+	}
+
 	@EmbeddedId
 	public WordId getWordId() {
 		return wordId;

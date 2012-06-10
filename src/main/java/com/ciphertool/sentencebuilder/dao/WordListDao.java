@@ -14,7 +14,7 @@ public class WordListDao {
 	@Autowired
 	public WordListDao(WordDao wordDao) {
 		this.wordDao = wordDao;
-		wordList = (ArrayList<Word>) this.wordDao.findAll();
+		wordList = (ArrayList<Word>) this.wordDao.findAllUniqueWords();
 	}
 
 	public Word findRandomWord() {
