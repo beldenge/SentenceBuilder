@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.beans;
+package com.ciphertool.sentencebuilder.util;
 
 import static org.junit.Assert.assertEquals;
 
