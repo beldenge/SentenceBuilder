@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -76,6 +78,31 @@ public class WordDaoTest {
 		assertFalse(words.isEmpty());
 
 		log.info("Unique words found: " + words.size());
+	}
+
+	@Test
+	public void testRegex() {
+		String goodWord = "teeth";
+		String badWord1 = "teeeo";
+		String badWord2 = "tteto";
+		String badWord3 = "tetto";
+		String badWord4 = "teete";
+		/*
+		 * We want the second letter to be different from the first letter, the
+		 * third letter to match the second letter, the fourth letter to match
+		 * the first letter, and the last letter to not match any other letters.
+		 */
+		String regex = "([a-z])(?!\\1)([a-z])\\2\\1(?!(\\1|\\2))[a-z]";
+		log.info("Regex: " + regex);
+
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(goodWord);
+		assertTrue(m.matches());
+
+		assertFalse(m.reset(badWord1).matches());
+		assertFalse(m.reset(badWord2).matches());
+		assertFalse(m.reset(badWord3).matches());
+		assertFalse(m.reset(badWord4).matches());
 	}
 
 	/**
