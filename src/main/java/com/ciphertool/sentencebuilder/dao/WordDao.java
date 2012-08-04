@@ -13,6 +13,8 @@ import com.ciphertool.sentencebuilder.entities.Word;
 @Component
 public class WordDao {
 	private SessionFactory sessionFactory;
+	private static final String separator = ":";
+	private static final String wordParameter = "word";
 
 	/*
 	 * This returns a list of all Words, so words will be duplicated if they
@@ -49,8 +51,9 @@ public class WordDao {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery("from Word where word = ?").setString(
-				0, word).list();
+		List<Word> words = (List<Word>) session.createQuery(
+				"from Word where word = " + separator + wordParameter).setParameter(wordParameter,
+				word).list();
 		session.getTransaction().commit();
 		session.close();
 
