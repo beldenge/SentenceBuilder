@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
 Copyright 2012 George Belden
 
@@ -9,8 +10,6 @@ SentenceBuilder is distributed in the hope that it will be useful, but WITHOUT A
 
 You should have received a copy of the GNU General Public License along with SentenceBuilder.  If not, see <http://www.gnu.org/licenses/>.
  -->
-
-<?xml version="1.0" encoding="UTF-8" ?>
 <ContextFreeGrammar first-rule="Sentence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="CFG.xsd">
