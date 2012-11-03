@@ -58,7 +58,7 @@ public class WordDao {
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
 		List<Word> result = (List<Word>) session.createQuery(
-				"select distinct new Word(id.word, frequencyWeight) from Word").list();
+				"select distinct new Word(word, frequencyWeight) from Word").list();
 		session.getTransaction().commit();
 		session.close();
 

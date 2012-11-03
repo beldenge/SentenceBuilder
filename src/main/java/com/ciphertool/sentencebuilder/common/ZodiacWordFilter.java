@@ -43,7 +43,7 @@ public class ZodiacWordFilter implements WordFilter {
 	 * .sentencebuilder.entities.Word)
 	 */
 	public boolean filter(Word word) {
-		if ((word.getWordId().getWord().length() < 3)
+		if ((word.getWord().length() < 3)
 				&& ((word.getFrequencyWeight() < FREQUENCY_THRESHOLD) || isBlacklisted(word))) {
 			return false;
 		}
@@ -60,9 +60,9 @@ public class ZodiacWordFilter implements WordFilter {
 	 * @return
 	 */
 	private boolean isBlacklisted(Word word) {
-		PartOfSpeech pos = PartOfSpeech.typeOf(word.getWordId().getPartOfSpeech());
-		String letters = word.getWordId().getWord();
-		if (word.getWordId().getWord().length() < 3) {
+		PartOfSpeech pos = PartOfSpeech.typeOf(word.getPartOfSpeech());
+		String letters = word.getWord();
+		if (word.getWord().length() < 3) {
 			if (letters.equalsIgnoreCase("in") && pos != PartOfSpeech.PREPOSITION) {
 				return true;
 			} else if (letters.equalsIgnoreCase("on")
@@ -114,7 +114,7 @@ public class ZodiacWordFilter implements WordFilter {
 			} else if (letters.equalsIgnoreCase("ha") && (pos == PartOfSpeech.NOUN)) {
 				return true;
 			}
-		} else if (word.getWordId().getWord().length() == 3) {
+		} else if (word.getWord().length() == 3) {
 			if (letters.equalsIgnoreCase("the") && (pos == PartOfSpeech.ADVERB)) {
 				return true;
 			} else if (letters.equalsIgnoreCase("for") && (pos == PartOfSpeech.NOUN)) {

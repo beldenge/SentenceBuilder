@@ -48,7 +48,7 @@ public class WordMapDaoImpl implements WordMapDao {
 	private HashMap<PartOfSpeech, ArrayList<Word>> mapByPartOfSpeech(ArrayList<Word> allWords) {
 		HashMap<PartOfSpeech, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeech, ArrayList<Word>>();
 		for (Word w : allWords) {
-			PartOfSpeech pos = PartOfSpeech.typeOf(w.getWordId().getPartOfSpeech());
+			PartOfSpeech pos = PartOfSpeech.typeOf(w.getPartOfSpeech());
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byPartOfSpeech.containsKey(pos)) {

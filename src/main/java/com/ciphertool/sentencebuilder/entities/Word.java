@@ -20,26 +20,31 @@
 package com.ciphertool.sentencebuilder.entities;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "parts_of_speech")
 public class Word {
-	protected WordId wordId;
-	protected int frequencyWeight;
+	private Integer id;
+	private char partOfSpeech;
+	private String word;
+	private int frequencyWeight;
 
 	public Word() {
 	}
 
-	public Word(WordId wordId) {
-		this.wordId = wordId;
-		this.frequencyWeight = 1;
-	}
-
-	public Word(WordId wordId, int frequencyWeight) {
-		this.wordId = wordId;
+	/*
+	 * full-args constructor
+	 */
+	public Word(char partOfSpeech, String word, int frequencyWeight) {
+		this.partOfSpeech = partOfSpeech;
+		this.word = word;
 		this.frequencyWeight = frequencyWeight;
 	}
 
@@ -48,17 +53,46 @@ public class Word {
 	 * irrespective of parts of speech
 	 */
 	public Word(String word, int frequencyWeight) {
-		this.wordId = new WordId(word, ' ');
+		this.word = word;
 		this.frequencyWeight = frequencyWeight;
 	}
 
-	@EmbeddedId
-	public WordId getWordId() {
-		return wordId;
+	/**
+	 * @return the id
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	public Integer getId() {
+		return id;
 	}
 
-	public void setWordId(WordId wordId) {
-		this.wordId = wordId;
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	@NaturalId
+	@Column(name = "part_of_speech")
+	public char getPartOfSpeech() {
+		return partOfSpeech;
+	}
+
+	public void setPartOfSpeech(char partOfSpeech) {
+		this.partOfSpeech = partOfSpeech;
+	}
+
+	@NaturalId
+	@Column(name = "word")
+	public String getWord() {
+		return word;
+	}
+
+	public void setWord(String word) {
+		this.word = word;
 	}
 
 	@Column(name = "frequency_weight")
@@ -70,8 +104,58 @@ public class Word {
 		this.frequencyWeight = frequencyWeight;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + partOfSpeech;
+		result = prime * result + ((word == null) ? 0 : word.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Word other = (Word) obj;
+		if (partOfSpeech != other.partOfSpeech) {
+			return false;
+		}
+		if (word == null) {
+			if (other.word != null) {
+				return false;
+			}
+		} else if (!word.equals(other.word)) {
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Word [wordId=" + wordId + ", frequencyWeight=" + frequencyWeight + "]";
+		return "Word [word=" + word + ", partOfSpeech=" + partOfSpeech + ", frequencyWeight="
+				+ frequencyWeight + "]";
 	}
 }

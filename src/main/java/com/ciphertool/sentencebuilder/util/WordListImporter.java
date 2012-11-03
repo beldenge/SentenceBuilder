@@ -36,7 +36,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class WordListImporter {
 	private String fileName;
@@ -101,7 +100,7 @@ public class WordListImporter {
 				 * we don't add it as a part of speech.
 				 */
 				if (partOfSpeech[i] != '|') {
-					wordBatch.add(new Word(new WordId(word, partOfSpeech[i]), 1));
+					wordBatch.add(new Word(partOfSpeech[i], word, 1));
 
 					rowCount++;
 				}
