@@ -27,19 +27,19 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "parts_of_speech")
 public class Word {
-	protected WordId wordId;
+	protected WordId id;
 	protected int frequencyWeight;
 
 	public Word() {
 	}
 
-	public Word(WordId wordId) {
-		this.wordId = wordId;
+	public Word(WordId id) {
+		this.id = id;
 		this.frequencyWeight = 1;
 	}
 
-	public Word(WordId wordId, int frequencyWeight) {
-		this.wordId = wordId;
+	public Word(WordId id, int frequencyWeight) {
+		this.id = id;
 		this.frequencyWeight = frequencyWeight;
 	}
 
@@ -48,17 +48,17 @@ public class Word {
 	 * irrespective of parts of speech
 	 */
 	public Word(String word, int frequencyWeight) {
-		this.wordId = new WordId(word, ' ');
+		this.id = new WordId(word, ' ');
 		this.frequencyWeight = frequencyWeight;
 	}
 
 	@EmbeddedId
-	public WordId getWordId() {
-		return wordId;
+	public WordId getId() {
+		return id;
 	}
 
-	public void setWordId(WordId wordId) {
-		this.wordId = wordId;
+	public void setId(WordId id) {
+		this.id = id;
 	}
 
 	@Column(name = "frequency_weight")
@@ -72,6 +72,6 @@ public class Word {
 
 	@Override
 	public String toString() {
-		return "Word [wordId=" + wordId + ", frequencyWeight=" + frequencyWeight + "]";
+		return "Word [id=" + id + ", frequencyWeight=" + frequencyWeight + "]";
 	}
 }

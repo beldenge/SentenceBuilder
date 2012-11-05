@@ -59,13 +59,13 @@ public class Sentence {
 		for (Word w : words) {
 			if (first) {
 				// Make first word in proper case
-				String firstWord = w.getWordId().getWord();
+				String firstWord = w.getId().getWord();
 				sb.append(firstWord.substring(0, 1).toUpperCase()
 						+ firstWord.substring(1, firstWord.length()));
 				first = false;
 			} else {
 				sb.append(" ");
-				sb.append(w.getWordId().getWord());
+				sb.append(w.getId().getWord());
 			}
 		}
 		sb.append(".");
@@ -75,7 +75,7 @@ public class Sentence {
 	public int length() {
 		int length = 0;
 		for (Word w : words) {
-			length += w.getWordId().getWord().length();
+			length += w.getId().getWord().length();
 		}
 		return length;
 	}
