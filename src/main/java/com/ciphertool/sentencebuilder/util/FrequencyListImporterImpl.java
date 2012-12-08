@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class FrequencyListImporterImpl implements FrequencyListImporter {
 	private String fileName;
@@ -56,9 +57,12 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 		String[] line = null;
 		String word = null;
 		int frequency = 1;
-		int rowCount = 0;
+		int rowUpdateCount = 0;
+		int rowInsertCount = 0;
 		long start = System.currentTimeMillis();
 
+		List<Word> wordUpdateBatch = new ArrayList<Word>();
+		List<Word> wordInsertBatch = new ArrayList<Word>();
 		try {
 			log.info("Starting frequency list import...");
 
@@ -71,7 +75,6 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			nextWord = input.readLine();
 
 			List<Word> words;
-			List<Word> wordBatch = new ArrayList<Word>();
 
 			while (nextWord != null) {
 				line = nextWord.split("\t");
@@ -89,7 +92,17 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 				// If word is not found, log at info level
 				if (words == null || words.size() == 0) {
 					log.debug("No frequency matches found in part_of_speech table for word: "
-							+ word);
+							+ word
+							+ ".  Inserting with a filler value for the part_of_speech column.");
+
+					wordInsertBatch.add(new Word(new WordId(word, 'X'), frequency));
+					rowInsertCount++;
+
+					if (wordInsertBatch.size() >= batchSize) {
+						wordDao.insertBatch(wordInsertBatch);
+
+						wordInsertBatch.clear();
+					}
 				} else {
 					/*
 					 * Loop over the list and update each word with the
@@ -104,9 +117,9 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 						if (w.getFrequencyWeight() != frequency) {
 							w.setFrequencyWeight(frequency);
 
-							wordBatch.add(w);
+							wordUpdateBatch.add(w);
 
-							rowCount++;
+							rowUpdateCount++;
 						}
 					}
 					/*
@@ -114,19 +127,31 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 					 * on how many parts of speech it is related to, the batch
 					 * size may be exceeded by a handful, and this is fine.
 					 */
-					if (wordBatch.size() >= batchSize) {
-						wordDao.updateBatch(wordBatch);
+					if (wordUpdateBatch.size() >= batchSize) {
+						wordDao.updateBatch(wordUpdateBatch);
 
-						wordBatch.clear();
+						wordUpdateBatch.clear();
 					}
 				}
 
 				nextWord = input.readLine();
 			}
+
+			/*
+			 * Do updates and inserts if the batch size wasn't reached before
+			 * the end of the loop
+			 */
+			if (wordUpdateBatch.size() > 0) {
+				wordDao.updateBatch(wordUpdateBatch);
+			}
+			if (wordInsertBatch.size() > 0) {
+				wordDao.insertBatch(wordInsertBatch);
+			}
 		} catch (IOException ioe) {
 			log.error("Caught IOException while reading next line from frequency list.", ioe);
 		} finally {
-			log.info("Rows updated: " + rowCount);
+			log.info("Rows updated: " + rowUpdateCount);
+			log.info("Rows inserted: " + rowInsertCount);
 			log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
 
 			try {

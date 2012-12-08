@@ -20,9 +20,21 @@
 package com.ciphertool.sentencebuilder.common;
 
 public enum PartOfSpeech {
-	NOUN('N'), PLURAL('p'), NOUN_PHRASE('h'), VERB_PARTICIPLE('V'), VERB_TRANSITIVE('t'), VERB_INTRANSITIVE(
-			'i'), ADJECTIVE('A'), ADVERB('v'), CONJUNCTION('C'), PREPOSITION('P'), INTERJECTION('!'), PRONOUN(
-			'r'), ARTICLE('D'), NOMINATIVE('o');
+	NOUN('N'),
+	PLURAL('p'),
+	NOUN_PHRASE('h'),
+	VERB_PARTICIPLE('V'),
+	VERB_TRANSITIVE('t'),
+	VERB_INTRANSITIVE('i'),
+	ADJECTIVE('A'),
+	ADVERB('v'),
+	CONJUNCTION('C'),
+	PREPOSITION('P'),
+	INTERJECTION('!'),
+	PRONOUN('r'),
+	ARTICLE('D'),
+	NOMINATIVE('o'),
+	NONE('X');
 
 	private final char tag;
 

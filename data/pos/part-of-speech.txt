@@ -244204,6 +244204,7 @@ slaughterous	|A
 slaughterously	v
 slav	|NA
 slave	NiVA
+slaves	p
 slave ant	h
 slave cylinder	h
 slave dealer	|h
