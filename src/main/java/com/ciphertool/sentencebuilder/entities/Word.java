@@ -27,7 +27,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "parts_of_speech")
 public class Word {
+
+	@EmbeddedId
 	protected WordId id;
+
+	@Column(name = "frequency_weight")
 	protected int frequencyWeight;
 
 	public Word() {
@@ -52,7 +56,6 @@ public class Word {
 		this.frequencyWeight = frequencyWeight;
 	}
 
-	@EmbeddedId
 	public WordId getId() {
 		return id;
 	}
@@ -61,7 +64,6 @@ public class Word {
 		this.id = id;
 	}
 
-	@Column(name = "frequency_weight")
 	public int getFrequencyWeight() {
 		return frequencyWeight;
 	}

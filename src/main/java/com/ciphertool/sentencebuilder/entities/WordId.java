@@ -32,7 +32,11 @@ public class WordId implements Serializable, Cloneable {
 	private static Logger log = Logger.getLogger(WordId.class);
 
 	private static final long serialVersionUID = 8960135451615360512L;
+
+	@Column(name = "word")
 	private String word;
+
+	@Column(name = "part_of_speech")
 	private char partOfSpeech;
 
 	public WordId() {
@@ -43,7 +47,6 @@ public class WordId implements Serializable, Cloneable {
 		this.partOfSpeech = partOfSpeech;
 	}
 
-	@Column(name = "word")
 	public String getWord() {
 		return word;
 	}
@@ -52,7 +55,6 @@ public class WordId implements Serializable, Cloneable {
 		this.word = word;
 	}
 
-	@Column(name = "part_of_speech")
 	public char getPartOfSpeech() {
 		return partOfSpeech;
 	}
