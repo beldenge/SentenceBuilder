@@ -70,7 +70,7 @@ public class WordId implements Serializable, Cloneable {
 		try {
 			copyId = (WordId) super.clone();
 		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNoteSupportedException while attempting to clone WordId.", cnse);
+			log.error("Caught CloneNotSupportedException while attempting to clone WordId.", cnse);
 		}
 
 		return copyId;
