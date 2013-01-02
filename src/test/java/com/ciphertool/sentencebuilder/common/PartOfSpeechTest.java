@@ -19,21 +19,14 @@
 
 package com.ciphertool.sentencebuilder.common;
 
-import org.apache.log4j.Logger;
-import org.junit.Before;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class PartOfSpeechTest {
-
-	private static Logger log = Logger.getLogger(PartOfSpeechTest.class);
-
-	@Before
-	public void setUp() {
-
-	}
-
 	@Test
-	public void testEnumValueOf() {
-		log.info(PartOfSpeech.valueOf("Pronoun".toUpperCase()).getTag());
+	public void testEnumTypeOf() {
+		PartOfSpeech pos = PartOfSpeech.typeOf('h');
+		assertEquals(pos, PartOfSpeech.valueOf("NOUN_PHRASE"));
 	}
 }
