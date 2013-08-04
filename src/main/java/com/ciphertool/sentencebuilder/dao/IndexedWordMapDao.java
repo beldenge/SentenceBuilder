@@ -37,20 +37,30 @@ import com.ciphertool.sentencebuilder.entities.Word;
  */
 public class IndexedWordMapDao implements WordMapDao {
 
-	private HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
-	private HashMap<PartOfSpeech, int[]> frequencyMap;
+	private HashMap<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap;
+	private HashMap<Integer, ArrayList<Word>> lengthWordMap;
+	private HashMap<PartOfSpeech, int[]> partOfSpeechFrequencyMap;
+	private HashMap<Integer, int[]> lengthFrequencyMap;
 	private WordDao wordDao;
 
 	@Autowired
 	public IndexedWordMapDao(WordDao wordDao) {
 		this.wordDao = wordDao;
-		wordMap = this.mapByPartOfSpeech((ArrayList<Word>) this.wordDao.findAll());
-		frequencyMap = buildIndexedFrequencyMap(wordMap);
+
+		ArrayList<Word> allWords = (ArrayList<Word>) this.wordDao.findAll();
+
+		partOfSpeechWordMap = this.mapByPartOfSpeech(allWords);
+
+		partOfSpeechFrequencyMap = buildIndexedFrequencyMapByPartOfSpeech(partOfSpeechWordMap);
+
+		lengthWordMap = this.mapByLength(allWords);
+
+		lengthFrequencyMap = buildIndexedFrequencyMapByLength(lengthWordMap);
 	}
 
 	@Override
 	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos) {
-		int[] indexList = frequencyMap.get(pos);
+		int[] indexList = partOfSpeechFrequencyMap.get(pos);
 
 		/*
 		 * This returns a pseudorandom number which is bounded by the
@@ -61,7 +71,25 @@ public class IndexedWordMapDao implements WordMapDao {
 
 		int selectedIndex = indexList[randomIndex];
 
-		ArrayList<Word> wordList = wordMap.get(pos);
+		ArrayList<Word> wordList = partOfSpeechWordMap.get(pos);
+
+		return wordList.get(selectedIndex);
+	}
+
+	@Override
+	public Word findRandomWordByLength(Integer length) {
+		int[] indexList = lengthFrequencyMap.get(length);
+
+		/*
+		 * This returns a pseudorandom number which is bounded by the
+		 * ArrayList's size - 1, which is perfect since the elements are
+		 * zero-indexed
+		 */
+		int randomIndex = (int) (Math.random() * indexList.length);
+
+		int selectedIndex = indexList[randomIndex];
+
+		ArrayList<Word> wordList = lengthWordMap.get(length);
 
 		return wordList.get(selectedIndex);
 	}
@@ -83,6 +111,23 @@ public class IndexedWordMapDao implements WordMapDao {
 		return byPartOfSpeech;
 	}
 
+	private HashMap<Integer, ArrayList<Word>> mapByLength(ArrayList<Word> allWords) {
+		HashMap<Integer, ArrayList<Word>> byLength = new HashMap<Integer, ArrayList<Word>>();
+
+		for (Word w : allWords) {
+			Integer wordLength = w.getId().getWord().length();
+
+			// Add the part of speech to the map if it doesn't exist
+			if (!byLength.containsKey(wordLength)) {
+				byLength.put(wordLength, new ArrayList<Word>());
+			}
+
+			byLength.get(wordLength).add(w);
+		}
+
+		return byLength;
+	}
+
 	/*
 	 * Add the word to the map by reference a number of times equal to the
 	 * frequency value
@@ -91,7 +136,7 @@ public class IndexedWordMapDao implements WordMapDao {
 	 * the words into one ArrayList not separated by part of speech, and then
 	 * only separate the index HashMap by parts of speech
 	 */
-	private HashMap<PartOfSpeech, int[]> buildIndexedFrequencyMap(
+	private HashMap<PartOfSpeech, int[]> buildIndexedFrequencyMapByPartOfSpeech(
 			HashMap<PartOfSpeech, ArrayList<Word>> byPartOfSpeech) {
 		HashMap<PartOfSpeech, int[]> byFrequency = new HashMap<PartOfSpeech, int[]>();
 
@@ -135,11 +180,71 @@ public class IndexedWordMapDao implements WordMapDao {
 		return byFrequency;
 	}
 
+	/*
+	 * Add the word to the map by reference a number of times equal to the
+	 * frequency value
+	 * 
+	 * TODO: We can probably reduce memory utilization even more if we combine
+	 * the words into one ArrayList not separated by part of speech, and then
+	 * only separate the index HashMap by parts of speech
+	 */
+	private HashMap<Integer, int[]> buildIndexedFrequencyMapByLength(
+			HashMap<Integer, ArrayList<Word>> byLength) {
+		HashMap<Integer, int[]> byFrequency = new HashMap<Integer, int[]>();
+
+		int frequencySum;
+
+		/*
+		 * Loop through each word length, add up the frequencyWeights, and
+		 * create an int array of the resulting length
+		 */
+		for (Map.Entry<Integer, ArrayList<Word>> length : byLength.entrySet()) {
+			frequencySum = 0;
+
+			for (Word w : byLength.get(length.getKey())) {
+				frequencySum += w.getFrequencyWeight();
+			}
+
+			byFrequency.put(length.getKey(), new int[frequencySum]);
+		}
+
+		int frequencyIndex;
+		int wordIndex;
+
+		/*
+		 * Loop through each length and word, and add the index to the
+		 * frequencyMap a number of times equal to the word's frequency weight
+		 */
+		for (Map.Entry<Integer, ArrayList<Word>> length : byLength.entrySet()) {
+			frequencyIndex = 0;
+			wordIndex = 0;
+
+			for (Word w : byLength.get(length.getKey())) {
+				for (int i = 0; i < w.getFrequencyWeight(); i++) {
+					byFrequency.get(length.getKey())[frequencyIndex] = wordIndex;
+
+					frequencyIndex++;
+				}
+				wordIndex++;
+			}
+		}
+
+		return byFrequency;
+	}
+
 	/**
 	 * @return the wordMap
 	 */
 	@Override
-	public HashMap<PartOfSpeech, ArrayList<Word>> getWordMap() {
-		return wordMap;
+	public HashMap<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
+		return partOfSpeechWordMap;
+	}
+
+	/**
+	 * @return the lengthWordMap
+	 */
+	@Override
+	public HashMap<Integer, ArrayList<Word>> getLengthWordMap() {
+		return lengthWordMap;
 	}
 }

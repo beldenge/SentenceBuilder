@@ -27,21 +27,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.ciphertool.sentencebuilder.common.PartOfSpeech;
 import com.ciphertool.sentencebuilder.entities.Word;
 
-public class WordMapDaoImpl implements WordMapDao {
+public class BasicWordMapDao implements WordMapDao {
 
-	private HashMap<PartOfSpeech, ArrayList<Word>> wordMap;
+	private HashMap<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap;
+	private HashMap<Integer, ArrayList<Word>> lengthWordMap;
 	private WordDao wordDao;
 
 	@Autowired
-	public WordMapDaoImpl(WordDao wordDao) {
+	public BasicWordMapDao(WordDao wordDao) {
 		this.wordDao = wordDao;
-		wordMap = this.mapByPartOfSpeech((ArrayList<Word>) this.wordDao.findAll());
+
+		ArrayList<Word> allWords = (ArrayList<Word>) this.wordDao.findAll();
+
+		partOfSpeechWordMap = this.mapByPartOfSpeech(allWords);
+
+		lengthWordMap = this.mapByWordLength(allWords);
 	}
 
 	@Override
 	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos) {
-		ArrayList<Word> wordList = wordMap.get(pos);
+		ArrayList<Word> wordList = partOfSpeechWordMap.get(pos);
+
 		int randomIndex = (int) (Math.random() * wordList.size());
+
+		return wordList.get(randomIndex);
+	}
+
+	@Override
+	public Word findRandomWordByLength(Integer length) {
+		ArrayList<Word> wordList = lengthWordMap.get(length);
+
+		int randomIndex = (int) (Math.random() * wordList.size());
+
 		return wordList.get(randomIndex);
 	}
 
@@ -66,11 +83,42 @@ public class WordMapDaoImpl implements WordMapDao {
 		return byPartOfSpeech;
 	}
 
+	private HashMap<Integer, ArrayList<Word>> mapByWordLength(ArrayList<Word> allWords) {
+		HashMap<Integer, ArrayList<Word>> byWordLength = new HashMap<Integer, ArrayList<Word>>();
+
+		for (Word w : allWords) {
+			Integer length = w.getId().getWord().length();
+
+			// Add the part of speech to the map if it doesn't exist
+			if (!byWordLength.containsKey(length)) {
+				byWordLength.put(length, new ArrayList<Word>());
+			}
+
+			/*
+			 * Add the word to the map by reference a number of times equal to
+			 * the frequency value
+			 */
+			for (int i = 0; i < w.getFrequencyWeight(); i++) {
+				byWordLength.get(length).add(w);
+			}
+		}
+
+		return byWordLength;
+	}
+
 	/**
-	 * @return the wordMap
+	 * @return the partOfSpeechWordMap
 	 */
 	@Override
-	public HashMap<PartOfSpeech, ArrayList<Word>> getWordMap() {
-		return wordMap;
+	public HashMap<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
+		return partOfSpeechWordMap;
+	}
+
+	/**
+	 * @return the lengthWordMap
+	 */
+	@Override
+	public HashMap<Integer, ArrayList<Word>> getLengthWordMap() {
+		return lengthWordMap;
 	}
 }

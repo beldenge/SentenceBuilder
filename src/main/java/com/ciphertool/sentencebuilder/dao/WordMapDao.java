@@ -28,5 +28,9 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public interface WordMapDao {
 	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos);
 
-	public HashMap<PartOfSpeech, ArrayList<Word>> getWordMap();
+	public Word findRandomWordByLength(Integer length);
+
+	public HashMap<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap();
+
+	public HashMap<Integer, ArrayList<Word>> getLengthWordMap();
 }
