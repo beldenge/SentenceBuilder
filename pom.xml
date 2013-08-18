@@ -4,7 +4,7 @@
 	<groupId>com.ciphertool.sentencebuilder</groupId>
 	<artifactId>SentenceBuilder</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>SentenceBuilder</name>
 	<url>http://www.ciphertool.com</url>
 	<properties>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.ciphertool.cfgreader</groupId>
 			<artifactId>CFGReader</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
