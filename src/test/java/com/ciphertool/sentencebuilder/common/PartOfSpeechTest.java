@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 George Belden
+ * Copyright 2013 George Belden
  * 
  * This file is part of SentenceBuilder.
  * 
