@@ -62,6 +62,20 @@ public class Word {
 	}
 
 	/**
+	 * This constructor is used for getting unique words from database
+	 * irrespective of parts of speech
+	 * 
+	 * @param word
+	 *            the word String to set
+	 * @param frequencyWeight
+	 *            the frequency weight to set
+	 */
+	public Word(String word, int frequencyWeight) {
+		this.id = new WordId(word, ' ');
+		this.frequencyWeight = frequencyWeight;
+	}
+
+	/**
 	 * @return the WordId
 	 */
 	public WordId getId() {

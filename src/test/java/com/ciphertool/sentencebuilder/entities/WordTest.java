@@ -45,6 +45,17 @@ public class WordTest {
 	}
 
 	@Test
+	public void testDatabaseArgsConstructor() {
+		String wordStringToSet = "arbitraryWord";
+		int frequencyWeightToSet = 50;
+		Word word = new Word(wordStringToSet, frequencyWeightToSet);
+
+		assertEquals(wordStringToSet, word.getId().getWord());
+		assertEquals(' ', word.getId().getPartOfSpeech());
+		assertEquals(frequencyWeightToSet, word.getFrequencyWeight());
+	}
+
+	@Test
 	public void testSetId() {
 		WordId wordIdToSet = new WordId("arbitraryWord", 'N');
 		Word word = new Word();
