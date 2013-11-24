@@ -62,8 +62,9 @@ public class Word {
 	}
 
 	/**
-	 * This constructor is used for getting unique words from database
-	 * irrespective of parts of speech
+	 * This constructor is required for querying unique words from database
+	 * irrespective of part of speech. It's not called by any other code in this
+	 * project, but it is used by an HQL query.
 	 * 
 	 * @param word
 	 *            the word String to set
