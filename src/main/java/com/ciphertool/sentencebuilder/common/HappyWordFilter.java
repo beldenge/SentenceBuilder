@@ -24,6 +24,10 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public class HappyWordFilter implements WordFilter {
 
 	public boolean filter(Word word) {
+		if (word == null || word.getId() == null) {
+			return false;
+		}
+
 		/*
 		 * We are so happy that we let every word pass our filter!
 		 */

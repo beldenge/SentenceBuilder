@@ -20,37 +20,40 @@
 package com.ciphertool.sentencebuilder.beans;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class Sentence {
-	private List<Word> words;
+	private List<Word> words = new ArrayList<Word>();
 
 	public Sentence() {
-		this.words = new ArrayList<Word>();
-	}
-
-	public Sentence(List<Word> words) {
-		super();
-		this.words = words;
 	}
 
 	public List<Word> getWords() {
-		return words;
-	}
-
-	public void setWords(List<Word> words) {
-		this.words = words;
+		return Collections.unmodifiableList(words);
 	}
 
 	/**
 	 * Appends a Word to the end of this Sentence
 	 * 
-	 * @param w
+	 * @param word
+	 *            the Word to append
 	 */
-	public void append(Word word) {
+	public void appendWord(Word word) {
 		this.words.add(word);
+	}
+
+	/**
+	 * Removes a word from this Sentence
+	 * 
+	 * @param index
+	 *            the index of the Word to remove
+	 * @return the Word removed
+	 */
+	public Word removeWord(int index) {
+		return this.words.remove(index);
 	}
 
 	public String toString() {
@@ -72,6 +75,9 @@ public class Sentence {
 		return sb.toString();
 	}
 
+	/**
+	 * @return the length of this sentence in individual letters
+	 */
 	public int length() {
 		int length = 0;
 		for (Word w : words) {

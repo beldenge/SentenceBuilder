@@ -37,39 +37,88 @@ public class Word {
 	public Word() {
 	}
 
+	/**
+	 * Business-key constructor
+	 * 
+	 * @param id
+	 *            the WordId to set
+	 */
 	public Word(WordId id) {
 		this.id = id;
 		this.frequencyWeight = 1;
 	}
 
+	/**
+	 * Full-args constructor
+	 * 
+	 * @param id
+	 *            the WordId to set
+	 * @param frequencyWeight
+	 *            the frequency weight to set
+	 */
 	public Word(WordId id, int frequencyWeight) {
 		this.id = id;
 		this.frequencyWeight = frequencyWeight;
 	}
 
-	/*
-	 * This constructor is used for getting unique words from database
-	 * irrespective of parts of speech
+	/**
+	 * @return the WordId
 	 */
-	public Word(String word, int frequencyWeight) {
-		this.id = new WordId(word, ' ');
-		this.frequencyWeight = frequencyWeight;
-	}
-
 	public WordId getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the WordId to set
+	 */
 	public void setId(WordId id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the frequency weight
+	 */
 	public int getFrequencyWeight() {
 		return frequencyWeight;
 	}
 
+	/**
+	 * @param frequencyWeight
+	 *            the frequency weight to set
+	 */
 	public void setFrequencyWeight(int frequencyWeight) {
 		this.frequencyWeight = frequencyWeight;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Word other = (Word) obj;
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override

@@ -17,35 +17,30 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.util;
+package com.ciphertool.sentencebuilder.common;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-
-import org.junit.Before;
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
-public class SentenceTest {
-	Sentence sent = null;
-
-	@Before
-	public void setUp() throws Exception {
-		ArrayList<Word> wordList = new ArrayList<Word>();
-		wordList.add(new Word(new WordId("the", 'D')));
-		wordList.add(new Word(new WordId("man", 'N')));
-		wordList.add(new Word(new WordId("walked", 'V')));
-		wordList.add(new Word(new WordId("with", 'P')));
-		wordList.add(new Word(new WordId("God", 'N')));
-		sent = new Sentence(wordList);
-	}
-
+public class ZodiacWordFilterTest {
 	@Test
-	public void testSentence() {
-		assertEquals(sent.toString(), "The man walked with God.");
+	public void testFilter() {
+		ZodiacWordFilter zodiacWordFilter = new ZodiacWordFilter();
+
+		assertFalse(zodiacWordFilter.filter(null));
+		assertFalse(zodiacWordFilter.filter(new Word()));
+
+		assertTrue(zodiacWordFilter.filter(new Word(new WordId("arbitraryWord", PartOfSpeech.NONE
+				.getSymbol()))));
+
+		assertFalse(zodiacWordFilter.filter(new Word(
+				new WordId("ON", PartOfSpeech.NOUN.getSymbol()))));
+		assertFalse(zodiacWordFilter.filter(new Word(new WordId("ll", PartOfSpeech.ADJECTIVE
+				.getSymbol()))));
 	}
 }

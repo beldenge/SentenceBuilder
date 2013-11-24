@@ -19,40 +19,26 @@
 
 package com.ciphertool.sentencebuilder.common;
 
-public enum PartOfSpeech {
-	NOUN('N'),
-	PLURAL('p'),
-	NOUN_PHRASE('h'),
-	VERB_PARTICIPLE('V'),
-	VERB_TRANSITIVE('t'),
-	VERB_INTRANSITIVE('i'),
-	ADJECTIVE('A'),
-	ADVERB('v'),
-	CONJUNCTION('C'),
-	PREPOSITION('P'),
-	INTERJECTION('!'),
-	PRONOUN('r'),
-	ARTICLE('D'),
-	NOMINATIVE('o'),
-	NONE('X');
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-	private final char symbol;
+import org.junit.Test;
 
-	PartOfSpeech(char symbol) {
-		this.symbol = symbol;
-	}
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 
-	public char getSymbol() {
-		return symbol;
-	}
+public class HappyWordFilterTest {
+	@Test
+	public void testFilter() {
+		HappyWordFilter happyWordFilter = new HappyWordFilter();
 
-	public static PartOfSpeech getValueFromSymbol(char symbol) {
-		for (PartOfSpeech pos : values()) {
-			if (pos.symbol == symbol) {
-				return pos;
-			}
-		}
+		assertFalse(happyWordFilter.filter(null));
+		assertFalse(happyWordFilter.filter(new Word()));
 
-		return null;
+		/*
+		 * Not much to test here -- this filter should return true for any Word.
+		 */
+		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist",
+				PartOfSpeech.NONE.getSymbol()))));
 	}
 }

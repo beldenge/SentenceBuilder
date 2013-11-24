@@ -24,56 +24,64 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import org.apache.log4j.Logger;
-
 @Embeddable
-public class WordId implements Serializable, Cloneable {
-
-	private static Logger log = Logger.getLogger(WordId.class);
+public class WordId implements Serializable {
 
 	private static final long serialVersionUID = 8960135451615360512L;
 
 	@Column(name = "word")
 	private String word;
 
+	/**
+	 * TODO: change this to use the PartOfSpeech enum instead of char
+	 */
 	@Column(name = "part_of_speech")
 	private char partOfSpeech;
 
 	public WordId() {
 	}
 
+	/**
+	 * Full-args constructor
+	 * 
+	 * @param word
+	 *            the word String to set
+	 * @param partOfSpeech
+	 *            the PartOfSpeech symbol to set
+	 */
 	public WordId(String word, char partOfSpeech) {
 		this.word = word;
 		this.partOfSpeech = partOfSpeech;
 	}
 
+	/**
+	 * @return the word String
+	 */
 	public String getWord() {
 		return word;
 	}
 
+	/**
+	 * @param word
+	 *            the word String to set
+	 */
 	public void setWord(String word) {
 		this.word = word;
 	}
 
+	/**
+	 * @return the PartOfSpeech symbol
+	 */
 	public char getPartOfSpeech() {
 		return partOfSpeech;
 	}
 
+	/**
+	 * @param partOfSpeech
+	 *            the PartOfSpeech symbol to set
+	 */
 	public void setPartOfSpeech(char partOfSpeech) {
 		this.partOfSpeech = partOfSpeech;
-	}
-
-	@Override
-	public WordId clone() {
-		WordId copyId = null;
-
-		try {
-			copyId = (WordId) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNotSupportedException while attempting to clone WordId.", cnse);
-		}
-
-		return copyId;
 	}
 
 	@Override
@@ -99,7 +107,7 @@ public class WordId implements Serializable, Cloneable {
 		if (word == null) {
 			if (other.word != null)
 				return false;
-		} else if (!word.equals(other.word))
+		} else if (!word.equalsIgnoreCase(other.word))
 			return false;
 		return true;
 	}

@@ -94,7 +94,7 @@ public class SentenceHelper {
 		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
-				sentence.append(wordMapDao.findRandomWordByPartOfSpeech(pos));
+				sentence.appendWord(wordMapDao.findRandomWordByPartOfSpeech(pos));
 			}
 		}
 		return sentence;
