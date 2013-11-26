@@ -20,7 +20,10 @@
 package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,19 +32,27 @@ import com.ciphertool.sentencebuilder.entities.Word;
 
 public class BasicWordMapDao implements WordMapDao {
 
-	private HashMap<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap;
-	private HashMap<Integer, ArrayList<Word>> lengthWordMap;
-	private WordDao wordDao;
+	private Map<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap = new HashMap<PartOfSpeech, ArrayList<Word>>();
+	private Map<Integer, ArrayList<Word>> lengthWordMap = new HashMap<Integer, ArrayList<Word>>();
 
+	/**
+	 * Constructor with autowired dependency.
+	 * 
+	 * @param wordDao
+	 *            the WordDao to use for populating the internal Maps
+	 */
 	@Autowired
 	public BasicWordMapDao(WordDao wordDao) {
-		this.wordDao = wordDao;
+		if (wordDao == null) {
+			throw new IllegalArgumentException(
+					"Error constructing BasicWordMapDao.  WordDao cannot be null.");
+		}
 
-		ArrayList<Word> allWords = (ArrayList<Word>) this.wordDao.findAll();
+		ArrayList<Word> allWords = (ArrayList<Word>) wordDao.findAll();
 
-		partOfSpeechWordMap = this.mapByPartOfSpeech(allWords);
+		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 
-		lengthWordMap = this.mapByWordLength(allWords);
+		lengthWordMap = mapByWordLength(allWords);
 	}
 
 	@Override
@@ -62,7 +73,17 @@ public class BasicWordMapDao implements WordMapDao {
 		return wordList.get(randomIndex);
 	}
 
-	private HashMap<PartOfSpeech, ArrayList<Word>> mapByPartOfSpeech(ArrayList<Word> allWords) {
+	/**
+	 * @param allWords
+	 *            the List of all Words pulled in from the constructor
+	 * @return a Map of all Words keyed by their PartOfSpeech
+	 */
+	protected static HashMap<PartOfSpeech, ArrayList<Word>> mapByPartOfSpeech(List<Word> allWords) {
+		if (allWords == null || allWords.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Error mapping Words by PartOfSpeech.  The supplied List of Words cannot be null or empty.");
+		}
+
 		HashMap<PartOfSpeech, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeech, ArrayList<Word>>();
 		for (Word w : allWords) {
 			PartOfSpeech pos = PartOfSpeech.getValueFromSymbol(w.getId().getPartOfSpeech());
@@ -83,7 +104,17 @@ public class BasicWordMapDao implements WordMapDao {
 		return byPartOfSpeech;
 	}
 
-	private HashMap<Integer, ArrayList<Word>> mapByWordLength(ArrayList<Word> allWords) {
+	/**
+	 * @param allWords
+	 *            the List of all Words pulled in from the constructor
+	 * @return a Map of all Words keyed by their length
+	 */
+	protected static HashMap<Integer, ArrayList<Word>> mapByWordLength(List<Word> allWords) {
+		if (allWords == null || allWords.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Error mapping Words by length.  The supplied List of Words cannot be null or empty.");
+		}
+
 		HashMap<Integer, ArrayList<Word>> byWordLength = new HashMap<Integer, ArrayList<Word>>();
 
 		for (Word w : allWords) {
@@ -106,19 +137,13 @@ public class BasicWordMapDao implements WordMapDao {
 		return byWordLength;
 	}
 
-	/**
-	 * @return the partOfSpeechWordMap
-	 */
 	@Override
-	public HashMap<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
-		return partOfSpeechWordMap;
+	public Map<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
+		return Collections.unmodifiableMap(partOfSpeechWordMap);
 	}
 
-	/**
-	 * @return the lengthWordMap
-	 */
 	@Override
-	public HashMap<Integer, ArrayList<Word>> getLengthWordMap() {
-		return lengthWordMap;
+	public Map<Integer, ArrayList<Word>> getLengthWordMap() {
+		return Collections.unmodifiableMap(lengthWordMap);
 	}
 }

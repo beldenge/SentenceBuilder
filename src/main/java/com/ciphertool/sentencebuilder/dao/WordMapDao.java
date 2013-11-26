@@ -20,17 +20,37 @@
 package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeech;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public interface WordMapDao {
+	/**
+	 * Finds a random Word by PartOfSpeech
+	 * 
+	 * @param pos
+	 *            the PartOfSpeech to search by
+	 * @return the Word found, or null if none is found
+	 */
 	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos);
 
+	/**
+	 * Finds a random Word by length
+	 * 
+	 * @param length
+	 *            the Word length to search by
+	 * @return the Word found, or null if none is found
+	 */
 	public Word findRandomWordByLength(Integer length);
 
-	public HashMap<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap();
+	/**
+	 * @return the Map of Words keyed by PartOfSpeech
+	 */
+	public Map<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap();
 
-	public HashMap<Integer, ArrayList<Word>> getLengthWordMap();
+	/**
+	 * @return the Map of Words keyed by their length
+	 */
+	public Map<Integer, ArrayList<Word>> getLengthWordMap();
 }
