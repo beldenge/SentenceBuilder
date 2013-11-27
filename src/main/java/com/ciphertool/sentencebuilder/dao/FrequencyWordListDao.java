@@ -25,23 +25,29 @@ import java.util.List;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class FrequencyWordListDao implements WordListDao {
-	private ArrayList<Word> wordList;
-	private WordDao wordDao;
+	private List<Word> wordList = new ArrayList<Word>();
 
-	/*
-	 * Calls the super constructor and then stacks the list based on word
-	 * frequency
+	/**
+	 * Constructor requiring a WordDao dependency as its only argument. Stacks
+	 * the List based on Word frequency.
+	 * 
+	 * @param wordDao
+	 *            the WordDao to use for populating the internal List
 	 */
 	public FrequencyWordListDao(WordDao wordDao) {
-		this.wordDao = wordDao;
-		wordList = (ArrayList<Word>) this.wordDao.findAllUniqueWords();
+		if (wordDao == null) {
+			throw new IllegalArgumentException(
+					"Error constructing FrequencyWordListDao.  WordDao cannot be null.");
+		}
+
+		wordList.addAll(wordDao.findAllUniqueWords());
 
 		List<Word> wordsToAdd = new ArrayList<Word>();
 
 		for (Word w : this.wordList) {
 			/*
 			 * Add the word to the map by reference a number of times equal to
-			 * the frequency value -1 since it already exists in the list once.
+			 * the frequency value - 1 since it already exists in the list once.
 			 */
 			for (int i = 0; i < w.getFrequencyWeight() - 1; i++) {
 				wordsToAdd.add(w);
@@ -54,6 +60,7 @@ public class FrequencyWordListDao implements WordListDao {
 	@Override
 	public Word findRandomWord() {
 		int randomIndex = (int) (Math.random() * wordList.size());
+
 		return wordList.get(randomIndex);
 	}
 }

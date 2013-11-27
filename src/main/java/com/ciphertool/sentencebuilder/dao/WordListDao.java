@@ -22,5 +22,10 @@ package com.ciphertool.sentencebuilder.dao;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public interface WordListDao {
+	/**
+	 * Returns a random Word.
+	 * 
+	 * @return a random Word
+	 */
 	public Word findRandomWord();
 }

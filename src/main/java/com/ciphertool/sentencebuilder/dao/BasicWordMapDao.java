@@ -48,7 +48,8 @@ public class BasicWordMapDao implements WordMapDao {
 					"Error constructing BasicWordMapDao.  WordDao cannot be null.");
 		}
 
-		ArrayList<Word> allWords = (ArrayList<Word>) wordDao.findAll();
+		ArrayList<Word> allWords = new ArrayList<Word>();
+		allWords.addAll(wordDao.findAll());
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 

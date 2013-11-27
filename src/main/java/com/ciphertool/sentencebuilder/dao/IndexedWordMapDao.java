@@ -43,7 +43,6 @@ public class IndexedWordMapDao implements WordMapDao {
 	private Map<Integer, ArrayList<Word>> lengthWordMap;
 	private Map<PartOfSpeech, int[]> partOfSpeechFrequencyMap;
 	private Map<Integer, int[]> lengthFrequencyMap;
-	private WordDao wordDao;
 
 	/**
 	 * Constructor with autowired dependency.
@@ -58,9 +57,8 @@ public class IndexedWordMapDao implements WordMapDao {
 					"Error constructing IndexedWordMapDao.  WordDao cannot be null.");
 		}
 
-		this.wordDao = wordDao;
-
-		ArrayList<Word> allWords = (ArrayList<Word>) this.wordDao.findAll();
+		ArrayList<Word> allWords = new ArrayList<Word>();
+		allWords.addAll(wordDao.findAll());
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 

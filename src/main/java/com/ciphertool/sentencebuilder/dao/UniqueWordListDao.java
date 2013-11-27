@@ -20,21 +20,32 @@
 package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class UniqueWordListDao implements WordListDao {
-	private ArrayList<Word> wordList;
-	private WordDao wordDao;
+	private List<Word> wordList = new ArrayList<Word>();
 
+	/**
+	 * Constructor requiring a WordDao dependency as its only argument.
+	 * 
+	 * @param wordDao
+	 *            the WordDao to use for populating the internal List
+	 */
 	public UniqueWordListDao(WordDao wordDao) {
-		this.wordDao = wordDao;
-		wordList = (ArrayList<Word>) this.wordDao.findAllUniqueWords();
+		if (wordDao == null) {
+			throw new IllegalArgumentException(
+					"Error constructing UniqueWordListDao.  WordDao cannot be null.");
+		}
+
+		wordList.addAll(wordDao.findAllUniqueWords());
 	}
 
 	@Override
 	public Word findRandomWord() {
 		int randomIndex = (int) (Math.random() * wordList.size());
+
 		return wordList.get(randomIndex);
 	}
 }
