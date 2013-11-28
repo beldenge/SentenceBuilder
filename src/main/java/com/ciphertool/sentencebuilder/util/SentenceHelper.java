@@ -36,10 +36,18 @@ import com.ciphertool.sentencebuilder.common.PartOfSpeech;
 import com.ciphertool.sentencebuilder.dao.WordMapDao;
 
 public class SentenceHelper {
-	private Logger log = Logger.getLogger(getClass());
+
+	private static Logger log = Logger.getLogger(SentenceHelper.class);
+
 	private WordMapDao wordMapDao;
 	private ContextFreeGrammarHelper cfgHelper;
 
+	/**
+	 * Constructor requiring a context-free grammar specification file.
+	 * 
+	 * @param grammarFile
+	 *            the context-free grammar specification file
+	 */
 	public SentenceHelper(String grammarFile) {
 		try {
 			cfgHelper = new ContextFreeGrammarHelper(new File(grammarFile));
@@ -50,9 +58,9 @@ public class SentenceHelper {
 
 	/**
 	 * Generates a random context-free grammar production tree and then fills in
-	 * the terminals with words from database
+	 * the terminals with words from database.
 	 * 
-	 * @return
+	 * @return the generated Sentence
 	 */
 	public Sentence generateRandomSentence() {
 		Tree<ProductionType> sentenceTree = cfgHelper.generateRandomSyntaxTree();
@@ -62,14 +70,23 @@ public class SentenceHelper {
 		return sentence;
 	}
 
+	/**
+	 * Generates a String representation of the Sentence from terminal nodes.
+	 * 
+	 * @param sentenceList
+	 *            the List of tree nodes
+	 * @return the String representing a Sentence
+	 */
 	public String makeSentenceString(ArrayList<Node<ProductionType>> sentenceList) {
 		StringBuilder sb = new StringBuilder();
+
 		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				sb.append(" ");
 				sb.append(n.getData().getSymbol());
 			}
 		}
+
 		return sb.toString();
 	}
 
@@ -84,16 +101,14 @@ public class SentenceHelper {
 	public Sentence makeSentenceFromTree(Tree<ProductionType> sentenceTree) {
 		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree
 				.toList();
+
 		Sentence sentence = new Sentence();
 		PartOfSpeech pos = null;
-		/*
-		 * TODO: We may be able to improve performance a tiny bit by returning
-		 * only the Terminal nodes from the sentenceTree above, instead of
-		 * filtering them in this loop.
-		 */
+
 		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
 				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
+
 				sentence.appendWord(wordMapDao.findRandomWordByPartOfSpeech(pos));
 			}
 		}
