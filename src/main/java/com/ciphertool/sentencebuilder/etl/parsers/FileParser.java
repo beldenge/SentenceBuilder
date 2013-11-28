@@ -17,28 +17,15 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.etl.parsers;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
-import org.junit.Test;
-
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
-
-public class HappyWordFilterTest {
-	@Test
-	public void testFilter() {
-		HappyWordFilter happyWordFilter = new HappyWordFilter();
-
-		assertFalse(happyWordFilter.filter(null));
-		assertFalse(happyWordFilter.filter(new Word()));
-
-		/*
-		 * Not much to test here -- this filter should return true for any Word.
-		 */
-		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist",
-				PartOfSpeech.NONE.getSymbol()))));
-	}
+public interface FileParser<T> {
+	/**
+	 * Parses a file into a List of Objects.
+	 * 
+	 * @return the List of Objects from the parsed file
+	 */
+	public List<T> parseFile();
 }

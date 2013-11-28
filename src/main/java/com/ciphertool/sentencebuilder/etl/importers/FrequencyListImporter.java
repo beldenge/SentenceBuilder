@@ -17,20 +17,14 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.etl.importers;
 
-import com.ciphertool.sentencebuilder.entities.Word;
 
-public class HappyWordFilter implements WordFilter {
-
-	public boolean filter(Word word) {
-		if (word == null || word.getId() == null) {
-			return false;
-		}
-
-		/*
-		 * We are so happy that we let every word pass our filter!
-		 */
-		return true;
-	}
+public interface FrequencyListImporter {
+	/**
+	 * Imports a List of Words from some source (likely a text file) into some
+	 * destination (likely a relational datastore), updating the frequency
+	 * values appropriately.
+	 */
+	public void importFrequencyList();
 }

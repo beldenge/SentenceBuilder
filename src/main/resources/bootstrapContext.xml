@@ -32,32 +32,6 @@ You should have received a copy of the GNU General Public License along with Sen
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao"
-		id="wordMapDao" />
-
-	<bean class="com.ciphertool.sentencebuilder.util.SentenceHelper"
-		id="sentenceHelper">
-		<constructor-arg index="0" type="java.lang.String"
-			value="${grammar.file.location}" />
-		<property name="wordMapDao" ref="wordMapDao" />
-	</bean>
-
-	<bean class="com.ciphertool.sentencebuilder.util.WordListImporterImpl"
-		id="wordListImporter">
-		<property name="fileName" value="${wordlist.file.location}" />
-		<property name="batchSize" value="${persistence.batchSize}" />
-	</bean>
-
-	<bean class="com.ciphertool.sentencebuilder.util.FrequencyListImporterImpl"
-		id="frequencyListImporter">
-		<property name="fileName" value="${frequency.file.location}" />
-		<property name="batchSize" value="${persistence.batchSize}" />
-	</bean>
-
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />

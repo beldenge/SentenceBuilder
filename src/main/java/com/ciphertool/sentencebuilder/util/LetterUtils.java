@@ -20,29 +20,41 @@
 package com.ciphertool.sentencebuilder.util;
 
 public class LetterUtils {
+	private static final int MINIMUM_ASCII_VALUE = 97;
+	private static final int MAXIMUM_ASCII_VALUE = 122;
+	private static final int NUMBER_OF_LETTERS = 26;
 
 	/**
-	 * Gets a random ASCII value for all lower case letters and returns the
-	 * appropriate char.
+	 * Gets a random ASCII value for all lower case English letters and returns
+	 * the appropriate char.
 	 * 
-	 * @return
+	 * @return the char representing an English letter
 	 */
 	public static char getRandomLetter() {
-		// Get a random number between 1 and 26 for a letter in the alphabet. 97
-		// is the ascii decimal offset.
-		int randomIndex = (int) (Math.random() * 26) + 97;
+		/*
+		 * Get a random number between 1 and 26 (inclusive) for a letter in the
+		 * English alphabet using the ASCII decimal offset.
+		 */
+		int randomIndex = (int) (Math.random() * NUMBER_OF_LETTERS) + MINIMUM_ASCII_VALUE;
 
 		return getLetterByAsciiValue(randomIndex);
 	}
 
 	/**
-	 * Casts the ASCII value to a char. The asciiValue must be in decimal
-	 * format.
+	 * Casts the ASCII value to a char. The asciiValue is expected to be the
+	 * decimal offset.
 	 * 
 	 * @param asciiValue
-	 * @return
+	 *            the ASCII value to use
+	 * @return the corresponding English letter
 	 */
 	public static char getLetterByAsciiValue(int asciiValue) {
+		if (asciiValue < MINIMUM_ASCII_VALUE || asciiValue > MAXIMUM_ASCII_VALUE) {
+			throw new IllegalArgumentException("Unable to get English letter by ASCII value of "
+					+ asciiValue + ".  Expecting a value in the range [" + MINIMUM_ASCII_VALUE
+					+ "-" + MAXIMUM_ASCII_VALUE + "].");
+		}
+
 		return (char) asciiValue;
 	}
 }

@@ -17,15 +17,17 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.filters;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeech;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.filters.ZodiacWordFilter;
 
 public class ZodiacWordFilterTest {
 	@Test

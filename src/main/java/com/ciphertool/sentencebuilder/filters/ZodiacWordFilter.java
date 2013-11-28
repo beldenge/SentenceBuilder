@@ -17,11 +17,12 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.filters;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeech;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 

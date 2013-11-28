@@ -17,19 +17,20 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.filters;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
-public interface WordFilter {
+public class HappyWordFilter implements WordFilter {
 
-	/**
-	 * Should return true if the supplied Word passes the filter. Otherwise, it
-	 * should return false, indicating that this Word should not be accepted by
-	 * the caller.
-	 * 
-	 * @return
-	 */
-	boolean filter(Word word);
+	public boolean filter(Word word) {
+		if (word == null || word.getId() == null) {
+			return false;
+		}
 
+		/*
+		 * We are so happy that we let every word pass our filter!
+		 */
+		return true;
+	}
 }

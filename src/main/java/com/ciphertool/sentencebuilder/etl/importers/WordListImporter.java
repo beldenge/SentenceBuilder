@@ -17,8 +17,13 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.util;
+package com.ciphertool.sentencebuilder.etl.importers;
 
-public interface FrequencyListImporter {
-	public void importFrequencyList();
+
+public interface WordListImporter {
+	/**
+	 * Imports a List of Words from some source (likely a text file) into some
+	 * destination (likely a relational datastore).
+	 */
+	public void importWordList();
 }

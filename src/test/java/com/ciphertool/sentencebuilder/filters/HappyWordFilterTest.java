@@ -17,37 +17,30 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.util;
+package com.ciphertool.sentencebuilder.filters;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class LetterUtilsTest {
+import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.filters.HappyWordFilter;
 
+public class HappyWordFilterTest {
 	@Test
-	public void testGetCharacterByAsciiValue() {
-		assertEquals(LetterUtils.getLetterByAsciiValue(97), 'a');
-		assertEquals(LetterUtils.getLetterByAsciiValue(122), 'z');
-	}
+	public void testFilter() {
+		HappyWordFilter happyWordFilter = new HappyWordFilter();
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetCharacterByAsciiValueTooLow() {
-		LetterUtils.getLetterByAsciiValue(96);
-	}
+		assertFalse(happyWordFilter.filter(null));
+		assertFalse(happyWordFilter.filter(new Word()));
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetCharacterByAsciiValueTooHigh() {
-		LetterUtils.getLetterByAsciiValue(123);
-	}
-
-	@Test
-	public void testGetRandomCharacter() {
-		char c;
-		for (int i = 0; i < 100; i++) {
-			c = LetterUtils.getRandomLetter();
-			assertTrue(String.valueOf(c).matches("[a-z]"));
-		}
+		/*
+		 * Not much to test here -- this filter should return true for any Word.
+		 */
+		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist",
+				PartOfSpeech.NONE.getSymbol()))));
 	}
 }

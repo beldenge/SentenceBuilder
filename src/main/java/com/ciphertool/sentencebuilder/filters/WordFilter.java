@@ -17,8 +17,19 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.util;
+package com.ciphertool.sentencebuilder.filters;
 
-public interface WordListImporter {
-	public void importWordList();
+import com.ciphertool.sentencebuilder.entities.Word;
+
+public interface WordFilter {
+
+	/**
+	 * Should return true if the supplied Word passes the filter. Otherwise, it
+	 * should return false, indicating that this Word should not be accepted by
+	 * the caller.
+	 * 
+	 * @return
+	 */
+	boolean filter(Word word);
+
 }

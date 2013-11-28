@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Copyright 2013 George Belden
+
+This file is part of SentenceBuilder.
+
+SentenceBuilder is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+SentenceBuilder is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with SentenceBuilder.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       		http://www.springframework.org/schema/context
+       		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       		http://www.springframework.org/schema/tx 
+     		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<import resource="classpath*:bootstrapContext.xml" />
+
+	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser" id="partOfSpeechfileParser">
+		<property name="fileName" value="${wordlist.file.location}" />
+	</bean>
+
+	<bean class="com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl"
+		id="wordListImporter">
+		<property name="batchSize" value="${persistence.batchSize}" />
+		<property name="fileParser" ref="partOfSpeechfileParser" />
+	</bean>
+
+	<bean class="com.ciphertool.sentencebuilder.etl.parsers.FrequencyFileParser" id="frequencyFileParser">
+		<property name="fileName" value="${frequency.file.location}" />
+	</bean>
+
+	<bean class="com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl"
+		id="frequencyListImporter">
+		<property name="batchSize" value="${persistence.batchSize}" />
+		<property name="fileParser" ref="frequencyFileParser" />
+	</bean>
+
+</beans>
