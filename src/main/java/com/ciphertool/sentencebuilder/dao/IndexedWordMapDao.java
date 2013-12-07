@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 /**
@@ -39,9 +39,9 @@ import com.ciphertool.sentencebuilder.entities.Word;
  */
 public class IndexedWordMapDao implements WordMapDao {
 
-	private Map<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap;
+	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap;
 	private Map<Integer, ArrayList<Word>> lengthWordMap;
-	private Map<PartOfSpeech, int[]> partOfSpeechFrequencyMap;
+	private Map<PartOfSpeechType, int[]> partOfSpeechFrequencyMap;
 	private Map<Integer, int[]> lengthFrequencyMap;
 
 	/**
@@ -70,7 +70,7 @@ public class IndexedWordMapDao implements WordMapDao {
 	}
 
 	@Override
-	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos) {
+	public Word findRandomWordByPartOfSpeech(PartOfSpeechType pos) {
 		int[] indexList = partOfSpeechFrequencyMap.get(pos);
 
 		/*
@@ -110,23 +110,23 @@ public class IndexedWordMapDao implements WordMapDao {
 	 *            the List of all Words pulled in from the constructor
 	 * @return a Map of all Words keyed by their PartOfSpeech
 	 */
-	protected static Map<PartOfSpeech, ArrayList<Word>> mapByPartOfSpeech(List<Word> allWords) {
+	protected static Map<PartOfSpeechType, ArrayList<Word>> mapByPartOfSpeech(List<Word> allWords) {
 		if (allWords == null || allWords.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Error mapping Words by PartOfSpeech.  The supplied List of Words cannot be null or empty.");
 		}
 
-		HashMap<PartOfSpeech, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeech, ArrayList<Word>>();
+		HashMap<PartOfSpeechType, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 
-		for (Word w : allWords) {
-			PartOfSpeech pos = PartOfSpeech.getValueFromSymbol(w.getId().getPartOfSpeech());
+		for (Word word : allWords) {
+			PartOfSpeechType pos = word.getId().getPartOfSpeech();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byPartOfSpeech.containsKey(pos)) {
 				byPartOfSpeech.put(pos, new ArrayList<Word>());
 			}
 
-			byPartOfSpeech.get(pos).add(w);
+			byPartOfSpeech.get(pos).add(word);
 		}
 
 		return byPartOfSpeech;
@@ -171,14 +171,14 @@ public class IndexedWordMapDao implements WordMapDao {
 	 *            the Map of Words keyed by PartOfSpeech
 	 * @return the index Map keyed by length
 	 */
-	protected static Map<PartOfSpeech, int[]> buildIndexedFrequencyMapByPartOfSpeech(
-			Map<PartOfSpeech, ArrayList<Word>> byPartOfSpeech) {
+	protected static Map<PartOfSpeechType, int[]> buildIndexedFrequencyMapByPartOfSpeech(
+			Map<PartOfSpeechType, ArrayList<Word>> byPartOfSpeech) {
 		if (byPartOfSpeech == null || byPartOfSpeech.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Error indexing PartOfSpeech map.  The supplied Map of Words cannot be null or empty.");
 		}
 
-		HashMap<PartOfSpeech, int[]> byFrequency = new HashMap<PartOfSpeech, int[]>();
+		HashMap<PartOfSpeechType, int[]> byFrequency = new HashMap<PartOfSpeechType, int[]>();
 
 		int frequencySum;
 
@@ -186,7 +186,7 @@ public class IndexedWordMapDao implements WordMapDao {
 		 * Loop through each PartOfSpeech, add up the frequency weights, and
 		 * create an int array of the resulting length
 		 */
-		for (Map.Entry<PartOfSpeech, ArrayList<Word>> pos : byPartOfSpeech.entrySet()) {
+		for (Map.Entry<PartOfSpeechType, ArrayList<Word>> pos : byPartOfSpeech.entrySet()) {
 			frequencySum = 0;
 
 			for (Word w : byPartOfSpeech.get(pos.getKey())) {
@@ -203,7 +203,8 @@ public class IndexedWordMapDao implements WordMapDao {
 		 * Loop through each PartOfSpeech and Word, and add the index to the
 		 * frequencyMap a number of times equal to the word's frequency weight
 		 */
-		for (Map.Entry<PartOfSpeech, ArrayList<Word>> partOfSpeechEntry : byPartOfSpeech.entrySet()) {
+		for (Map.Entry<PartOfSpeechType, ArrayList<Word>> partOfSpeechEntry : byPartOfSpeech
+				.entrySet()) {
 			frequencyIndex = 0;
 			wordIndex = 0;
 
@@ -282,7 +283,7 @@ public class IndexedWordMapDao implements WordMapDao {
 	}
 
 	@Override
-	public Map<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
+	public Map<PartOfSpeechType, ArrayList<Word>> getPartOfSpeechWordMap() {
 		return Collections.unmodifiableMap(partOfSpeechWordMap);
 	}
 

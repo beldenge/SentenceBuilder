@@ -24,11 +24,13 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
+
 public class WordIdTest {
 	@Test
 	public void testConstructor() {
 		String wordStringToSet = "arbitraryWord";
-		char partOfSpeechToSet = 'N';
+		PartOfSpeechType partOfSpeechToSet = PartOfSpeechType.NOUN;
 		WordId wordId = new WordId(wordStringToSet, partOfSpeechToSet);
 
 		assertEquals(wordStringToSet, wordId.getWord());
@@ -46,7 +48,7 @@ public class WordIdTest {
 
 	@Test
 	public void testSetPartOfSpeech() {
-		char partOfSpeechToSet = 'N';
+		PartOfSpeechType partOfSpeechToSet = PartOfSpeechType.NOUN;
 		WordId wordId = new WordId();
 		wordId.setPartOfSpeech(partOfSpeechToSet);
 
@@ -56,7 +58,7 @@ public class WordIdTest {
 	@Test
 	public void testEquals() {
 		String baseWordString = "arbitraryWord";
-		char basePartOfSpeech = 'N';
+		PartOfSpeechType basePartOfSpeech = PartOfSpeechType.NOUN;
 
 		WordId base = new WordId();
 		base.setWord(baseWordString);
@@ -82,7 +84,7 @@ public class WordIdTest {
 
 		WordId wordIdWithDifferentPartOfSpeech = new WordId();
 		wordIdWithDifferentPartOfSpeech.setWord(baseWordString);
-		wordIdWithDifferentPartOfSpeech.setPartOfSpeech('A');
+		wordIdWithDifferentPartOfSpeech.setPartOfSpeech(PartOfSpeechType.ADJECTIVE);
 
 		assertFalse(wordIdWithDifferentPartOfSpeech.equals(base));
 

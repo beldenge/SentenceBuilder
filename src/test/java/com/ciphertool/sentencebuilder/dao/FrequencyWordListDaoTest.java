@@ -35,6 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -46,11 +47,11 @@ public class FrequencyWordListDaoTest {
 
 	@BeforeClass
 	public static void setUp() {
-		word1 = new Word(new WordId("programming", 'N'), 5);
+		word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN), 5);
 		wordsToReturn.add(word1);
-		word2 = new Word(new WordId("is", 'p'), 1);
+		word2 = new Word(new WordId("is", PartOfSpeechType.PLURAL), 1);
 		wordsToReturn.add(word2);
-		word3 = new Word(new WordId("awesome", 'h'), 0);
+		word3 = new Word(new WordId("awesome", PartOfSpeechType.NOUN_PHRASE), 0);
 		wordsToReturn.add(word3);
 	}
 

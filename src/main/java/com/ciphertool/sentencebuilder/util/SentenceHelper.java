@@ -32,7 +32,7 @@ import com.ciphertool.cfgreader.datastructures.Tree;
 import com.ciphertool.cfgreader.generated.ProductionType;
 import com.ciphertool.cfgreader.util.ContextFreeGrammarHelper;
 import com.ciphertool.sentencebuilder.beans.Sentence;
-import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.dao.WordMapDao;
 
 public class SentenceHelper {
@@ -80,10 +80,10 @@ public class SentenceHelper {
 	public String makeSentenceString(ArrayList<Node<ProductionType>> sentenceList) {
 		StringBuilder sb = new StringBuilder();
 
-		for (Node<ProductionType> n : sentenceList) {
-			if (n.getData().getType().equals("Terminal")) {
+		for (Node<ProductionType> node : sentenceList) {
+			if (node.getData().getType().equals("Terminal")) {
 				sb.append(" ");
-				sb.append(n.getData().getSymbol());
+				sb.append(node.getData().getSymbol());
 			}
 		}
 
@@ -103,11 +103,11 @@ public class SentenceHelper {
 				.toList();
 
 		Sentence sentence = new Sentence();
-		PartOfSpeech pos = null;
+		PartOfSpeechType pos = null;
 
 		for (Node<ProductionType> n : sentenceList) {
 			if (n.getData().getType().equals("Terminal")) {
-				pos = PartOfSpeech.valueOf(n.getData().getSymbol());
+				pos = PartOfSpeechType.valueOf(n.getData().getSymbol());
 
 				sentence.appendWord(wordMapDao.findRandomWordByPartOfSpeech(pos));
 			}

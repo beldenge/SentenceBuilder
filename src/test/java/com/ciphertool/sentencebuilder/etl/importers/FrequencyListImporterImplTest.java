@@ -46,6 +46,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
@@ -167,10 +168,10 @@ public class FrequencyListImporterImplTest {
 		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("awesome", 'A'), 400);
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 400);
 		List<Word> wordsToReturn = new ArrayList<Word>();
 		wordsToReturn.add(word1);
 		wordsToReturn.add(word2);
@@ -181,8 +182,8 @@ public class FrequencyListImporterImplTest {
 
 		frequencyListImporterImpl.setFileParser(fileParserMock);
 
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
@@ -249,11 +250,11 @@ public class FrequencyListImporterImplTest {
 		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("super", 'A'), 400);
-		Word word5 = new Word(new WordId("awesome", 'A'), 500);
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("super", PartOfSpeechType.ADJECTIVE), 400);
+		Word word5 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 500);
 		List<Word> wordsToReturn = new ArrayList<Word>();
 		wordsToReturn.add(word1);
 		wordsToReturn.add(word2);
@@ -265,9 +266,9 @@ public class FrequencyListImporterImplTest {
 
 		frequencyListImporterImpl.setFileParser(fileParserMock);
 
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
-		Word wordFromDatabase3 = new Word(new WordId("is", 'A'));
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word wordFromDatabase3 = new Word(new WordId("is", PartOfSpeechType.ADJECTIVE));
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
@@ -332,12 +333,12 @@ public class FrequencyListImporterImplTest {
 		List<Word> insertBatch = new ArrayList<Word>();
 		List<Word> updateBatch = new ArrayList<Word>();
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("awesome", 'A'), 400);
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 400);
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 
 		when(wordDaoMock.findByWordString(anyString())).thenReturn(
 				Arrays.asList(wordFromDatabase1), Arrays.asList(wordFromDatabase2), null, null);
@@ -457,12 +458,12 @@ public class FrequencyListImporterImplTest {
 		List<Word> insertBatch = new ArrayList<Word>();
 		List<Word> updateBatch = new ArrayList<Word>();
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("awesome", 'A'), 400);
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 400);
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 
 		when(wordDaoMock.findByWordString(anyString())).thenReturn(
 				Arrays.asList(wordFromDatabase1), Arrays.asList(wordFromDatabase2), null, null);
@@ -511,10 +512,10 @@ public class FrequencyListImporterImplTest {
 	public void testBatchWordImportTask() {
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("awesome", 'A'), 400);
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 400);
 		List<Word> threadBatch = new ArrayList<Word>();
 		threadBatch.add(word1);
 		threadBatch.add(word2);
@@ -549,8 +550,8 @@ public class FrequencyListImporterImplTest {
 		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
@@ -586,12 +587,12 @@ public class FrequencyListImporterImplTest {
 	public void testBatchWordImportTask_LeftoversFromBatch() {
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
 
-		Word word1 = new Word(new WordId("george", 'N'), 100);
-		Word word2 = new Word(new WordId("belden", 'N'), 200);
-		Word word3 = new Word(new WordId("is", 'V'), 300);
-		Word word4 = new Word(new WordId("super", 'A'), 400);
-		Word word5 = new Word(new WordId("seriously", 'A'), 500);
-		Word word6 = new Word(new WordId("awesome", 'A'), 600);
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN), 100);
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN), 200);
+		Word word3 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE), 300);
+		Word word4 = new Word(new WordId("super", PartOfSpeechType.ADJECTIVE), 400);
+		Word word5 = new Word(new WordId("seriously", PartOfSpeechType.ADJECTIVE), 500);
+		Word word6 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE), 600);
 		List<Word> threadBatch = new ArrayList<Word>();
 		threadBatch.add(word1);
 		threadBatch.add(word2);
@@ -628,9 +629,9 @@ public class FrequencyListImporterImplTest {
 		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
-		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
-		Word wordFromDatabase3 = new Word(new WordId("is", 'A'));
+		Word wordFromDatabase1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word wordFromDatabase2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word wordFromDatabase3 = new Word(new WordId("is", PartOfSpeechType.ADJECTIVE));
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);

@@ -23,6 +23,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 
 @Embeddable
 public class WordId implements Serializable {
@@ -32,11 +36,9 @@ public class WordId implements Serializable {
 	@Column(name = "word")
 	private String word;
 
-	/**
-	 * TODO: change this to use the PartOfSpeech enum instead of char
-	 */
+	@Enumerated(EnumType.STRING)
 	@Column(name = "part_of_speech")
-	private char partOfSpeech;
+	private PartOfSpeechType partOfSpeech;
 
 	public WordId() {
 	}
@@ -49,7 +51,7 @@ public class WordId implements Serializable {
 	 * @param partOfSpeech
 	 *            the PartOfSpeech symbol to set
 	 */
-	public WordId(String word, char partOfSpeech) {
+	public WordId(String word, PartOfSpeechType partOfSpeech) {
 		this.word = word;
 		this.partOfSpeech = partOfSpeech;
 	}
@@ -70,9 +72,9 @@ public class WordId implements Serializable {
 	}
 
 	/**
-	 * @return the PartOfSpeech symbol
+	 * @return the PartOfSpeechType
 	 */
-	public char getPartOfSpeech() {
+	public PartOfSpeechType getPartOfSpeech() {
 		return partOfSpeech;
 	}
 
@@ -80,7 +82,7 @@ public class WordId implements Serializable {
 	 * @param partOfSpeech
 	 *            the PartOfSpeech symbol to set
 	 */
-	public void setPartOfSpeech(char partOfSpeech) {
+	public void setPartOfSpeech(PartOfSpeechType partOfSpeech) {
 		this.partOfSpeech = partOfSpeech;
 	}
 
@@ -88,27 +90,33 @@ public class WordId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + partOfSpeech;
+		result = prime * result + ((partOfSpeech == null) ? 0 : partOfSpeech.hashCode());
 		result = prime * result + ((word == null) ? 0 : word.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		WordId other = (WordId) obj;
-		if (partOfSpeech != other.partOfSpeech)
+		if (partOfSpeech != other.partOfSpeech) {
 			return false;
+		}
 		if (word == null) {
-			if (other.word != null)
+			if (other.word != null) {
 				return false;
-		} else if (!word.equalsIgnoreCase(other.word))
+			}
+		} else if (!word.equalsIgnoreCase(other.word)) {
 			return false;
+		}
 		return true;
 	}
 

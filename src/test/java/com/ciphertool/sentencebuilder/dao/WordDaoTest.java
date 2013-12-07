@@ -46,6 +46,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -99,11 +100,11 @@ public class WordDaoTest {
 	@Test
 	public void testFindAll() {
 		List<Word> wordList = new ArrayList<Word>();
-		Word word1 = new Word(new WordId("programming", 'N'));
+		Word word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN));
 		wordList.add(word1);
-		Word word2 = new Word(new WordId("is", 'V'));
+		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
 		wordList.add(word2);
-		Word word3 = new Word(new WordId("awesome", 'A'));
+		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
 		wordList.add(word3);
 
 		when(queryMock.list()).thenReturn(wordList);
@@ -119,11 +120,11 @@ public class WordDaoTest {
 	@Test
 	public void testFindAllUniqueWords() {
 		List<Word> wordList = new ArrayList<Word>();
-		Word word1 = new Word(new WordId("programming", 'N'));
+		Word word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN));
 		wordList.add(word1);
-		Word word2 = new Word(new WordId("is", 'V'));
+		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
 		wordList.add(word2);
-		Word word3 = new Word(new WordId("awesome", 'A'));
+		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
 		wordList.add(word3);
 
 		when(queryMock.list()).thenReturn(wordList);
@@ -141,11 +142,11 @@ public class WordDaoTest {
 		String wordString = "stuff";
 
 		List<Word> wordList = new ArrayList<Word>();
-		Word word1 = new Word(new WordId(wordString, 'N'));
+		Word word1 = new Word(new WordId(wordString, PartOfSpeechType.NOUN));
 		wordList.add(word1);
-		Word word2 = new Word(new WordId(wordString, 'V'));
+		Word word2 = new Word(new WordId(wordString, PartOfSpeechType.VERB_PARTICIPLE));
 		wordList.add(word2);
-		Word word3 = new Word(new WordId(wordString, 'A'));
+		Word word3 = new Word(new WordId(wordString, PartOfSpeechType.ADJECTIVE));
 		wordList.add(word3);
 
 		when(queryMock.list()).thenReturn(wordList);
@@ -174,7 +175,7 @@ public class WordDaoTest {
 
 	@Test
 	public void testInsert() {
-		Word wordToInsert = new Word(new WordId("stuff", 'N'));
+		Word wordToInsert = new Word(new WordId("stuff", PartOfSpeechType.NOUN));
 
 		boolean result = wordDao.insert(wordToInsert);
 
@@ -198,11 +199,11 @@ public class WordDaoTest {
 	@Test
 	public void testInsertBatch() {
 		List<Word> wordList = new ArrayList<Word>();
-		Word word1 = new Word(new WordId("programming", 'N'));
+		Word word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN));
 		wordList.add(word1);
-		Word word2 = new Word(new WordId("is", 'V'));
+		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
 		wordList.add(word2);
-		Word word3 = new Word(new WordId("awesome", 'A'));
+		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
 		wordList.add(word3);
 
 		boolean result = wordDao.insertBatch(wordList);
@@ -228,7 +229,7 @@ public class WordDaoTest {
 
 	@Test
 	public void testUpdate() {
-		Word wordToInsert = new Word(new WordId("stuff", 'N'));
+		Word wordToInsert = new Word(new WordId("stuff", PartOfSpeechType.NOUN));
 
 		boolean result = wordDao.update(wordToInsert);
 
@@ -252,11 +253,11 @@ public class WordDaoTest {
 	@Test
 	public void testUpdateBatch() {
 		List<Word> wordList = new ArrayList<Word>();
-		Word word1 = new Word(new WordId("programming", 'N'));
+		Word word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN));
 		wordList.add(word1);
-		Word word2 = new Word(new WordId("is", 'V'));
+		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
 		wordList.add(word2);
-		Word word3 = new Word(new WordId("awesome", 'A'));
+		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
 		wordList.add(word3);
 
 		boolean result = wordDao.updateBatch(wordList);

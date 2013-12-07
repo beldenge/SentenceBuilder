@@ -19,7 +19,7 @@
 
 package com.ciphertool.sentencebuilder.common;
 
-public enum PartOfSpeech {
+public enum PartOfSpeechType {
 	NOUN('N'),
 	PLURAL('p'),
 	NOUN_PHRASE('h'),
@@ -38,7 +38,7 @@ public enum PartOfSpeech {
 
 	private final char symbol;
 
-	PartOfSpeech(char symbol) {
+	PartOfSpeechType(char symbol) {
 		this.symbol = symbol;
 	}
 
@@ -46,8 +46,8 @@ public enum PartOfSpeech {
 		return symbol;
 	}
 
-	public static PartOfSpeech getValueFromSymbol(char symbol) {
-		for (PartOfSpeech pos : values()) {
+	public static PartOfSpeechType getValueFromSymbol(char symbol) {
+		for (PartOfSpeechType pos : values()) {
 			if (pos.symbol == symbol) {
 				return pos;
 			}

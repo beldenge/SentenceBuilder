@@ -21,14 +21,17 @@ package com.ciphertool.sentencebuilder.entities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
+
 public class WordTest {
 	@Test
 	public void testBusinessKeyConstructor() {
-		WordId wordIdToSet = new WordId("arbitraryWord", 'N');
+		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
 		Word word = new Word(wordIdToSet);
 
 		assertSame(wordIdToSet, word.getId());
@@ -36,7 +39,7 @@ public class WordTest {
 
 	@Test
 	public void testFullArgsConstructor() {
-		WordId wordIdToSet = new WordId("arbitraryWord", 'N');
+		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
 		int frequencyWeightToSet = 50;
 		Word word = new Word(wordIdToSet, frequencyWeightToSet);
 
@@ -51,13 +54,13 @@ public class WordTest {
 		Word word = new Word(wordStringToSet, frequencyWeightToSet);
 
 		assertEquals(wordStringToSet, word.getId().getWord());
-		assertEquals(' ', word.getId().getPartOfSpeech());
+		assertNull(word.getId().getPartOfSpeech());
 		assertEquals(frequencyWeightToSet, word.getFrequencyWeight());
 	}
 
 	@Test
 	public void testSetId() {
-		WordId wordIdToSet = new WordId("arbitraryWord", 'N');
+		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
 		Word word = new Word();
 		word.setId(wordIdToSet);
 
@@ -75,7 +78,7 @@ public class WordTest {
 
 	@Test
 	public void testEquals() {
-		WordId baseWordId = new WordId("arbitraryWord", 'N');
+		WordId baseWordId = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
 		int baseFrequencyWeight = 50;
 
 		Word base = new Word();
@@ -89,7 +92,7 @@ public class WordTest {
 		assertEquals(base, wordEqualToBase);
 
 		Word wordWithDifferentId = new Word();
-		wordWithDifferentId.setId(new WordId("aDifferentWord", 'A'));
+		wordWithDifferentId.setId(new WordId("aDifferentWord", PartOfSpeechType.NOUN));
 		wordWithDifferentId.setFrequencyWeight(baseFrequencyWeight);
 
 		assertFalse(wordWithDifferentId.equals(base));

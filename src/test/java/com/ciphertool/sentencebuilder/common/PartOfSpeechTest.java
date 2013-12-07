@@ -26,39 +26,39 @@ import org.junit.Test;
 public class PartOfSpeechTest {
 	@Test
 	public void testGetSymbol() {
-		assertEquals('N', PartOfSpeech.NOUN.getSymbol());
-		assertEquals('p', PartOfSpeech.PLURAL.getSymbol());
-		assertEquals('h', PartOfSpeech.NOUN_PHRASE.getSymbol());
-		assertEquals('V', PartOfSpeech.VERB_PARTICIPLE.getSymbol());
-		assertEquals('t', PartOfSpeech.VERB_TRANSITIVE.getSymbol());
-		assertEquals('i', PartOfSpeech.VERB_INTRANSITIVE.getSymbol());
-		assertEquals('A', PartOfSpeech.ADJECTIVE.getSymbol());
-		assertEquals('v', PartOfSpeech.ADVERB.getSymbol());
-		assertEquals('C', PartOfSpeech.CONJUNCTION.getSymbol());
-		assertEquals('P', PartOfSpeech.PREPOSITION.getSymbol());
-		assertEquals('!', PartOfSpeech.INTERJECTION.getSymbol());
-		assertEquals('r', PartOfSpeech.PRONOUN.getSymbol());
-		assertEquals('D', PartOfSpeech.ARTICLE.getSymbol());
-		assertEquals('o', PartOfSpeech.NOMINATIVE.getSymbol());
-		assertEquals('X', PartOfSpeech.NONE.getSymbol());
+		assertEquals('N', PartOfSpeechType.NOUN.getSymbol());
+		assertEquals('p', PartOfSpeechType.PLURAL.getSymbol());
+		assertEquals('h', PartOfSpeechType.NOUN_PHRASE.getSymbol());
+		assertEquals('V', PartOfSpeechType.VERB_PARTICIPLE.getSymbol());
+		assertEquals('t', PartOfSpeechType.VERB_TRANSITIVE.getSymbol());
+		assertEquals('i', PartOfSpeechType.VERB_INTRANSITIVE.getSymbol());
+		assertEquals('A', PartOfSpeechType.ADJECTIVE.getSymbol());
+		assertEquals('v', PartOfSpeechType.ADVERB.getSymbol());
+		assertEquals('C', PartOfSpeechType.CONJUNCTION.getSymbol());
+		assertEquals('P', PartOfSpeechType.PREPOSITION.getSymbol());
+		assertEquals('!', PartOfSpeechType.INTERJECTION.getSymbol());
+		assertEquals('r', PartOfSpeechType.PRONOUN.getSymbol());
+		assertEquals('D', PartOfSpeechType.ARTICLE.getSymbol());
+		assertEquals('o', PartOfSpeechType.NOMINATIVE.getSymbol());
+		assertEquals('X', PartOfSpeechType.NONE.getSymbol());
 	}
 
 	@Test
 	public void testGetValue() {
-		assertEquals(PartOfSpeech.NOUN, PartOfSpeech.getValueFromSymbol('N'));
-		assertEquals(PartOfSpeech.PLURAL, PartOfSpeech.getValueFromSymbol('p'));
-		assertEquals(PartOfSpeech.NOUN_PHRASE, PartOfSpeech.getValueFromSymbol('h'));
-		assertEquals(PartOfSpeech.VERB_PARTICIPLE, PartOfSpeech.getValueFromSymbol('V'));
-		assertEquals(PartOfSpeech.VERB_TRANSITIVE, PartOfSpeech.getValueFromSymbol('t'));
-		assertEquals(PartOfSpeech.VERB_INTRANSITIVE, PartOfSpeech.getValueFromSymbol('i'));
-		assertEquals(PartOfSpeech.ADJECTIVE, PartOfSpeech.getValueFromSymbol('A'));
-		assertEquals(PartOfSpeech.ADVERB, PartOfSpeech.getValueFromSymbol('v'));
-		assertEquals(PartOfSpeech.CONJUNCTION, PartOfSpeech.getValueFromSymbol('C'));
-		assertEquals(PartOfSpeech.PREPOSITION, PartOfSpeech.getValueFromSymbol('P'));
-		assertEquals(PartOfSpeech.INTERJECTION, PartOfSpeech.getValueFromSymbol('!'));
-		assertEquals(PartOfSpeech.PRONOUN, PartOfSpeech.getValueFromSymbol('r'));
-		assertEquals(PartOfSpeech.ARTICLE, PartOfSpeech.getValueFromSymbol('D'));
-		assertEquals(PartOfSpeech.NOMINATIVE, PartOfSpeech.getValueFromSymbol('o'));
-		assertEquals(PartOfSpeech.NONE, PartOfSpeech.getValueFromSymbol('X'));
+		assertEquals(PartOfSpeechType.NOUN, PartOfSpeechType.getValueFromSymbol('N'));
+		assertEquals(PartOfSpeechType.PLURAL, PartOfSpeechType.getValueFromSymbol('p'));
+		assertEquals(PartOfSpeechType.NOUN_PHRASE, PartOfSpeechType.getValueFromSymbol('h'));
+		assertEquals(PartOfSpeechType.VERB_PARTICIPLE, PartOfSpeechType.getValueFromSymbol('V'));
+		assertEquals(PartOfSpeechType.VERB_TRANSITIVE, PartOfSpeechType.getValueFromSymbol('t'));
+		assertEquals(PartOfSpeechType.VERB_INTRANSITIVE, PartOfSpeechType.getValueFromSymbol('i'));
+		assertEquals(PartOfSpeechType.ADJECTIVE, PartOfSpeechType.getValueFromSymbol('A'));
+		assertEquals(PartOfSpeechType.ADVERB, PartOfSpeechType.getValueFromSymbol('v'));
+		assertEquals(PartOfSpeechType.CONJUNCTION, PartOfSpeechType.getValueFromSymbol('C'));
+		assertEquals(PartOfSpeechType.PREPOSITION, PartOfSpeechType.getValueFromSymbol('P'));
+		assertEquals(PartOfSpeechType.INTERJECTION, PartOfSpeechType.getValueFromSymbol('!'));
+		assertEquals(PartOfSpeechType.PRONOUN, PartOfSpeechType.getValueFromSymbol('r'));
+		assertEquals(PartOfSpeechType.ARTICLE, PartOfSpeechType.getValueFromSymbol('D'));
+		assertEquals(PartOfSpeechType.NOMINATIVE, PartOfSpeechType.getValueFromSymbol('o'));
+		assertEquals(PartOfSpeechType.NONE, PartOfSpeechType.getValueFromSymbol('X'));
 	}
 }

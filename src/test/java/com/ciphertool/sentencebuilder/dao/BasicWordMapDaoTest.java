@@ -34,7 +34,7 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -57,25 +57,25 @@ public class BasicWordMapDaoTest {
 	public static void setUp() {
 		wordDaoMock = mock(WordDao.class);
 
-		word1 = new Word(new WordId("I", 'N'));
+		word1 = new Word(new WordId("I", PartOfSpeechType.NOUN));
 		wordsToReturn.add(word1);
-		word2 = new Word(new WordId("am", 'p'));
+		word2 = new Word(new WordId("am", PartOfSpeechType.PLURAL));
 		wordsToReturn.add(word2);
-		word3 = new Word(new WordId("the", 'h'));
+		word3 = new Word(new WordId("the", PartOfSpeechType.NOUN_PHRASE));
 		wordsToReturn.add(word3);
-		word4 = new Word(new WordId("best", 'V'));
+		word4 = new Word(new WordId("best", PartOfSpeechType.VERB_PARTICIPLE));
 		wordsToReturn.add(word4);
-		word5 = new Word(new WordId("homie", 't'));
+		word5 = new Word(new WordId("homie", PartOfSpeechType.VERB_TRANSITIVE));
 		wordsToReturn.add(word5);
-		word6 = new Word(new WordId("hollah", 'i'));
+		word6 = new Word(new WordId("hollah", PartOfSpeechType.VERB_INTRANSITIVE));
 		wordsToReturn.add(word6);
-		word7 = new Word(new WordId("seventy", 'A'));
+		word7 = new Word(new WordId("seventy", PartOfSpeechType.ADJECTIVE));
 		wordsToReturn.add(word7);
-		word8 = new Word(new WordId("trillion", 'v'));
+		word8 = new Word(new WordId("trillion", PartOfSpeechType.ADVERB));
 		wordsToReturn.add(word8);
-		word9 = new Word(new WordId("benjamins", 'C'));
+		word9 = new Word(new WordId("benjamins", PartOfSpeechType.CONJUNCTION));
 		wordsToReturn.add(word9);
-		word10 = new Word(new WordId("investment", 'P'));
+		word10 = new Word(new WordId("investment", PartOfSpeechType.PREPOSITION));
 		wordsToReturn.add(word10);
 
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
@@ -124,38 +124,40 @@ public class BasicWordMapDaoTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testPartOfSpeechWordMapUnmodifiable() {
-		Map<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap = basicWordMapDao
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = basicWordMapDao
 				.getPartOfSpeechWordMap();
 		partOfSpeechWordMap.remove(0); // should throw exception
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testLengthWordMapUnmodifiable() {
-		Map<PartOfSpeech, ArrayList<Word>> lengthWordMap = basicWordMapDao.getPartOfSpeechWordMap();
+		Map<PartOfSpeechType, ArrayList<Word>> lengthWordMap = basicWordMapDao
+				.getPartOfSpeechWordMap();
 		lengthWordMap.remove(0); // should throw exception
 	}
 
 	@Test
 	public void testFindByPartOfSpeech() {
-		Word wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.NOUN);
+		Word wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.NOUN);
 		assertEquals(word1, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.PLURAL);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.PLURAL);
 		assertEquals(word2, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.NOUN_PHRASE);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.NOUN_PHRASE);
 		assertEquals(word3, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.VERB_PARTICIPLE);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_PARTICIPLE);
 		assertEquals(word4, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.VERB_TRANSITIVE);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_TRANSITIVE);
 		assertEquals(word5, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.VERB_INTRANSITIVE);
+		wordToTest = basicWordMapDao
+				.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_INTRANSITIVE);
 		assertEquals(word6, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.ADJECTIVE);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.ADJECTIVE);
 		assertEquals(word7, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.ADVERB);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.ADVERB);
 		assertEquals(word8, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.CONJUNCTION);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.CONJUNCTION);
 		assertEquals(word9, wordToTest);
-		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeech.PREPOSITION);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.PREPOSITION);
 		assertEquals(word10, wordToTest);
 	}
 
@@ -185,14 +187,13 @@ public class BasicWordMapDaoTest {
 
 	@Test
 	public void testMapByPartOfSpeech() {
-		Map<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap = BasicWordMapDao
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = BasicWordMapDao
 				.mapByPartOfSpeech(wordsToReturn);
 
 		assertEquals(10, partOfSpeechWordMap.size());
 
 		for (Word word : wordsToReturn) {
-			assertTrue(partOfSpeechWordMap.get(
-					PartOfSpeech.getValueFromSymbol(word.getId().getPartOfSpeech())).contains(word));
+			assertTrue(partOfSpeechWordMap.get(word.getId().getPartOfSpeech()).contains(word));
 		}
 	}
 

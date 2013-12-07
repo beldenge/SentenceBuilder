@@ -29,6 +29,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -106,7 +107,8 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 			 * don't add it as a part of speech.
 			 */
 			if (partsOfSpeech[i] != '|') {
-				wordsFromFile.add(new Word(new WordId(word, partsOfSpeech[i]), 1));
+				wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType
+						.getValueFromSymbol(partsOfSpeech[i])), 1));
 
 				wordCount++;
 			}

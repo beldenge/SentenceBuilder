@@ -27,12 +27,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class BasicWordMapDao implements WordMapDao {
 
-	private Map<PartOfSpeech, ArrayList<Word>> partOfSpeechWordMap = new HashMap<PartOfSpeech, ArrayList<Word>>();
+	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 	private Map<Integer, ArrayList<Word>> lengthWordMap = new HashMap<Integer, ArrayList<Word>>();
 
 	/**
@@ -57,7 +57,7 @@ public class BasicWordMapDao implements WordMapDao {
 	}
 
 	@Override
-	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos) {
+	public Word findRandomWordByPartOfSpeech(PartOfSpeechType pos) {
 		ArrayList<Word> wordList = partOfSpeechWordMap.get(pos);
 
 		int randomIndex = (int) (Math.random() * wordList.size());
@@ -79,15 +79,16 @@ public class BasicWordMapDao implements WordMapDao {
 	 *            the List of all Words pulled in from the constructor
 	 * @return a Map of all Words keyed by their PartOfSpeech
 	 */
-	protected static HashMap<PartOfSpeech, ArrayList<Word>> mapByPartOfSpeech(List<Word> allWords) {
+	protected static HashMap<PartOfSpeechType, ArrayList<Word>> mapByPartOfSpeech(
+			List<Word> allWords) {
 		if (allWords == null || allWords.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Error mapping Words by PartOfSpeech.  The supplied List of Words cannot be null or empty.");
 		}
 
-		HashMap<PartOfSpeech, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeech, ArrayList<Word>>();
+		HashMap<PartOfSpeechType, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 		for (Word w : allWords) {
-			PartOfSpeech pos = PartOfSpeech.getValueFromSymbol(w.getId().getPartOfSpeech());
+			PartOfSpeechType pos = w.getId().getPartOfSpeech();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byPartOfSpeech.containsKey(pos)) {
@@ -139,7 +140,7 @@ public class BasicWordMapDao implements WordMapDao {
 	}
 
 	@Override
-	public Map<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap() {
+	public Map<PartOfSpeechType, ArrayList<Word>> getPartOfSpeechWordMap() {
 		return Collections.unmodifiableMap(partOfSpeechWordMap);
 	}
 

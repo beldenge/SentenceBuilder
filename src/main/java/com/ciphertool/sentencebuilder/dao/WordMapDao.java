@@ -22,7 +22,7 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeech;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public interface WordMapDao {
@@ -33,7 +33,7 @@ public interface WordMapDao {
 	 *            the PartOfSpeech to search by
 	 * @return the Word found, or null if none is found
 	 */
-	public Word findRandomWordByPartOfSpeech(PartOfSpeech pos);
+	public Word findRandomWordByPartOfSpeech(PartOfSpeechType pos);
 
 	/**
 	 * Finds a random Word by length
@@ -47,7 +47,7 @@ public interface WordMapDao {
 	/**
 	 * @return the Map of Words keyed by PartOfSpeech
 	 */
-	public Map<PartOfSpeech, ArrayList<Word>> getPartOfSpeechWordMap();
+	public Map<PartOfSpeechType, ArrayList<Word>> getPartOfSpeechWordMap();
 
 	/**
 	 * @return the Map of Words keyed by their length

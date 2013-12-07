@@ -72,7 +72,7 @@ public class Word {
 	 *            the frequency weight to set
 	 */
 	public Word(String word, int frequencyWeight) {
-		this.id = new WordId(word, ' ');
+		this.id = new WordId(word, null);
 		this.frequencyWeight = frequencyWeight;
 	}
 
