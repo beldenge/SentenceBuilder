@@ -21,10 +21,15 @@ package com.ciphertool.sentencebuilder.etl.importers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.core.task.TaskExecutor;
 
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -34,29 +39,100 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 
 	private static Logger log = Logger.getLogger(FrequencyListImporterImpl.class);
 
+	private TaskExecutor taskExecutor;
 	private FileParser<Word> frequencyFileParser;
 	private WordDao wordDao;
-	private int batchSize;
-	private Integer rowUpdateCount = 0;
-	private Integer rowInsertCount = 0;
+	private int persistenceBatchSize;
+	private AtomicInteger rowUpdateCount = new AtomicInteger(0);
+	private AtomicInteger rowInsertCount = new AtomicInteger(0);
+	private int concurrencyBatchSize;
 
 	@Override
 	public void importFrequencyList() {
 		// Reset the counts in case this method is called again
-		rowUpdateCount = 0;
-		rowInsertCount = 0;
+		rowUpdateCount.set(0);
+		rowInsertCount.set(0);
 
 		long start = System.currentTimeMillis();
 
 		try {
-			List<Word> wordUpdateBatch = new ArrayList<Word>();
-			List<Word> wordInsertBatch = new ArrayList<Word>();
 
 			List<Word> wordsFromFile = frequencyFileParser.parseFile();
 
 			log.info("Starting frequency list import...");
 
+			List<FutureTask<Void>> futureTasks = new ArrayList<FutureTask<Void>>();
+			FutureTask<Void> futureTask = null;
+			List<Word> threadedWordBatch = new ArrayList<Word>();
 			for (Word word : wordsFromFile) {
+				threadedWordBatch.add(word);
+
+				if (threadedWordBatch.size() >= this.concurrencyBatchSize) {
+					List<Word> nextThreadedWordBatch = new ArrayList<Word>();
+					int originalSize = threadedWordBatch.size();
+
+					for (int i = 0; i < originalSize; i++) {
+						nextThreadedWordBatch.add(threadedWordBatch.remove(0));
+					}
+
+					futureTask = new FutureTask<Void>(
+							new BatchWordImportTask(nextThreadedWordBatch));
+					futureTasks.add(futureTask);
+					this.taskExecutor.execute(futureTask);
+				}
+			}
+
+			/*
+			 * Start one last task if there are any leftover Words from file
+			 * that did not reach the batch size.
+			 */
+			if (threadedWordBatch.size() > 0) {
+				/*
+				 * It's safe to use the threadedWordBatch now, instead of
+				 * copying into a temporaryList, because this is the last thread
+				 * to run.
+				 */
+				futureTask = new FutureTask<Void>(new BatchWordImportTask(threadedWordBatch));
+				futureTasks.add(futureTask);
+				this.taskExecutor.execute(futureTask);
+			}
+
+			for (FutureTask<Void> future : futureTasks) {
+				try {
+					future.get();
+				} catch (InterruptedException ie) {
+					log.error("Caught InterruptedException while waiting for BatchWordImportTask ",
+							ie);
+				} catch (ExecutionException ee) {
+					log.error("Caught ExecutionException while waiting for BatchWordImportTask ",
+							ee);
+				}
+			}
+		} finally {
+			log.info("Rows updated: " + this.rowUpdateCount);
+			log.info("Rows inserted: " + this.rowInsertCount);
+			log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
+		}
+	}
+
+	/**
+	 * A concurrent task for performing a crossover of two parent Chromosomes,
+	 * producing one child Chromosome.
+	 */
+	protected class BatchWordImportTask implements Callable<Void> {
+
+		private List<Word> words;
+
+		public BatchWordImportTask(List<Word> words) {
+			this.words = words;
+		}
+
+		@Override
+		public Void call() throws Exception {
+			List<Word> wordUpdateBatch = new ArrayList<Word>();
+			List<Word> wordInsertBatch = new ArrayList<Word>();
+
+			for (Word word : this.words) {
 				importWord(word, wordInsertBatch, wordUpdateBatch);
 			}
 
@@ -68,7 +144,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 				boolean result = wordDao.updateBatch(wordUpdateBatch);
 
 				if (result) {
-					this.rowUpdateCount += wordUpdateBatch.size();
+					rowUpdateCount.addAndGet(wordUpdateBatch.size());
 				}
 			}
 
@@ -76,13 +152,11 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 				boolean result = wordDao.insertBatch(wordInsertBatch);
 
 				if (result) {
-					this.rowInsertCount += wordInsertBatch.size();
+					rowInsertCount.addAndGet(wordInsertBatch.size());
 				}
 			}
-		} finally {
-			log.info("Rows updated: " + this.rowUpdateCount);
-			log.info("Rows inserted: " + this.rowInsertCount);
-			log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
+
+			return null;
 		}
 	}
 
@@ -111,19 +185,19 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 		 * not return the results we would expect. Rather than modify our logic
 		 * here to account for this, it is better to fix the data.
 		 */
-		List<Word> words = wordDao.findByWordString(word.getId().getWord());
+		List<Word> wordsFromDatabase = wordDao.findByWordString(word.getId().getWord());
 
-		if (words == null || words.size() == 0) {
+		if (wordsFromDatabase == null || wordsFromDatabase.size() == 0) {
 			log.debug("No frequency matches found in part_of_speech table for word: " + word
 					+ ".  Inserting with a filler value for the part_of_speech column.");
 
 			wordInsertBatch.add(word);
 
-			if (wordInsertBatch.size() >= batchSize) {
-				boolean result = wordDao.insertBatch(wordInsertBatch);
+			if (wordInsertBatch.size() >= this.persistenceBatchSize) {
+				boolean result = this.wordDao.insertBatch(wordInsertBatch);
 
 				if (result) {
-					this.rowInsertCount += wordInsertBatch.size();
+					this.rowInsertCount.addAndGet(wordInsertBatch.size());
 				}
 
 				wordInsertBatch.clear();
@@ -132,7 +206,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			/*
 			 * Loop over the list and update each word with the frequency
 			 */
-			for (Word w : words) {
+			for (Word w : wordsFromDatabase) {
 				/*
 				 * Don't update if the frequency weight from file is the same as
 				 * what's already in the database. It's pointless.
@@ -149,11 +223,11 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			 * many parts of speech it is related to, the batch size may be
 			 * exceeded by a handful, and this is fine.
 			 */
-			if (wordUpdateBatch.size() >= batchSize) {
-				boolean result = wordDao.updateBatch(wordUpdateBatch);
+			if (wordUpdateBatch.size() >= this.persistenceBatchSize) {
+				boolean result = this.wordDao.updateBatch(wordUpdateBatch);
 
 				if (result) {
-					this.rowUpdateCount += wordUpdateBatch.size();
+					this.rowUpdateCount.addAndGet(wordUpdateBatch.size());
 				}
 
 				wordUpdateBatch.clear();
@@ -171,12 +245,12 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	}
 
 	/**
-	 * @param batchSize
-	 *            the batchSize to set
+	 * @param persistenceBatchSize
+	 *            the persistenceBatchSize to set
 	 */
 	@Required
-	public void setBatchSize(int batchSize) {
-		this.batchSize = batchSize;
+	public void setPersistenceBatchSize(int persistenceBatchSize) {
+		this.persistenceBatchSize = persistenceBatchSize;
 	}
 
 	/**
@@ -186,5 +260,23 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	@Required
 	public void setFileParser(FileParser<Word> fileParser) {
 		this.frequencyFileParser = fileParser;
+	}
+
+	/**
+	 * @param concurrencyBatchSize
+	 *            the concurrencyBatchSize to set
+	 */
+	@Required
+	public void setConcurrencyBatchSize(int concurrencyBatchSize) {
+		this.concurrencyBatchSize = concurrencyBatchSize;
+	}
+
+	/**
+	 * @param taskExecutor
+	 *            the taskExecutor to set
+	 */
+	@Required
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 }

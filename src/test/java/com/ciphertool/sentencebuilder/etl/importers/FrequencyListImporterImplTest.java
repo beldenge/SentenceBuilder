@@ -22,10 +22,14 @@ package com.ciphertool.sentencebuilder.etl.importers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -35,8 +39,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.dao.WordDao;
@@ -62,18 +69,18 @@ public class FrequencyListImporterImplTest {
 	}
 
 	@Test
-	public void testSetBatchSize() {
-		int batchSizeToSet = 99;
+	public void testSetPersistenceBatchSize() {
+		int persistenceBatchSizeToSet = 99;
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
-		frequencyListImporterImpl.setBatchSize(batchSizeToSet);
+		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 
-		Field batchSizeField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
-				"batchSize");
-		ReflectionUtils.makeAccessible(batchSizeField);
-		int batchSizeFromObject = (int) ReflectionUtils.getField(batchSizeField,
-				frequencyListImporterImpl);
+		Field persistenceBatchSizeField = ReflectionUtils.findField(
+				FrequencyListImporterImpl.class, "persistenceBatchSize");
+		ReflectionUtils.makeAccessible(persistenceBatchSizeField);
+		int persistenceBatchSizeFromObject = (int) ReflectionUtils.getField(
+				persistenceBatchSizeField, frequencyListImporterImpl);
 
-		assertEquals(batchSizeToSet, batchSizeFromObject);
+		assertEquals(persistenceBatchSizeToSet, persistenceBatchSizeFromObject);
 	}
 
 	@Test
@@ -93,32 +100,72 @@ public class FrequencyListImporterImplTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
-	public void testImportFrequencyList() {
+	public void testSetConcurrencyBatchSize() {
+		int concurrencyBatchSizeToSet = 250;
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
+
+		Field concurrencyBatchSizeField = ReflectionUtils.findField(
+				FrequencyListImporterImpl.class, "concurrencyBatchSize");
+		ReflectionUtils.makeAccessible(concurrencyBatchSizeField);
+		int concurrencyBatchSizeFromObject = (int) ReflectionUtils.getField(
+				concurrencyBatchSizeField, frequencyListImporterImpl);
+
+		assertEquals(concurrencyBatchSizeToSet, concurrencyBatchSizeFromObject);
+	}
+
+	@Test
+	public void testSetTaskExecutor() {
+		TaskExecutor taskExecutorToSet = mock(TaskExecutor.class);
+		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+		frequencyListImporterImpl.setTaskExecutor(taskExecutorToSet);
+
+		Field taskExecutorField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
+				"taskExecutor");
+		ReflectionUtils.makeAccessible(taskExecutorField);
+		TaskExecutor taskExecutorFromObject = (TaskExecutor) ReflectionUtils.getField(
+				taskExecutorField, frequencyListImporterImpl);
+
+		assertEquals(taskExecutorToSet, taskExecutorFromObject);
+	}
+
+	@Test
+	public void testImportFrequencyList() {
+		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
+		taskExecutorSpy.setCorePoolSize(4);
+		taskExecutorSpy.setMaxPoolSize(4);
+		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setKeepAliveSeconds(1);
+		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
+		taskExecutorSpy.initialize();
+
+		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+		frequencyListImporterImpl.setTaskExecutor(taskExecutorSpy);
 
 		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowUpdateCount");
 		ReflectionUtils.makeAccessible(rowUpdateCountField);
-		Integer rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 
 		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowInsertCount");
 		ReflectionUtils.makeAccessible(rowInsertCountField);
-		Integer rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowInsertCountFromObject.intValue());
 
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
-		int batchSizeToSet = 2;
+		int persistenceBatchSizeToSet = 2;
+		int concurrencyBatchSizeToSet = 2;
 
 		frequencyListImporterImpl.setWordDao(wordDaoMock);
-		frequencyListImporterImpl.setBatchSize(batchSizeToSet);
+		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
+		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
 		Word word1 = new Word(new WordId("george", 'N'), 100);
 		Word word2 = new Word(new WordId("belden", 'N'), 200);
@@ -139,17 +186,21 @@ public class FrequencyListImporterImplTest {
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
-		when(wordDaoMock.findByWordString(anyString())).thenReturn(
-				Arrays.asList(wordFromDatabase1), Arrays.asList(wordFromDatabase2), null, null);
+		when(wordDaoMock.findByWordString(eq("george"))).thenReturn(
+				Arrays.asList(wordFromDatabase1));
+		when(wordDaoMock.findByWordString(eq("belden"))).thenReturn(
+				Arrays.asList(wordFromDatabase2));
+		when(wordDaoMock.findByWordString(eq("is"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
 
 		frequencyListImporterImpl.importFrequencyList();
 
 		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
 		assertEquals(200, wordFromDatabase2.getFrequencyWeight());
 
-		rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
 				frequencyListImporterImpl);
-		rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
 				frequencyListImporterImpl);
 
 		assertEquals(2, rowUpdateCountFromObject.intValue());
@@ -157,49 +208,58 @@ public class FrequencyListImporterImplTest {
 		verify(wordDaoMock, times(1)).insertBatch(anyListOf(Word.class));
 		verify(wordDaoMock, times(1)).updateBatch(anyListOf(Word.class));
 		verify(wordDaoMock, times(4)).findByWordString(anyString());
+		verify(taskExecutorSpy, times(2)).execute(any(Runnable.class));
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void testImportFrequencyList_LeftoversFromBatch() {
+		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
+		taskExecutorSpy.setCorePoolSize(4);
+		taskExecutorSpy.setMaxPoolSize(4);
+		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setKeepAliveSeconds(1);
+		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
+		taskExecutorSpy.initialize();
+
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+		frequencyListImporterImpl.setTaskExecutor(taskExecutorSpy);
 
 		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowUpdateCount");
 		ReflectionUtils.makeAccessible(rowUpdateCountField);
-		Integer rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 
 		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowInsertCount");
 		ReflectionUtils.makeAccessible(rowInsertCountField);
-		Integer rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowInsertCountFromObject.intValue());
 
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
-		int batchSizeToSet = 2;
+		int persistenceBatchSizeToSet = 3;
+		int concurrencyBatchSizeToSet = 2;
 
 		frequencyListImporterImpl.setWordDao(wordDaoMock);
-		frequencyListImporterImpl.setBatchSize(batchSizeToSet);
+		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
+		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
 		Word word1 = new Word(new WordId("george", 'N'), 100);
 		Word word2 = new Word(new WordId("belden", 'N'), 200);
 		Word word3 = new Word(new WordId("is", 'V'), 300);
 		Word word4 = new Word(new WordId("super", 'A'), 400);
-		Word word5 = new Word(new WordId("seriously", 'A'), 500);
-		Word word6 = new Word(new WordId("awesome", 'A'), 600);
+		Word word5 = new Word(new WordId("awesome", 'A'), 500);
 		List<Word> wordsToReturn = new ArrayList<Word>();
 		wordsToReturn.add(word1);
 		wordsToReturn.add(word2);
 		wordsToReturn.add(word3);
 		wordsToReturn.add(word4);
 		wordsToReturn.add(word5);
-		wordsToReturn.add(word6);
 		FrequencyFileParser fileParserMock = mock(FrequencyFileParser.class);
 		when(fileParserMock.parseFile()).thenReturn(wordsToReturn);
 
@@ -211,9 +271,16 @@ public class FrequencyListImporterImplTest {
 
 		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
-		when(wordDaoMock.findByWordString(anyString())).thenReturn(
-				Arrays.asList(wordFromDatabase1), Arrays.asList(wordFromDatabase2),
-				Arrays.asList(wordFromDatabase3), null, null, null);
+		when(wordDaoMock.findByWordString(eq("george"))).thenReturn(
+				Arrays.asList(wordFromDatabase1));
+		when(wordDaoMock.findByWordString(eq("belden"))).thenReturn(
+				Arrays.asList(wordFromDatabase2));
+		when(wordDaoMock.findByWordString(eq("is"))).thenReturn(
+
+		Arrays.asList(wordFromDatabase3));
+		when(wordDaoMock.findByWordString(eq("super"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("seriously"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
 
 		frequencyListImporterImpl.importFrequencyList();
 
@@ -221,36 +288,37 @@ public class FrequencyListImporterImplTest {
 		assertEquals(200, wordFromDatabase2.getFrequencyWeight());
 		assertEquals(300, wordFromDatabase3.getFrequencyWeight());
 
-		rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
 				frequencyListImporterImpl);
-		rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
 				frequencyListImporterImpl);
 
 		assertEquals(3, rowUpdateCountFromObject.intValue());
-		assertEquals(3, rowInsertCountFromObject.intValue());
+		assertEquals(2, rowInsertCountFromObject.intValue());
 		verify(wordDaoMock, times(2)).insertBatch(anyListOf(Word.class));
 		verify(wordDaoMock, times(2)).updateBatch(anyListOf(Word.class));
-		verify(wordDaoMock, times(6)).findByWordString(anyString());
+		verify(wordDaoMock, times(5)).findByWordString(anyString());
+		verify(taskExecutorSpy, times(3)).execute(any(Runnable.class));
 	}
 
-	@Test
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testImportWord() {
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
 
 		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowUpdateCount");
 		ReflectionUtils.makeAccessible(rowUpdateCountField);
-		Integer rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 
 		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowInsertCount");
 		ReflectionUtils.makeAccessible(rowInsertCountField);
-		Integer rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowInsertCountFromObject.intValue());
 
@@ -259,7 +327,7 @@ public class FrequencyListImporterImplTest {
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
 
 		frequencyListImporterImpl.setWordDao(wordDaoMock);
-		frequencyListImporterImpl.setBatchSize(2);
+		frequencyListImporterImpl.setPersistenceBatchSize(2);
 
 		List<Word> insertBatch = new ArrayList<Word>();
 		List<Word> updateBatch = new ArrayList<Word>();
@@ -302,9 +370,9 @@ public class FrequencyListImporterImplTest {
 		assertTrue(updateBatch.isEmpty());
 		assertTrue(insertBatch.isEmpty());
 
-		rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
 				frequencyListImporterImpl);
-		rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
 				frequencyListImporterImpl);
 
 		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
@@ -321,16 +389,16 @@ public class FrequencyListImporterImplTest {
 		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowUpdateCount");
 		ReflectionUtils.makeAccessible(rowUpdateCountField);
-		Integer rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 
 		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowInsertCount");
 		ReflectionUtils.makeAccessible(rowInsertCountField);
-		Integer rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowInsertCountFromObject.intValue());
 
@@ -339,16 +407,16 @@ public class FrequencyListImporterImplTest {
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
 
 		frequencyListImporterImpl.setWordDao(wordDaoMock);
-		frequencyListImporterImpl.setBatchSize(2);
+		frequencyListImporterImpl.setPersistenceBatchSize(2);
 
 		List<Word> insertBatch = new ArrayList<Word>();
 		List<Word> updateBatch = new ArrayList<Word>();
 
 		frequencyListImporterImpl.importWord(null, insertBatch, updateBatch);
 
-		rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
 				frequencyListImporterImpl);
-		rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
 				frequencyListImporterImpl);
 
 		assertTrue(updateBatch.isEmpty());
@@ -358,24 +426,24 @@ public class FrequencyListImporterImplTest {
 		verifyZeroInteractions(wordDaoMock);
 	}
 
-	@Test
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testImportWord_BatchSizeNotReached() {
 		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
 
 		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowUpdateCount");
 		ReflectionUtils.makeAccessible(rowUpdateCountField);
-		Integer rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 
 		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
 				"rowInsertCount");
 		ReflectionUtils.makeAccessible(rowInsertCountField);
-		Integer rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
-				frequencyListImporterImpl);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
 
 		assertEquals(0, rowInsertCountFromObject.intValue());
 
@@ -384,7 +452,7 @@ public class FrequencyListImporterImplTest {
 		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
 
 		frequencyListImporterImpl.setWordDao(wordDaoMock);
-		frequencyListImporterImpl.setBatchSize(3);
+		frequencyListImporterImpl.setPersistenceBatchSize(3);
 
 		List<Word> insertBatch = new ArrayList<Word>();
 		List<Word> updateBatch = new ArrayList<Word>();
@@ -427,9 +495,9 @@ public class FrequencyListImporterImplTest {
 		assertEquals(2, updateBatch.size());
 		assertEquals(2, insertBatch.size());
 
-		rowUpdateCountFromObject = (Integer) ReflectionUtils.getField(rowUpdateCountField,
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
 				frequencyListImporterImpl);
-		rowInsertCountFromObject = (Integer) ReflectionUtils.getField(rowInsertCountField,
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
 				frequencyListImporterImpl);
 
 		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
@@ -437,5 +505,165 @@ public class FrequencyListImporterImplTest {
 		assertEquals(0, rowUpdateCountFromObject.intValue());
 		assertEquals(0, rowInsertCountFromObject.intValue());
 		verify(wordDaoMock, times(4)).findByWordString(anyString());
+	}
+
+	@Test
+	public void testBatchWordImportTask() {
+		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+
+		Word word1 = new Word(new WordId("george", 'N'), 100);
+		Word word2 = new Word(new WordId("belden", 'N'), 200);
+		Word word3 = new Word(new WordId("is", 'V'), 300);
+		Word word4 = new Word(new WordId("awesome", 'A'), 400);
+		List<Word> threadBatch = new ArrayList<Word>();
+		threadBatch.add(word1);
+		threadBatch.add(word2);
+		threadBatch.add(word3);
+		threadBatch.add(word4);
+
+		FrequencyListImporterImpl.BatchWordImportTask batchWordImportTask = frequencyListImporterImpl.new BatchWordImportTask(
+				threadBatch);
+
+		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
+				"rowUpdateCount");
+		ReflectionUtils.makeAccessible(rowUpdateCountField);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
+
+		assertEquals(0, rowUpdateCountFromObject.intValue());
+
+		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
+				"rowInsertCount");
+		ReflectionUtils.makeAccessible(rowInsertCountField);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
+
+		assertEquals(0, rowInsertCountFromObject.intValue());
+
+		WordDao wordDaoMock = mock(WordDao.class);
+		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
+		int persistenceBatchSizeToSet = 2;
+		int concurrencyBatchSizeToSet = 2;
+
+		frequencyListImporterImpl.setWordDao(wordDaoMock);
+		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
+		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
+
+		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
+		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+
+		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
+		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
+		when(wordDaoMock.findByWordString(eq("george"))).thenReturn(
+				Arrays.asList(wordFromDatabase1));
+		when(wordDaoMock.findByWordString(eq("belden"))).thenReturn(
+				Arrays.asList(wordFromDatabase2));
+		when(wordDaoMock.findByWordString(eq("is"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
+
+		try {
+			batchWordImportTask.call();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
+		assertEquals(200, wordFromDatabase2.getFrequencyWeight());
+
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
+				frequencyListImporterImpl);
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
+				frequencyListImporterImpl);
+
+		assertEquals(2, rowUpdateCountFromObject.intValue());
+		assertEquals(2, rowInsertCountFromObject.intValue());
+		verify(wordDaoMock, times(1)).insertBatch(anyListOf(Word.class));
+		verify(wordDaoMock, times(1)).updateBatch(anyListOf(Word.class));
+		verify(wordDaoMock, times(4)).findByWordString(anyString());
+	}
+
+	@Test
+	public void testBatchWordImportTask_LeftoversFromBatch() {
+		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+
+		Word word1 = new Word(new WordId("george", 'N'), 100);
+		Word word2 = new Word(new WordId("belden", 'N'), 200);
+		Word word3 = new Word(new WordId("is", 'V'), 300);
+		Word word4 = new Word(new WordId("super", 'A'), 400);
+		Word word5 = new Word(new WordId("seriously", 'A'), 500);
+		Word word6 = new Word(new WordId("awesome", 'A'), 600);
+		List<Word> threadBatch = new ArrayList<Word>();
+		threadBatch.add(word1);
+		threadBatch.add(word2);
+		threadBatch.add(word3);
+		threadBatch.add(word4);
+		threadBatch.add(word5);
+		threadBatch.add(word6);
+
+		FrequencyListImporterImpl.BatchWordImportTask batchWordImportTask = frequencyListImporterImpl.new BatchWordImportTask(
+				threadBatch);
+
+		Field rowUpdateCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
+				"rowUpdateCount");
+		ReflectionUtils.makeAccessible(rowUpdateCountField);
+		AtomicInteger rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowUpdateCountField, frequencyListImporterImpl);
+
+		assertEquals(0, rowUpdateCountFromObject.intValue());
+
+		Field rowInsertCountField = ReflectionUtils.findField(FrequencyListImporterImpl.class,
+				"rowInsertCount");
+		ReflectionUtils.makeAccessible(rowInsertCountField);
+		AtomicInteger rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(
+				rowInsertCountField, frequencyListImporterImpl);
+
+		assertEquals(0, rowInsertCountFromObject.intValue());
+
+		WordDao wordDaoMock = mock(WordDao.class);
+		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
+		int persistenceBatchSizeToSet = 2;
+		int concurrencyBatchSizeToSet = 3;
+
+		frequencyListImporterImpl.setWordDao(wordDaoMock);
+		frequencyListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
+		frequencyListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
+
+		Word wordFromDatabase1 = new Word(new WordId("george", 'N'));
+		Word wordFromDatabase2 = new Word(new WordId("belden", 'N'));
+		Word wordFromDatabase3 = new Word(new WordId("is", 'A'));
+
+		when(wordDaoMock.insertBatch(anyListOf(Word.class))).thenReturn(true);
+		when(wordDaoMock.updateBatch(anyListOf(Word.class))).thenReturn(true);
+		when(wordDaoMock.findByWordString(eq("george"))).thenReturn(
+				Arrays.asList(wordFromDatabase1));
+		when(wordDaoMock.findByWordString(eq("belden"))).thenReturn(
+				Arrays.asList(wordFromDatabase2));
+		when(wordDaoMock.findByWordString(eq("is"))).thenReturn(
+
+		Arrays.asList(wordFromDatabase3));
+		when(wordDaoMock.findByWordString(eq("super"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("seriously"))).thenReturn(null);
+		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
+
+		try {
+			batchWordImportTask.call();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+
+		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
+		assertEquals(200, wordFromDatabase2.getFrequencyWeight());
+		assertEquals(300, wordFromDatabase3.getFrequencyWeight());
+
+		rowUpdateCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowUpdateCountField,
+				frequencyListImporterImpl);
+		rowInsertCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowInsertCountField,
+				frequencyListImporterImpl);
+
+		assertEquals(3, rowUpdateCountFromObject.intValue());
+		assertEquals(3, rowInsertCountFromObject.intValue());
+		verify(wordDaoMock, times(2)).insertBatch(anyListOf(Word.class));
+		verify(wordDaoMock, times(2)).updateBatch(anyListOf(Word.class));
+		verify(wordDaoMock, times(6)).findByWordString(anyString());
 	}
 }
