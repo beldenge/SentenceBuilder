@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License along with Sen
 	<groupId>com.ciphertool.sentencebuilder</groupId>
 	<artifactId>SentenceBuilder</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.0</version>
+	<version>1.1.0</version>
 	<name>SentenceBuilder</name>
 	<url>http://www.ciphertool.com</url>
 	<properties>
