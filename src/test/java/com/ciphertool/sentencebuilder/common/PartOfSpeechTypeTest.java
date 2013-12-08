@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class PartOfSpeechTest {
+public class PartOfSpeechTypeTest {
 	@Test
 	public void testGetSymbol() {
 		assertEquals('N', PartOfSpeechType.NOUN.getSymbol());
