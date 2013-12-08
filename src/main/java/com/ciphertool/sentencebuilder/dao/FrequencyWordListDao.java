@@ -22,9 +22,13 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class FrequencyWordListDao implements WordListDao {
+	private static Logger log = Logger.getLogger(FrequencyWordListDao.class);
+
 	private List<Word> wordList = new ArrayList<Word>();
 
 	/**
@@ -40,7 +44,14 @@ public class FrequencyWordListDao implements WordListDao {
 					"Error constructing FrequencyWordListDao.  WordDao cannot be null.");
 		}
 
+		log.info("Beginning fetching of words from database.");
+
+		long start = System.currentTimeMillis();
+
 		wordList.addAll(wordDao.findAllUniqueWords());
+
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
+				+ "ms.");
 
 		List<Word> wordsToAdd = new ArrayList<Word>();
 

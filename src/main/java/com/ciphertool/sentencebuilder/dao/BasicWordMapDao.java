@@ -25,12 +25,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class BasicWordMapDao implements WordMapDao {
+	private static Logger log = Logger.getLogger(BasicWordMapDao.class);
 
 	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 	private Map<Integer, ArrayList<Word>> lengthWordMap = new HashMap<Integer, ArrayList<Word>>();
@@ -49,7 +51,15 @@ public class BasicWordMapDao implements WordMapDao {
 		}
 
 		ArrayList<Word> allWords = new ArrayList<Word>();
+
+		log.info("Beginning fetching of words from database.");
+
+		long start = System.currentTimeMillis();
+
 		allWords.addAll(wordDao.findAll());
+
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
+				+ "ms.");
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 

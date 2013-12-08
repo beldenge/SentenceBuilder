@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
@@ -38,6 +39,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
  * @author George Belden
  */
 public class IndexedWordMapDao implements WordMapDao {
+	private static Logger log = Logger.getLogger(IndexedWordMapDao.class);
 
 	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap;
 	private Map<Integer, ArrayList<Word>> lengthWordMap;
@@ -58,7 +60,15 @@ public class IndexedWordMapDao implements WordMapDao {
 		}
 
 		ArrayList<Word> allWords = new ArrayList<Word>();
+
+		log.info("Beginning fetching of words from database.");
+
+		long start = System.currentTimeMillis();
+
 		allWords.addAll(wordDao.findAll());
+
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
+				+ "ms.");
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 
