@@ -173,8 +173,8 @@ public class IndexedWordMapDao implements WordMapDao {
 	 * Add the word to the map by reference a number of times equal to the
 	 * frequency value
 	 * 
-	 * TODO: We can probably reduce memory utilization even more if we combine
-	 * the words into one ArrayList not separated by PartOfSpeech, and then only
+	 * We can probably reduce memory utilization even more if we combine the
+	 * words into one ArrayList not separated by PartOfSpeech, and then only
 	 * separate the index HashMap by parts of speech
 	 * 
 	 * @param byPartOfSpeech
@@ -235,8 +235,8 @@ public class IndexedWordMapDao implements WordMapDao {
 	 * Add the word to the map by reference a number of times equal to the
 	 * frequency value
 	 * 
-	 * TODO: We can probably reduce memory utilization even more if we combine
-	 * the words into one ArrayList not separated by Word length, and then only
+	 * We can probably reduce memory utilization even more if we combine the
+	 * words into one ArrayList not separated by Word length, and then only
 	 * separate the index HashMap by length
 	 * 
 	 * @param byLength
