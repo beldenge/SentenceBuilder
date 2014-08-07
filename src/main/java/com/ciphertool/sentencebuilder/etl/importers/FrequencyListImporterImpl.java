@@ -72,7 +72,12 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 					int originalSize = threadedWordBatch.size();
 
 					for (int i = 0; i < originalSize; i++) {
-						nextThreadedWordBatch.add(threadedWordBatch.remove(0));
+						/*
+						 * It's faster to remove from the end of the List
+						 * because no elements need to shift
+						 */
+						nextThreadedWordBatch.add(threadedWordBatch
+								.remove(threadedWordBatch.size() - 1));
 					}
 
 					futureTask = new FutureTask<Void>(
