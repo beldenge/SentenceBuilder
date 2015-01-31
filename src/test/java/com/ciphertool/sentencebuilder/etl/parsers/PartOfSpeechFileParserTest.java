@@ -58,7 +58,7 @@ public class PartOfSpeechFileParserTest {
 
 	@Test
 	public void testParseFile() {
-		String filePath = "src\\test\\data\\part-of-speech.txt";
+		String filePath = "src/test/data/part-of-speech.txt";
 
 		PartOfSpeechFileParser partOfSpeechFileParser = new PartOfSpeechFileParser();
 		partOfSpeechFileParser.setFileName(filePath);

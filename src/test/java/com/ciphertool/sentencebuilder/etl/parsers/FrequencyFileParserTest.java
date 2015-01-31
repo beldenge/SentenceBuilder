@@ -59,7 +59,7 @@ public class FrequencyFileParserTest {
 
 	@Test
 	public void testParseFile() {
-		String filePath = "src\\test\\data\\frequency.txt";
+		String filePath = "src/test/data/frequency.txt";
 
 		FrequencyFileParser frequencyFileParser = new FrequencyFileParser();
 		frequencyFileParser.setFileName(filePath);
