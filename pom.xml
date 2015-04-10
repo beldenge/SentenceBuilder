@@ -20,8 +20,8 @@ You should have received a copy of the GNU General Public License along with Sen
 	<name>SentenceBuilder</name>
 	<url>http://www.ciphertool.com</url>
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	
 	<build>
