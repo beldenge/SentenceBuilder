@@ -20,6 +20,7 @@
 package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -39,8 +40,7 @@ public class UniqueWordListDao implements WordListDao {
 	 */
 	public UniqueWordListDao(WordDao wordDao) {
 		if (wordDao == null) {
-			throw new IllegalArgumentException(
-					"Error constructing UniqueWordListDao.  WordDao cannot be null.");
+			throw new IllegalArgumentException("Error constructing UniqueWordListDao.  WordDao cannot be null.");
 		}
 
 		log.info("Beginning fetching of words from database.");
@@ -49,8 +49,20 @@ public class UniqueWordListDao implements WordListDao {
 
 		wordList.addAll(wordDao.findAllUniqueWords());
 
-		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
-				+ "ms.");
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
+
+		wordList.sort(new Comparator<Word>() {
+			@Override
+			public int compare(Word word1, Word word2) {
+				if (word1.getFrequencyWeight() < word2.getFrequencyWeight()) {
+					return 1;
+				} else if (word1.getFrequencyWeight() > word2.getFrequencyWeight()) {
+					return -1;
+				}
+
+				return 0;
+			}
+		});
 	}
 
 	@Override
@@ -58,5 +70,9 @@ public class UniqueWordListDao implements WordListDao {
 		int randomIndex = (int) (Math.random() * wordList.size());
 
 		return wordList.get(randomIndex);
+	}
+
+	public List<Word> getTopWords(int top) {
+		return wordList.subList(0, top);
 	}
 }
