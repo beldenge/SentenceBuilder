@@ -22,6 +22,7 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 
@@ -67,7 +68,7 @@ public class UniqueWordListDao implements WordListDao {
 
 	@Override
 	public Word findRandomWord() {
-		int randomIndex = (int) (Math.random() * wordList.size());
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * wordList.size());
 
 		return wordList.get(randomIndex);
 	}

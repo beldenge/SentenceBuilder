@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,7 @@ public class BasicWordMapDao implements WordMapDao {
 	@Autowired
 	public BasicWordMapDao(WordDao wordDao) {
 		if (wordDao == null) {
-			throw new IllegalArgumentException(
-					"Error constructing BasicWordMapDao.  WordDao cannot be null.");
+			throw new IllegalArgumentException("Error constructing BasicWordMapDao.  WordDao cannot be null.");
 		}
 
 		ArrayList<Word> allWords = new ArrayList<Word>();
@@ -58,8 +58,7 @@ public class BasicWordMapDao implements WordMapDao {
 
 		allWords.addAll(wordDao.findAll());
 
-		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
-				+ "ms.");
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 
@@ -70,7 +69,7 @@ public class BasicWordMapDao implements WordMapDao {
 	public Word findRandomWordByPartOfSpeech(PartOfSpeechType pos) {
 		ArrayList<Word> wordList = partOfSpeechWordMap.get(pos);
 
-		int randomIndex = (int) (Math.random() * wordList.size());
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * wordList.size());
 
 		return wordList.get(randomIndex);
 	}
@@ -79,7 +78,7 @@ public class BasicWordMapDao implements WordMapDao {
 	public Word findRandomWordByLength(Integer length) {
 		ArrayList<Word> wordList = lengthWordMap.get(length);
 
-		int randomIndex = (int) (Math.random() * wordList.size());
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * wordList.size());
 
 		return wordList.get(randomIndex);
 	}
@@ -89,8 +88,7 @@ public class BasicWordMapDao implements WordMapDao {
 	 *            the List of all Words pulled in from the constructor
 	 * @return a Map of all Words keyed by their PartOfSpeech
 	 */
-	protected static HashMap<PartOfSpeechType, ArrayList<Word>> mapByPartOfSpeech(
-			List<Word> allWords) {
+	protected static HashMap<PartOfSpeechType, ArrayList<Word>> mapByPartOfSpeech(List<Word> allWords) {
 		if (allWords == null || allWords.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Error mapping Words by PartOfSpeech.  The supplied List of Words cannot be null or empty.");
@@ -106,8 +104,7 @@ public class BasicWordMapDao implements WordMapDao {
 			}
 
 			/*
-			 * Add the word to the map by reference a number of times equal to
-			 * the frequency value
+			 * Add the word to the map by reference a number of times equal to the frequency value
 			 */
 			for (int i = 0; i < w.getFrequencyWeight(); i++) {
 				byPartOfSpeech.get(pos).add(w);
@@ -138,8 +135,7 @@ public class BasicWordMapDao implements WordMapDao {
 			}
 
 			/*
-			 * Add the word to the map by reference a number of times equal to
-			 * the frequency value
+			 * Add the word to the map by reference a number of times equal to the frequency value
 			 */
 			for (int i = 0; i < w.getFrequencyWeight(); i++) {
 				byWordLength.get(length).add(w);

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,8 @@ import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 /**
- * This is a lower memory utilization implementation of WordMapDao. It builds an
- * index map using int, which is 32-bit, instead of the 64-bit reference needed
- * to hold each Object reference.
+ * This is a lower memory utilization implementation of WordMapDao. It builds an index map using int, which is 32-bit,
+ * instead of the 64-bit reference needed to hold each Object reference.
  * 
  * @author George Belden
  */
@@ -55,8 +55,7 @@ public class IndexedWordMapDao implements WordMapDao {
 	@Autowired
 	public IndexedWordMapDao(WordDao wordDao) {
 		if (wordDao == null) {
-			throw new IllegalArgumentException(
-					"Error constructing IndexedWordMapDao.  WordDao cannot be null.");
+			throw new IllegalArgumentException("Error constructing IndexedWordMapDao.  WordDao cannot be null.");
 		}
 
 		ArrayList<Word> allWords = new ArrayList<Word>();
@@ -67,8 +66,7 @@ public class IndexedWordMapDao implements WordMapDao {
 
 		allWords.addAll(wordDao.findAll());
 
-		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
-				+ "ms.");
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
 
 		partOfSpeechWordMap = mapByPartOfSpeech(allWords);
 
@@ -84,11 +82,10 @@ public class IndexedWordMapDao implements WordMapDao {
 		int[] indexList = partOfSpeechFrequencyMap.get(pos);
 
 		/*
-		 * This returns a pseudorandom number which is bounded by the
-		 * ArrayList's size - 1, which is perfect since the elements are
-		 * zero-indexed
+		 * This returns a pseudorandom number which is bounded by the ArrayList's size - 1, which is perfect since the
+		 * elements are zero-indexed
 		 */
-		int randomIndex = (int) (Math.random() * indexList.length);
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * indexList.length);
 
 		int selectedIndex = indexList[randomIndex];
 
@@ -102,11 +99,10 @@ public class IndexedWordMapDao implements WordMapDao {
 		int[] indexList = lengthFrequencyMap.get(length);
 
 		/*
-		 * This returns a pseudorandom number which is bounded by the
-		 * ArrayList's size - 1, which is perfect since the elements are
-		 * zero-indexed
+		 * This returns a pseudorandom number which is bounded by the ArrayList's size - 1, which is perfect since the
+		 * elements are zero-indexed
 		 */
-		int randomIndex = (int) (Math.random() * indexList.length);
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * indexList.length);
 
 		int selectedIndex = indexList[randomIndex];
 
@@ -170,12 +166,10 @@ public class IndexedWordMapDao implements WordMapDao {
 	}
 
 	/**
-	 * Add the word to the map by reference a number of times equal to the
-	 * frequency value
+	 * Add the word to the map by reference a number of times equal to the frequency value
 	 * 
-	 * We can probably reduce memory utilization even more if we combine the
-	 * words into one ArrayList not separated by PartOfSpeech, and then only
-	 * separate the index HashMap by parts of speech
+	 * We can probably reduce memory utilization even more if we combine the words into one ArrayList not separated by
+	 * PartOfSpeech, and then only separate the index HashMap by parts of speech
 	 * 
 	 * @param byPartOfSpeech
 	 *            the Map of Words keyed by PartOfSpeech
@@ -193,8 +187,7 @@ public class IndexedWordMapDao implements WordMapDao {
 		int frequencySum;
 
 		/*
-		 * Loop through each PartOfSpeech, add up the frequency weights, and
-		 * create an int array of the resulting length
+		 * Loop through each PartOfSpeech, add up the frequency weights, and create an int array of the resulting length
 		 */
 		for (Map.Entry<PartOfSpeechType, ArrayList<Word>> pos : byPartOfSpeech.entrySet()) {
 			frequencySum = 0;
@@ -210,11 +203,10 @@ public class IndexedWordMapDao implements WordMapDao {
 		int wordIndex;
 
 		/*
-		 * Loop through each PartOfSpeech and Word, and add the index to the
-		 * frequencyMap a number of times equal to the word's frequency weight
+		 * Loop through each PartOfSpeech and Word, and add the index to the frequencyMap a number of times equal to the
+		 * word's frequency weight
 		 */
-		for (Map.Entry<PartOfSpeechType, ArrayList<Word>> partOfSpeechEntry : byPartOfSpeech
-				.entrySet()) {
+		for (Map.Entry<PartOfSpeechType, ArrayList<Word>> partOfSpeechEntry : byPartOfSpeech.entrySet()) {
 			frequencyIndex = 0;
 			wordIndex = 0;
 
@@ -232,19 +224,16 @@ public class IndexedWordMapDao implements WordMapDao {
 	}
 
 	/**
-	 * Add the word to the map by reference a number of times equal to the
-	 * frequency value
+	 * Add the word to the map by reference a number of times equal to the frequency value
 	 * 
-	 * We can probably reduce memory utilization even more if we combine the
-	 * words into one ArrayList not separated by Word length, and then only
-	 * separate the index HashMap by length
+	 * We can probably reduce memory utilization even more if we combine the words into one ArrayList not separated by
+	 * Word length, and then only separate the index HashMap by length
 	 * 
 	 * @param byLength
 	 *            the Map of Words keyed by length
 	 * @return the index Map keyed by length
 	 */
-	protected static Map<Integer, int[]> buildIndexedFrequencyMapByLength(
-			Map<Integer, ArrayList<Word>> byLength) {
+	protected static Map<Integer, int[]> buildIndexedFrequencyMapByLength(Map<Integer, ArrayList<Word>> byLength) {
 		if (byLength == null || byLength.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Error indexing Word length map.  The supplied Map of Words cannot be null or empty.");
@@ -255,8 +244,7 @@ public class IndexedWordMapDao implements WordMapDao {
 		int frequencySum;
 
 		/*
-		 * Loop through each Word length, add up the frequency weights, and
-		 * create an int array of the resulting length
+		 * Loop through each Word length, add up the frequency weights, and create an int array of the resulting length
 		 */
 		for (Map.Entry<Integer, ArrayList<Word>> length : byLength.entrySet()) {
 			frequencySum = 0;
@@ -272,8 +260,8 @@ public class IndexedWordMapDao implements WordMapDao {
 		int wordIndex;
 
 		/*
-		 * Loop through each length and word, and add the index to the
-		 * frequencyMap a number of times equal to the word's frequency weight
+		 * Loop through each length and word, and add the index to the frequencyMap a number of times equal to the
+		 * word's frequency weight
 		 */
 		for (Map.Entry<Integer, ArrayList<Word>> lengthEntry : byLength.entrySet()) {
 			frequencyIndex = 0;

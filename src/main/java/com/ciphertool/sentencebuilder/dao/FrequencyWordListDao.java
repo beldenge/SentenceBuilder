@@ -21,6 +21,7 @@ package com.ciphertool.sentencebuilder.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 
@@ -32,16 +33,14 @@ public class FrequencyWordListDao implements WordListDao {
 	private List<Word> wordList = new ArrayList<Word>();
 
 	/**
-	 * Constructor requiring a WordDao dependency as its only argument. Stacks
-	 * the List based on Word frequency.
+	 * Constructor requiring a WordDao dependency as its only argument. Stacks the List based on Word frequency.
 	 * 
 	 * @param wordDao
 	 *            the WordDao to use for populating the internal List
 	 */
 	public FrequencyWordListDao(WordDao wordDao) {
 		if (wordDao == null) {
-			throw new IllegalArgumentException(
-					"Error constructing FrequencyWordListDao.  WordDao cannot be null.");
+			throw new IllegalArgumentException("Error constructing FrequencyWordListDao.  WordDao cannot be null.");
 		}
 
 		log.info("Beginning fetching of words from database.");
@@ -50,15 +49,14 @@ public class FrequencyWordListDao implements WordListDao {
 
 		wordList.addAll(wordDao.findAllUniqueWords());
 
-		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start)
-				+ "ms.");
+		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
 
 		List<Word> wordsToAdd = new ArrayList<Word>();
 
 		for (Word w : this.wordList) {
 			/*
-			 * Add the word to the map by reference a number of times equal to
-			 * the frequency value - 1 since it already exists in the list once.
+			 * Add the word to the map by reference a number of times equal to the frequency value - 1 since it already
+			 * exists in the list once.
 			 */
 			for (int i = 0; i < w.getFrequencyWeight() - 1; i++) {
 				wordsToAdd.add(w);
@@ -70,7 +68,7 @@ public class FrequencyWordListDao implements WordListDao {
 
 	@Override
 	public Word findRandomWord() {
-		int randomIndex = (int) (Math.random() * wordList.size());
+		int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * wordList.size());
 
 		return wordList.get(randomIndex);
 	}
