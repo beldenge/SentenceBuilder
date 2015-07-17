@@ -50,8 +50,7 @@ public class PartOfSpeechFileParserTest {
 
 		Field fileNameField = ReflectionUtils.findField(PartOfSpeechFileParser.class, "fileName");
 		ReflectionUtils.makeAccessible(fileNameField);
-		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField,
-				partOfSpeechFileParser);
+		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField, partOfSpeechFileParser);
 
 		assertSame(fileNameToSet, fileNameFromObject);
 	}

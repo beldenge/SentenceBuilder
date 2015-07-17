@@ -51,8 +51,7 @@ public class FrequencyFileParserTest {
 
 		Field fileNameField = ReflectionUtils.findField(FrequencyFileParser.class, "fileName");
 		ReflectionUtils.makeAccessible(fileNameField);
-		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField,
-				frequencyFileParser);
+		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField, frequencyFileParser);
 
 		assertSame(fileNameToSet, fileNameFromObject);
 	}

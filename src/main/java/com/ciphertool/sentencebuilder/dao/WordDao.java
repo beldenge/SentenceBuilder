@@ -40,8 +40,7 @@ public class WordDao {
 	private static final String wordParameter = "word";
 
 	/**
-	 * Returns a list of all Words, so words will be duplicated if they have
-	 * multiple parts of speech.
+	 * Returns a list of all Words, so words will be duplicated if they have multiple parts of speech.
 	 */
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findAll() {
@@ -82,9 +81,8 @@ public class WordDao {
 
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery(
-				"from Word where word = " + separator + wordParameter).setParameter(wordParameter,
-				word).list();
+		List<Word> words = (List<Word>) session.createQuery("from Word where word = " + separator + wordParameter)
+				.setParameter(wordParameter, word).list();
 
 		return words;
 	}

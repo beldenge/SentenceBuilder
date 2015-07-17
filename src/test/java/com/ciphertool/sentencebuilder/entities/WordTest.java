@@ -101,8 +101,7 @@ public class WordTest {
 		wordWithDifferentFrequencyWeight.setId(baseWordId);
 		wordWithDifferentFrequencyWeight.setFrequencyWeight(baseFrequencyWeight);
 		/*
-		 * Even if the frequency weight is different, the Words should evaluate
-		 * as equal
+		 * Even if the frequency weight is different, the Words should evaluate as equal
 		 */
 		assertEquals(base, wordWithDifferentFrequencyWeight);
 

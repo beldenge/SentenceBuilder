@@ -53,9 +53,7 @@ public class FrequencyFileParser implements FileParser<Word> {
 		try {
 			input = new BufferedReader(new FileReader(fileName));
 		} catch (FileNotFoundException fnfe) {
-			log.error(
-					"File: " + fileName + " not found.  Returning as there is nothing to import.",
-					fnfe);
+			log.error("File: " + fileName + " not found.  Returning as there is nothing to import.", fnfe);
 
 			return wordsFromFile;
 		}
@@ -68,8 +66,7 @@ public class FrequencyFileParser implements FileParser<Word> {
 			String nextLine = input.readLine();
 
 			/*
-			 * Skip to the second record because the first record contains
-			 * column names
+			 * Skip to the second record because the first record contains column names
 			 */
 			nextLine = input.readLine();
 

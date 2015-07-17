@@ -70,29 +70,24 @@ public class WordListImporterImpl implements WordListImporter {
 
 					for (int i = 0; i < originalSize; i++) {
 						/*
-						 * It's faster to remove from the end of the List
-						 * because no elements need to shift
+						 * It's faster to remove from the end of the List because no elements need to shift
 						 */
-						nextThreadedWordBatch.add(threadedWordBatch
-								.remove(threadedWordBatch.size() - 1));
+						nextThreadedWordBatch.add(threadedWordBatch.remove(threadedWordBatch.size() - 1));
 					}
 
-					futureTask = new FutureTask<Void>(
-							new BatchWordImportTask(nextThreadedWordBatch));
+					futureTask = new FutureTask<Void>(new BatchWordImportTask(nextThreadedWordBatch));
 					futureTasks.add(futureTask);
 					this.taskExecutor.execute(futureTask);
 				}
 			}
 
 			/*
-			 * Start one last task if there are any leftover Words from file
-			 * that did not reach the batch size.
+			 * Start one last task if there are any leftover Words from file that did not reach the batch size.
 			 */
 			if (threadedWordBatch.size() > 0) {
 				/*
-				 * It's safe to use the threadedWordBatch now, instead of
-				 * copying into a temporaryList, because this is the last thread
-				 * to run.
+				 * It's safe to use the threadedWordBatch now, instead of copying into a temporaryList, because this is
+				 * the last thread to run.
 				 */
 				futureTask = new FutureTask<Void>(new BatchWordImportTask(threadedWordBatch));
 				futureTasks.add(futureTask);
@@ -103,11 +98,9 @@ public class WordListImporterImpl implements WordListImporter {
 				try {
 					future.get();
 				} catch (InterruptedException ie) {
-					log.error("Caught InterruptedException while waiting for BatchWordImportTask ",
-							ie);
+					log.error("Caught InterruptedException while waiting for BatchWordImportTask ", ie);
 				} catch (ExecutionException ee) {
-					log.error("Caught ExecutionException while waiting for BatchWordImportTask ",
-							ee);
+					log.error("Caught ExecutionException while waiting for BatchWordImportTask ", ee);
 				}
 			}
 		} finally {
@@ -117,8 +110,7 @@ public class WordListImporterImpl implements WordListImporter {
 	}
 
 	/**
-	 * A concurrent task for performing a crossover of two parent Chromosomes,
-	 * producing one child Chromosome.
+	 * A concurrent task for performing a crossover of two parent Chromosomes, producing one child Chromosome.
 	 */
 	protected class BatchWordImportTask implements Callable<Void> {
 
@@ -137,8 +129,7 @@ public class WordListImporterImpl implements WordListImporter {
 			}
 
 			/*
-			 * Insert one last batch if there are any leftover Words that did
-			 * not reach the batch size.
+			 * Insert one last batch if there are any leftover Words that did not reach the batch size.
 			 */
 			if (wordBatch.size() > 0) {
 				boolean result = wordDao.insertBatch(wordBatch);
@@ -153,8 +144,7 @@ public class WordListImporterImpl implements WordListImporter {
 	}
 
 	/**
-	 * Imports a Word, only calling down to the persistence layer once the batch
-	 * size is reached.
+	 * Imports a Word, only calling down to the persistence layer once the batch size is reached.
 	 * 
 	 * @param word
 	 *            the Word to import
@@ -170,9 +160,8 @@ public class WordListImporterImpl implements WordListImporter {
 		wordBatch.add(word);
 
 		/*
-		 * Since the above loop adds a word several times depending on how many
-		 * parts of speech it is related to, the batch size may be exceeded by a
-		 * handful, and this is fine.
+		 * Since the above loop adds a word several times depending on how many parts of speech it is related to, the
+		 * batch size may be exceeded by a handful, and this is fine.
 		 */
 		if (wordBatch.size() >= this.persistenceBatchSize) {
 			boolean result = this.wordDao.insertBatch(wordBatch);

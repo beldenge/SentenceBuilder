@@ -39,7 +39,6 @@ public class HappyWordFilterTest {
 		/*
 		 * Not much to test here -- this filter should return true for any Word.
 		 */
-		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist",
-				PartOfSpeechType.NONE))));
+		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist", PartOfSpeechType.NONE))));
 	}
 }

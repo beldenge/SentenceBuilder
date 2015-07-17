@@ -65,8 +65,7 @@ public class UniqueWordListDaoTest {
 
 		Field wordListField = ReflectionUtils.findField(UniqueWordListDao.class, "wordList");
 		ReflectionUtils.makeAccessible(wordListField);
-		List<Word> wordListFromObject = (List<Word>) ReflectionUtils.getField(wordListField,
-				uniqueWordListDao);
+		List<Word> wordListFromObject = (List<Word>) ReflectionUtils.getField(wordListField, uniqueWordListDao);
 
 		assertEquals(3, wordListFromObject.size());
 		assertTrue(wordListFromObject.containsAll(wordsToReturn));

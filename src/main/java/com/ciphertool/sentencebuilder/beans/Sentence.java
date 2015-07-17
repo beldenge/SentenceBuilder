@@ -63,8 +63,7 @@ public class Sentence {
 			if (first) {
 				// Make first word in proper case
 				String firstWord = w.getId().getWord();
-				sb.append(firstWord.substring(0, 1).toUpperCase()
-						+ firstWord.substring(1, firstWord.length()));
+				sb.append(firstWord.substring(0, 1).toUpperCase() + firstWord.substring(1, firstWord.length()));
 				first = false;
 			} else {
 				sb.append(" ");

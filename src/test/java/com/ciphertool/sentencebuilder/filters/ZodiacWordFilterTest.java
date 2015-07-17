@@ -36,8 +36,7 @@ public class ZodiacWordFilterTest {
 		assertFalse(zodiacWordFilter.filter(null));
 		assertFalse(zodiacWordFilter.filter(new Word()));
 
-		assertTrue(zodiacWordFilter.filter(new Word(new WordId("arbitraryWord",
-				PartOfSpeechType.NONE))));
+		assertTrue(zodiacWordFilter.filter(new Word(new WordId("arbitraryWord", PartOfSpeechType.NONE))));
 
 		assertFalse(zodiacWordFilter.filter(new Word(new WordId("ON", PartOfSpeechType.NOUN))));
 		assertFalse(zodiacWordFilter.filter(new Word(new WordId("ll", PartOfSpeechType.ADJECTIVE))));

@@ -57,8 +57,7 @@ public class SentenceHelper {
 	}
 
 	/**
-	 * Generates a random context-free grammar production tree and then fills in
-	 * the terminals with words from database.
+	 * Generates a random context-free grammar production tree and then fills in the terminals with words from database.
 	 * 
 	 * @return the generated Sentence
 	 */
@@ -91,16 +90,14 @@ public class SentenceHelper {
 	}
 
 	/**
-	 * Fills in terminal symbols with random words from database based on the
-	 * part of speech. The terminal symbols are case-sensitive when matching to
-	 * the PartOfSpeech enum.
+	 * Fills in terminal symbols with random words from database based on the part of speech. The terminal symbols are
+	 * case-sensitive when matching to the PartOfSpeech enum.
 	 * 
 	 * @param sentenceTree
 	 * @return
 	 */
 	public Sentence makeSentenceFromTree(Tree<ProductionType> sentenceTree) {
-		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree
-				.toList();
+		ArrayList<Node<ProductionType>> sentenceList = (ArrayList<Node<ProductionType>>) sentenceTree.toList();
 
 		Sentence sentence = new Sentence();
 		PartOfSpeechType pos = null;

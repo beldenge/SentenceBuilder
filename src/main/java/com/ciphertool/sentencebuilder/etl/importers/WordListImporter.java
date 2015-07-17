@@ -19,11 +19,10 @@
 
 package com.ciphertool.sentencebuilder.etl.importers;
 
-
 public interface WordListImporter {
 	/**
-	 * Imports a List of Words from some source (likely a text file) into some
-	 * destination (likely a relational datastore).
+	 * Imports a List of Words from some source (likely a text file) into some destination (likely a relational
+	 * datastore).
 	 */
 	public void importWordList();
 }

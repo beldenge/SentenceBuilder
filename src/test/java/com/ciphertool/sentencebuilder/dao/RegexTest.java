@@ -32,9 +32,8 @@ public class RegexTest {
 	private static Logger log = Logger.getLogger(WordDaoTest.class);
 
 	/**
-	 * This is a test for a potential future WordMapDao or WordListDao
-	 * implementation which would select words based on a specified regular
-	 * expression.
+	 * This is a test for a potential future WordMapDao or WordListDao implementation which would select words based on
+	 * a specified regular expression.
 	 */
 	@Test
 	public void testRegex() {
@@ -44,9 +43,8 @@ public class RegexTest {
 		String badWord3 = "tetto";
 		String badWord4 = "teete";
 		/*
-		 * We want the second letter to be different from the first letter, the
-		 * third letter to match the second letter, the fourth letter to match
-		 * the first letter, and the last letter to not match any other letters.
+		 * We want the second letter to be different from the first letter, the third letter to match the second letter,
+		 * the fourth letter to match the first letter, and the last letter to not match any other letters.
 		 */
 		String regex = "([a-z])(?!\\1)([a-z])\\2\\1(?!(\\1|\\2))[a-z]";
 		log.info("Regex: " + regex);

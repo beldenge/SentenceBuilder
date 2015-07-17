@@ -73,29 +73,24 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 
 					for (int i = 0; i < originalSize; i++) {
 						/*
-						 * It's faster to remove from the end of the List
-						 * because no elements need to shift
+						 * It's faster to remove from the end of the List because no elements need to shift
 						 */
-						nextThreadedWordBatch.add(threadedWordBatch
-								.remove(threadedWordBatch.size() - 1));
+						nextThreadedWordBatch.add(threadedWordBatch.remove(threadedWordBatch.size() - 1));
 					}
 
-					futureTask = new FutureTask<Void>(
-							new BatchWordImportTask(nextThreadedWordBatch));
+					futureTask = new FutureTask<Void>(new BatchWordImportTask(nextThreadedWordBatch));
 					futureTasks.add(futureTask);
 					this.taskExecutor.execute(futureTask);
 				}
 			}
 
 			/*
-			 * Start one last task if there are any leftover Words from file
-			 * that did not reach the batch size.
+			 * Start one last task if there are any leftover Words from file that did not reach the batch size.
 			 */
 			if (threadedWordBatch.size() > 0) {
 				/*
-				 * It's safe to use the threadedWordBatch now, instead of
-				 * copying into a temporaryList, because this is the last thread
-				 * to run.
+				 * It's safe to use the threadedWordBatch now, instead of copying into a temporaryList, because this is
+				 * the last thread to run.
 				 */
 				futureTask = new FutureTask<Void>(new BatchWordImportTask(threadedWordBatch));
 				futureTasks.add(futureTask);
@@ -106,11 +101,9 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 				try {
 					future.get();
 				} catch (InterruptedException ie) {
-					log.error("Caught InterruptedException while waiting for BatchWordImportTask ",
-							ie);
+					log.error("Caught InterruptedException while waiting for BatchWordImportTask ", ie);
 				} catch (ExecutionException ee) {
-					log.error("Caught ExecutionException while waiting for BatchWordImportTask ",
-							ee);
+					log.error("Caught ExecutionException while waiting for BatchWordImportTask ", ee);
 				}
 			}
 		} finally {
@@ -121,8 +114,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	}
 
 	/**
-	 * A concurrent task for performing a crossover of two parent Chromosomes,
-	 * producing one child Chromosome.
+	 * A concurrent task for performing a crossover of two parent Chromosomes, producing one child Chromosome.
 	 */
 	protected class BatchWordImportTask implements Callable<Void> {
 
@@ -142,8 +134,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			}
 
 			/*
-			 * Do updates and inserts if the batch size wasn't reached before
-			 * the end of the loop
+			 * Do updates and inserts if the batch size wasn't reached before the end of the loop
 			 */
 			if (wordUpdateBatch.size() > 0) {
 				boolean result = wordDao.updateBatch(wordUpdateBatch);
@@ -166,18 +157,15 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	}
 
 	/**
-	 * Imports a Word, either adding it or updating it depending whether it
-	 * already exists in the datastore or not. It should only call down to the
-	 * persistence layer once the batch size is reached.
+	 * Imports a Word, either adding it or updating it depending whether it already exists in the datastore or not. It
+	 * should only call down to the persistence layer once the batch size is reached.
 	 * 
 	 * @param word
 	 *            the next line to import
 	 * @param wordInsertBatch
-	 *            the batch of Words to insert, maintained across loop
-	 *            iterations
+	 *            the batch of Words to insert, maintained across loop iterations
 	 * @param wordUpdateBatch
-	 *            the batch of Words to update, maintained across loop
-	 *            iterations
+	 *            the batch of Words to update, maintained across loop iterations
 	 */
 	protected void importWord(Word word, List<Word> wordInsertBatch, List<Word> wordUpdateBatch) {
 		if (word == null) {
@@ -186,9 +174,8 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 		}
 
 		/*
-		 * Unfortunately the frequency data has mixed case, so this query may
-		 * not return the results we would expect. Rather than modify our logic
-		 * here to account for this, it is better to fix the data.
+		 * Unfortunately the frequency data has mixed case, so this query may not return the results we would expect.
+		 * Rather than modify our logic here to account for this, it is better to fix the data.
 		 */
 		List<Word> wordsFromDatabase = wordDao.findByWordString(word.getId().getWord());
 
@@ -213,8 +200,8 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			 */
 			for (Word w : wordsFromDatabase) {
 				/*
-				 * Don't update if the frequency weight from file is the same as
-				 * what's already in the database. It's pointless.
+				 * Don't update if the frequency weight from file is the same as what's already in the database. It's
+				 * pointless.
 				 */
 				if (w.getFrequencyWeight() != word.getFrequencyWeight()) {
 					w.setFrequencyWeight(word.getFrequencyWeight());
@@ -224,9 +211,8 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 			}
 
 			/*
-			 * Since the above loop adds a word several times depending on how
-			 * many parts of speech it is related to, the batch size may be
-			 * exceeded by a handful, and this is fine.
+			 * Since the above loop adds a word several times depending on how many parts of speech it is related to,
+			 * the batch size may be exceeded by a handful, and this is fine.
 			 */
 			if (wordUpdateBatch.size() >= this.persistenceBatchSize) {
 				boolean result = this.wordDao.updateBatch(wordUpdateBatch);

@@ -101,8 +101,7 @@ public class IndexedWordMapDaoTest {
 			wordFoundByPartOfSpeech = false;
 			wordFoundByLength = false;
 
-			for (ArrayList<Word> wordsByPartOfSpeech : IndexedWordMapDao.getPartOfSpeechWordMap()
-					.values()) {
+			for (ArrayList<Word> wordsByPartOfSpeech : IndexedWordMapDao.getPartOfSpeechWordMap().values()) {
 				if (wordsByPartOfSpeech.contains(word)) {
 					wordFoundByPartOfSpeech = true;
 				}
@@ -124,15 +123,13 @@ public class IndexedWordMapDaoTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testPartOfSpeechWordMapUnmodifiable() {
-		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = indexedWordMapDao
-				.getPartOfSpeechWordMap();
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = indexedWordMapDao.getPartOfSpeechWordMap();
 		partOfSpeechWordMap.remove(0); // should throw exception
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testLengthWordMapUnmodifiable() {
-		Map<PartOfSpeechType, ArrayList<Word>> lengthWordMap = indexedWordMapDao
-				.getPartOfSpeechWordMap();
+		Map<PartOfSpeechType, ArrayList<Word>> lengthWordMap = indexedWordMapDao.getPartOfSpeechWordMap();
 		lengthWordMap.remove(0); // should throw exception
 	}
 
@@ -144,14 +141,11 @@ public class IndexedWordMapDaoTest {
 		assertEquals(word2, wordToTest);
 		wordToTest = indexedWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.NOUN_PHRASE);
 		assertEquals(word3, wordToTest);
-		wordToTest = indexedWordMapDao
-				.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_PARTICIPLE);
+		wordToTest = indexedWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_PARTICIPLE);
 		assertEquals(word4, wordToTest);
-		wordToTest = indexedWordMapDao
-				.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_TRANSITIVE);
+		wordToTest = indexedWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_TRANSITIVE);
 		assertEquals(word5, wordToTest);
-		wordToTest = indexedWordMapDao
-				.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_INTRANSITIVE);
+		wordToTest = indexedWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_INTRANSITIVE);
 		assertEquals(word6, wordToTest);
 		wordToTest = indexedWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.ADJECTIVE);
 		assertEquals(word7, wordToTest);
@@ -189,8 +183,7 @@ public class IndexedWordMapDaoTest {
 
 	@Test
 	public void testMapByPartOfSpeech() {
-		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = IndexedWordMapDao
-				.mapByPartOfSpeech(wordsToReturn);
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = IndexedWordMapDao.mapByPartOfSpeech(wordsToReturn);
 
 		assertEquals(10, partOfSpeechWordMap.size());
 
@@ -206,8 +199,7 @@ public class IndexedWordMapDaoTest {
 
 	@Test
 	public void testMapByWordLength() {
-		Map<Integer, ArrayList<Word>> lengthWordMap = IndexedWordMapDao
-				.mapByWordLength(wordsToReturn);
+		Map<Integer, ArrayList<Word>> lengthWordMap = IndexedWordMapDao.mapByWordLength(wordsToReturn);
 
 		assertEquals(10, lengthWordMap.size());
 
@@ -223,8 +215,7 @@ public class IndexedWordMapDaoTest {
 
 	@Test
 	public void testBuildIndexedFrequencyMapByPartOfSpeech() {
-		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = IndexedWordMapDao
-				.mapByPartOfSpeech(wordsToReturn);
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = IndexedWordMapDao.mapByPartOfSpeech(wordsToReturn);
 
 		Map<PartOfSpeechType, int[]> partOfSpeechIndexedMap = IndexedWordMapDao
 				.buildIndexedFrequencyMapByPartOfSpeech(partOfSpeechWordMap);
@@ -237,8 +228,7 @@ public class IndexedWordMapDaoTest {
 
 			int index = partOfSpeechWordMap.get(word.getId().getPartOfSpeech()).indexOf(word);
 
-			for (int wordsByPartOfSpeech : partOfSpeechIndexedMap.get(word.getId()
-					.getPartOfSpeech())) {
+			for (int wordsByPartOfSpeech : partOfSpeechIndexedMap.get(word.getId().getPartOfSpeech())) {
 				if (index == wordsByPartOfSpeech) {
 					indicesFound++;
 				}
@@ -255,11 +245,9 @@ public class IndexedWordMapDaoTest {
 
 	@Test
 	public void testBuildIndexedFrequencyMapByLength() {
-		Map<Integer, ArrayList<Word>> lengthWordMap = IndexedWordMapDao
-				.mapByWordLength(wordsToReturn);
+		Map<Integer, ArrayList<Word>> lengthWordMap = IndexedWordMapDao.mapByWordLength(wordsToReturn);
 
-		Map<Integer, int[]> lengthIndexedMap = IndexedWordMapDao
-				.buildIndexedFrequencyMapByLength(lengthWordMap);
+		Map<Integer, int[]> lengthIndexedMap = IndexedWordMapDao.buildIndexedFrequencyMapByLength(lengthWordMap);
 
 		assertEquals(10, lengthIndexedMap.size());
 

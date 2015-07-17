@@ -10,10 +10,8 @@ SentenceBuilder is distributed in the hope that it will be useful, but WITHOUT A
 
 You should have received a copy of the GNU General Public License along with SentenceBuilder.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        		http://www.springframework.org/schema/context
@@ -31,8 +29,7 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="fileName" value="${wordlist.file.location}" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl"
-		id="wordListImporter">
+	<bean class="com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl" id="wordListImporter">
 		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
 		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
 		<property name="fileParser" ref="partOfSpeechfileParser" />
@@ -43,16 +40,14 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="fileName" value="${frequency.file.location}" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl"
-		id="frequencyListImporter">
+	<bean class="com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl" id="frequencyListImporter">
 		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
 		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
 		<property name="fileParser" ref="frequencyFileParser" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
-	
-	<bean id="taskExecutor"
-		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
 		<property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />
 		<!-- queueCapacity should be the same as populationSize, or we will get 

@@ -46,8 +46,7 @@ public class WordImportManager {
 
 		wordListImporter = (WordListImporterImpl) beanFactory.getBean("wordListImporter");
 
-		frequencyListImporter = (FrequencyListImporterImpl) beanFactory
-				.getBean("frequencyListImporter");
+		frequencyListImporter = (FrequencyListImporterImpl) beanFactory.getBean("frequencyListImporter");
 	}
 
 	/**

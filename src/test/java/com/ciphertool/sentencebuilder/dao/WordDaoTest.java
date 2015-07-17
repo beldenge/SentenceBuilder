@@ -91,8 +91,8 @@ public class WordDaoTest {
 
 		Field sessionFactoryField = ReflectionUtils.findField(WordDao.class, "sessionFactory");
 		ReflectionUtils.makeAccessible(sessionFactoryField);
-		SessionFactory sessionFactoryFromObject = (SessionFactory) ReflectionUtils.getField(
-				sessionFactoryField, wordDao);
+		SessionFactory sessionFactoryFromObject = (SessionFactory) ReflectionUtils.getField(sessionFactoryField,
+				wordDao);
 
 		assertSame(sessionFactoryToSet, sessionFactoryFromObject);
 	}

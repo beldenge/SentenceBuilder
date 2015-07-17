@@ -19,12 +19,10 @@
 
 package com.ciphertool.sentencebuilder.etl.importers;
 
-
 public interface FrequencyListImporter {
 	/**
-	 * Imports a List of Words from some source (likely a text file) into some
-	 * destination (likely a relational datastore), updating the frequency
-	 * values appropriately.
+	 * Imports a List of Words from some source (likely a text file) into some destination (likely a relational
+	 * datastore), updating the frequency values appropriately.
 	 */
 	public void importFrequencyList();
 }

@@ -65,8 +65,7 @@ public class FrequencyWordListDaoTest {
 
 		Field wordListField = ReflectionUtils.findField(FrequencyWordListDao.class, "wordList");
 		ReflectionUtils.makeAccessible(wordListField);
-		List<Word> wordListFromObject = (List<Word>) ReflectionUtils.getField(wordListField,
-				frequencyWordListDao);
+		List<Word> wordListFromObject = (List<Word>) ReflectionUtils.getField(wordListField, frequencyWordListDao);
 
 		assertEquals(7, wordListFromObject.size());
 		assertTrue(wordListFromObject.containsAll(wordsToReturn));

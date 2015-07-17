@@ -165,23 +165,19 @@ public class ZodiacWordFilter implements WordFilter {
 	}
 
 	/*
-	 * The number 6000 is not arbitrary. The cut-off was chosen for the
-	 * exclamation word "ha" which has a frequency weight of 6260. There are
-	 * several words with a lower frequency which might be interpreted as
-	 * correct, but they are negligible for the purposes of this cipher.
+	 * The number 6000 is not arbitrary. The cut-off was chosen for the exclamation word "ha" which has a frequency
+	 * weight of 6260. There are several words with a lower frequency which might be interpreted as correct, but they
+	 * are negligible for the purposes of this cipher.
 	 */
 	private final static int FREQUENCY_THRESHOLD = 6000;
 
 	/*
-	 * The purpose of the conditions on word length and frequency is to reduce
-	 * overhead of checking the expensive isBlacklisted() method when it's not
-	 * necessary.
+	 * The purpose of the conditions on word length and frequency is to reduce overhead of checking the expensive
+	 * isBlacklisted() method when it's not necessary.
 	 * 
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ciphertool.sentencebuilder.common.WordFilter#filter(com.ciphertool
-	 * .sentencebuilder.entities.Word)
+	 * @see com.ciphertool.sentencebuilder.common.WordFilter#filter(com.ciphertool .sentencebuilder.entities.Word)
 	 */
 	public boolean filter(Word word) {
 		if (word == null || word.getId() == null) {
@@ -202,8 +198,7 @@ public class ZodiacWordFilter implements WordFilter {
 	}
 
 	/**
-	 * This searches through a huge List of Words and returns whether the
-	 * specified Word is blacklisted.
+	 * This searches through a huge List of Words and returns whether the specified Word is blacklisted.
 	 * 
 	 * @param word
 	 *            the Word to check

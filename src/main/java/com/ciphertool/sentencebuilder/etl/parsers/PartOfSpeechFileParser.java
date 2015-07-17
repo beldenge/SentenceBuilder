@@ -53,9 +53,7 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 		try {
 			input = new BufferedReader(new FileReader(fileName));
 		} catch (FileNotFoundException fnfe) {
-			log.error(
-					"File: " + fileName + " not found.  Returning as there is nothing to import.",
-					fnfe);
+			log.error("File: " + fileName + " not found.  Returning as there is nothing to import.", fnfe);
 
 			return wordsFromFile;
 		}
@@ -103,12 +101,10 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 
 		for (int i = 0; i < partsOfSpeech.length; i++) {
 			/*
-			 * The pipe character is just informational in the word list, so we
-			 * don't add it as a part of speech.
+			 * The pipe character is just informational in the word list, so we don't add it as a part of speech.
 			 */
 			if (partsOfSpeech[i] != '|') {
-				wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType
-						.getValueFromSymbol(partsOfSpeech[i])), 1));
+				wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType.getValueFromSymbol(partsOfSpeech[i])), 1));
 
 				wordCount++;
 			}

@@ -101,8 +101,7 @@ public class BasicWordMapDaoTest {
 			wordFoundByPartOfSpeech = false;
 			wordFoundByLength = false;
 
-			for (ArrayList<Word> wordsByPartOfSpeech : basicWordMapDao.getPartOfSpeechWordMap()
-					.values()) {
+			for (ArrayList<Word> wordsByPartOfSpeech : basicWordMapDao.getPartOfSpeechWordMap().values()) {
 				if (wordsByPartOfSpeech.contains(word)) {
 					wordFoundByPartOfSpeech = true;
 				}
@@ -124,15 +123,13 @@ public class BasicWordMapDaoTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testPartOfSpeechWordMapUnmodifiable() {
-		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = basicWordMapDao
-				.getPartOfSpeechWordMap();
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = basicWordMapDao.getPartOfSpeechWordMap();
 		partOfSpeechWordMap.remove(0); // should throw exception
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testLengthWordMapUnmodifiable() {
-		Map<PartOfSpeechType, ArrayList<Word>> lengthWordMap = basicWordMapDao
-				.getPartOfSpeechWordMap();
+		Map<PartOfSpeechType, ArrayList<Word>> lengthWordMap = basicWordMapDao.getPartOfSpeechWordMap();
 		lengthWordMap.remove(0); // should throw exception
 	}
 
@@ -148,8 +145,7 @@ public class BasicWordMapDaoTest {
 		assertEquals(word4, wordToTest);
 		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_TRANSITIVE);
 		assertEquals(word5, wordToTest);
-		wordToTest = basicWordMapDao
-				.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_INTRANSITIVE);
+		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.VERB_INTRANSITIVE);
 		assertEquals(word6, wordToTest);
 		wordToTest = basicWordMapDao.findRandomWordByPartOfSpeech(PartOfSpeechType.ADJECTIVE);
 		assertEquals(word7, wordToTest);
@@ -187,8 +183,7 @@ public class BasicWordMapDaoTest {
 
 	@Test
 	public void testMapByPartOfSpeech() {
-		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = BasicWordMapDao
-				.mapByPartOfSpeech(wordsToReturn);
+		Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = BasicWordMapDao.mapByPartOfSpeech(wordsToReturn);
 
 		assertEquals(10, partOfSpeechWordMap.size());
 
@@ -204,8 +199,7 @@ public class BasicWordMapDaoTest {
 
 	@Test
 	public void testMapByWordLength() {
-		Map<Integer, ArrayList<Word>> lengthWordMap = BasicWordMapDao
-				.mapByWordLength(wordsToReturn);
+		Map<Integer, ArrayList<Word>> lengthWordMap = BasicWordMapDao.mapByWordLength(wordsToReturn);
 
 		assertEquals(10, lengthWordMap.size());
 
