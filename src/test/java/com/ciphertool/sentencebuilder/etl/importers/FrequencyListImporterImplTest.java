@@ -128,6 +128,20 @@ public class FrequencyListImporterImplTest {
 	}
 
 	@Test
+	public void testSetFilename() {
+		String[] fileNamesToSet = new String[] { "arbitraryFileName" };
+
+		FrequencyListImporterImpl frequencyListImporterImpl = new FrequencyListImporterImpl();
+		frequencyListImporterImpl.setFileNames(fileNamesToSet);
+
+		Field fileNamesField = ReflectionUtils.findField(FrequencyListImporterImpl.class, "fileNames");
+		ReflectionUtils.makeAccessible(fileNamesField);
+		String[] fileNamesFromObject = (String[]) ReflectionUtils.getField(fileNamesField, frequencyListImporterImpl);
+
+		assertSame(fileNamesToSet, fileNamesFromObject);
+	}
+
+	@Test
 	public void testImportFrequencyList() {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
@@ -173,7 +187,7 @@ public class FrequencyListImporterImplTest {
 		wordsToReturn.add(word3);
 		wordsToReturn.add(word4);
 		FrequencyFileParser fileParserMock = mock(FrequencyFileParser.class);
-		when(fileParserMock.parseFile()).thenReturn(wordsToReturn);
+		when(fileParserMock.parseFile(anyString())).thenReturn(wordsToReturn);
 
 		frequencyListImporterImpl.setFileParser(fileParserMock);
 
@@ -187,6 +201,7 @@ public class FrequencyListImporterImplTest {
 		when(wordDaoMock.findByWordString(eq("is"))).thenReturn(null);
 		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
 
+		frequencyListImporterImpl.setFileNames(new String[] { "arbitraryFileName" });
 		frequencyListImporterImpl.importFrequencyList();
 
 		assertEquals(100, wordFromDatabase1.getFrequencyWeight());
@@ -253,7 +268,7 @@ public class FrequencyListImporterImplTest {
 		wordsToReturn.add(word4);
 		wordsToReturn.add(word5);
 		FrequencyFileParser fileParserMock = mock(FrequencyFileParser.class);
-		when(fileParserMock.parseFile()).thenReturn(wordsToReturn);
+		when(fileParserMock.parseFile(anyString())).thenReturn(wordsToReturn);
 
 		frequencyListImporterImpl.setFileParser(fileParserMock);
 
@@ -272,6 +287,7 @@ public class FrequencyListImporterImplTest {
 		when(wordDaoMock.findByWordString(eq("seriously"))).thenReturn(null);
 		when(wordDaoMock.findByWordString(eq("awesome"))).thenReturn(null);
 
+		frequencyListImporterImpl.setFileNames(new String[] { "arbitraryFileName" });
 		frequencyListImporterImpl.importFrequencyList();
 
 		assertEquals(100, wordFromDatabase1.getFrequencyWeight());

@@ -28,13 +28,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.entities.NGram;
 
-public class PartOfSpeechFileParser implements FileParser<Word> {
+public class NGramFileParser implements FileParser<NGram> {
 
-	private static Logger log = Logger.getLogger(PartOfSpeechFileParser.class);
+	private static Logger log = Logger.getLogger(NGramFileParser.class);
 
 	/**
 	 * We are expecting the fields to be tab-delimited in the file.
@@ -42,8 +40,8 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 	private static final String FIELD_DELIMITER = "\t";
 
 	@Override
-	public List<Word> parseFile(String fileName) {
-		List<Word> wordsFromFile = new ArrayList<Word>();
+	public List<NGram> parseFile(String fileName) {
+		List<NGram> nGramsFromFile = new ArrayList<NGram>();
 
 		BufferedReader input = null;
 
@@ -52,61 +50,60 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 		} catch (FileNotFoundException fnfe) {
 			log.error("File: " + fileName + " not found.  Returning as there is nothing to import.", fnfe);
 
-			return wordsFromFile;
+			return nGramsFromFile;
 		}
 
-		int wordCount = 0;
+		int nGramCount = 0;
 		int rowCount = 0;
 		long start = System.currentTimeMillis();
 
 		try {
 			String nextLine = input.readLine();
 
-			log.info("Parsing parts of speech file " + fileName + "...");
+			log.info("Parsing n-gram file " + fileName + "...");
 
 			while (nextLine != null) {
 				rowCount++;
 
-				wordCount += parseLine(nextLine, wordsFromFile);
+				nGramCount += parseLine(nextLine, nGramsFromFile) ? 1 : 0;
 
 				nextLine = input.readLine();
 			}
 		} catch (IOException ioe) {
-			log.error("Caught IOException while reading next line from word list.", ioe);
+			log.error("Caught IOException while reading next line from n-gram list.", ioe);
 		} finally {
 			try {
 				input.close();
 			} catch (IOException e) {
-				log.error("Unable to close BufferedReader while finishing word list import.", e);
+				log.error("Unable to close BufferedReader while finishing n-gram list import.", e);
 			}
 
-			log.info("Parsed " + wordCount + " Words from " + rowCount + " rows from file in "
+			log.info("Parsed " + nGramCount + " NGrams from " + rowCount + " rows from file in "
 					+ (System.currentTimeMillis() - start) + "ms.");
 		}
 
-		return wordsFromFile;
+		return nGramsFromFile;
 	}
 
-	protected int parseLine(String line, List<Word> wordsFromFile) {
-		int wordCount = 0;
-
+	protected boolean parseLine(String line, List<NGram> nGramsFromFile) {
 		String[] lineParts = line.split(FIELD_DELIMITER);
 
-		String word = lineParts[0];
+		int frequency = Integer.parseInt(lineParts[0]);
 
-		char[] partsOfSpeech = lineParts[1].toCharArray();
+		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < partsOfSpeech.length; i++) {
-			/*
-			 * The pipe character is just informational in the word list, so we don't add it as a part of speech.
-			 */
-			if (partsOfSpeech[i] != '|') {
-				wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType.getValueFromSymbol(partsOfSpeech[i])), 1));
-
-				wordCount++;
-			}
+		for (int i = 1; i < lineParts.length; i++) {
+			sb.append(lineParts[i]);
 		}
 
-		return wordCount;
+		String nGram = sb.toString();
+
+		if (nGram != null && !nGram.isEmpty()) {
+			nGramsFromFile.add(new NGram(nGram, frequency));
+
+			return true;
+		}
+
+		return false;
 	}
 }

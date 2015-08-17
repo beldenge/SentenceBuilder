@@ -17,17 +17,12 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.etl.parsers;
+package com.ciphertool.sentencebuilder.etl.importers;
 
-import java.util.List;
-
-public interface FileParser<T> {
+public interface NGramListImporter {
 	/**
-	 * Parses a file into a List of Objects.
-	 * 
-	 * @param fileName
-	 *            the file name to parse
-	 * @return the List of Objects from the parsed file
+	 * Imports a List of NGrams from some source (likely a text file) into some destination (likely a relational
+	 * datastore), updating the frequency values appropriately.
 	 */
-	public List<T> parseFile(String fileName);
+	public void importNGramList();
 }

@@ -30,17 +30,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.task.TaskExecutor;
 
-import com.ciphertool.sentencebuilder.dao.WordDao;
-import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.dao.NGramDao;
+import com.ciphertool.sentencebuilder.entities.NGram;
 import com.ciphertool.sentencebuilder.etl.parsers.FileParser;
 
-public class WordListImporterImpl implements WordListImporter {
+public class NGramListImporterImpl implements NGramListImporter {
 
-	private static Logger log = Logger.getLogger(WordListImporterImpl.class);
+	private static Logger log = Logger.getLogger(NGramListImporterImpl.class);
 
 	private TaskExecutor taskExecutor;
-	private FileParser<Word> partOfSpeechFileParser;
-	private WordDao wordDao;
+	private FileParser<NGram> nGramFileParser;
+	private NGramDao nGramDao;
 	private int persistenceBatchSize;
 	private AtomicInteger rowCount = new AtomicInteger(0);
 	private int concurrencyBatchSize;
@@ -48,52 +48,52 @@ public class WordListImporterImpl implements WordListImporter {
 	private String[] fileNames;
 
 	@Override
-	public void importWordList() {
-		// Reset the count in case this method is called again
+	public void importNGramList() {
+		// Reset the counts in case this method is called again
 		rowCount.set(0);
 
 		long start = System.currentTimeMillis();
 
 		try {
-			List<Word> wordsFromFile = new ArrayList<Word>();
+			List<NGram> nGramsFromFile = new ArrayList<NGram>();
 			for (String fileName : fileNames) {
-				wordsFromFile.addAll(partOfSpeechFileParser.parseFile(fileName));
+				nGramsFromFile.addAll(nGramFileParser.parseFile(fileName));
 			}
 
-			log.info("Starting word list import...");
+			log.info("Starting n-gram list import...");
 
 			List<FutureTask<Void>> futureTasks = new ArrayList<FutureTask<Void>>();
 			FutureTask<Void> futureTask = null;
-			List<Word> threadedWordBatch = new ArrayList<Word>();
-			for (Word word : wordsFromFile) {
-				threadedWordBatch.add(word);
+			List<NGram> threadedNGramBatch = new ArrayList<NGram>();
+			for (NGram nGram : nGramsFromFile) {
+				threadedNGramBatch.add(nGram);
 
-				if (threadedWordBatch.size() >= this.concurrencyBatchSize) {
-					List<Word> nextThreadedWordBatch = new ArrayList<Word>();
-					int originalSize = threadedWordBatch.size();
+				if (threadedNGramBatch.size() >= this.concurrencyBatchSize) {
+					List<NGram> nextThreadedNGramBatch = new ArrayList<NGram>();
+					int originalSize = threadedNGramBatch.size();
 
 					for (int i = 0; i < originalSize; i++) {
 						/*
 						 * It's faster to remove from the end of the List because no elements need to shift
 						 */
-						nextThreadedWordBatch.add(threadedWordBatch.remove(threadedWordBatch.size() - 1));
+						nextThreadedNGramBatch.add(threadedNGramBatch.remove(threadedNGramBatch.size() - 1));
 					}
 
-					futureTask = new FutureTask<Void>(new BatchWordImportTask(nextThreadedWordBatch));
+					futureTask = new FutureTask<Void>(new BatchNGramImportTask(nextThreadedNGramBatch));
 					futureTasks.add(futureTask);
 					this.taskExecutor.execute(futureTask);
 				}
 			}
 
 			/*
-			 * Start one last task if there are any leftover Words from file that did not reach the batch size.
+			 * Start one last task if there are any leftover NGrams from file that did not reach the batch size.
 			 */
-			if (threadedWordBatch.size() > 0) {
+			if (threadedNGramBatch.size() > 0) {
 				/*
-				 * It's safe to use the threadedWordBatch now, instead of copying into a temporaryList, because this is
+				 * It's safe to use the threadedNGramBatch now, instead of copying into a temporaryList, because this is
 				 * the last thread to run.
 				 */
-				futureTask = new FutureTask<Void>(new BatchWordImportTask(threadedWordBatch));
+				futureTask = new FutureTask<Void>(new BatchNGramImportTask(threadedNGramBatch));
 				futureTasks.add(futureTask);
 				this.taskExecutor.execute(futureTask);
 			}
@@ -102,9 +102,9 @@ public class WordListImporterImpl implements WordListImporter {
 				try {
 					future.get();
 				} catch (InterruptedException ie) {
-					log.error("Caught InterruptedException while waiting for BatchWordImportTask ", ie);
+					log.error("Caught InterruptedException while waiting for BatchNGramImportTask ", ie);
 				} catch (ExecutionException ee) {
-					log.error("Caught ExecutionException while waiting for BatchWordImportTask ", ee);
+					log.error("Caught ExecutionException while waiting for BatchNGramImportTask ", ee);
 				}
 			}
 		} finally {
@@ -116,30 +116,27 @@ public class WordListImporterImpl implements WordListImporter {
 	/**
 	 * A concurrent task for performing a crossover of two parent Chromosomes, producing one child Chromosome.
 	 */
-	protected class BatchWordImportTask implements Callable<Void> {
+	protected class BatchNGramImportTask implements Callable<Void> {
 
-		private List<Word> words;
+		private List<NGram> nGrams;
 
-		public BatchWordImportTask(List<Word> words) {
-			this.words = words;
+		public BatchNGramImportTask(List<NGram> nGrams) {
+			this.nGrams = nGrams;
 		}
 
 		@Override
 		public Void call() throws Exception {
-			List<Word> wordBatch = new ArrayList<Word>();
+			List<NGram> nGramInsertBatch = new ArrayList<NGram>();
 
-			for (Word word : this.words) {
-				importWord(word, wordBatch);
+			for (NGram nGram : this.nGrams) {
+				importNGram(nGram, nGramInsertBatch);
 			}
 
-			/*
-			 * Insert one last batch if there are any leftover Words that did not reach the batch size.
-			 */
-			if (wordBatch.size() > 0) {
-				boolean result = wordDao.insertBatch(wordBatch);
+			if (nGramInsertBatch.size() > 0) {
+				boolean result = nGramDao.insertBatch(nGramInsertBatch);
 
 				if (result) {
-					rowCount.addAndGet(wordBatch.size());
+					rowCount.addAndGet(nGramInsertBatch.size());
 				}
 			}
 
@@ -148,43 +145,43 @@ public class WordListImporterImpl implements WordListImporter {
 	}
 
 	/**
-	 * Imports a Word, only calling down to the persistence layer once the batch size is reached.
+	 * Imports an NGram, only calling down to the persistence layer once the batch size is reached.
 	 * 
-	 * @param word
-	 *            the Word to import
-	 * @param wordBatch
-	 *            the batch of Words maintained across loop iterations
+	 * @param nGram
+	 *            the next line to import
+	 * @param nGramInsertBatch
+	 *            the batch of NGrams to insert, maintained across loop iterations
 	 */
-	protected void importWord(Word word, List<Word> wordBatch) {
-		if (word == null) {
+	protected void importNGram(NGram nGram, List<NGram> nGramBatch) {
+		if (nGram == null) {
 			// Nothing to do
 			return;
 		}
 
-		wordBatch.add(word);
+		nGramBatch.add(nGram);
 
 		/*
-		 * Since the above loop adds a word several times depending on how many parts of speech it is related to, the
+		 * Since the above loop adds a nGram several times depending on how many parts of speech it is related to, the
 		 * batch size may be exceeded by a handful, and this is fine.
 		 */
-		if (wordBatch.size() >= this.persistenceBatchSize) {
-			boolean result = this.wordDao.insertBatch(wordBatch);
+		if (nGramBatch.size() >= this.persistenceBatchSize) {
+			boolean result = this.nGramDao.insertBatch(nGramBatch);
 
 			if (result) {
-				this.rowCount.addAndGet(wordBatch.size());
+				this.rowCount.addAndGet(nGramBatch.size());
 			}
 
-			wordBatch.clear();
+			nGramBatch.clear();
 		}
 	}
 
 	/**
-	 * @param wordDao
-	 *            the wordDao to set
+	 * @param nGramDao
+	 *            the nGramDao to set
 	 */
 	@Required
-	public void setWordDao(WordDao wordDao) {
-		this.wordDao = wordDao;
+	public void setNGramDao(NGramDao nGramDao) {
+		this.nGramDao = nGramDao;
 	}
 
 	/**
@@ -201,8 +198,8 @@ public class WordListImporterImpl implements WordListImporter {
 	 *            the fileParser to set
 	 */
 	@Required
-	public void setFileParser(FileParser<Word> fileParser) {
-		this.partOfSpeechFileParser = fileParser;
+	public void setFileParser(FileParser<NGram> fileParser) {
+		this.nGramFileParser = fileParser;
 	}
 
 	/**

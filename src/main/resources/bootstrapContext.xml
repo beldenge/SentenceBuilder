@@ -19,8 +19,6 @@ You should have received a copy of the GNU General Public License along with Sen
        		http://www.springframework.org/schema/tx 
      		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-	<context:annotation-config />
-	<context:component-scan base-package="com.ciphertool.sentencebuilder.dao" />
 	<tx:annotation-driven />
 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -43,6 +41,7 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="annotatedClasses">
 			<list>
 				<value>com.ciphertool.sentencebuilder.entities.Word</value>
+				<value>com.ciphertool.sentencebuilder.entities.NGram</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

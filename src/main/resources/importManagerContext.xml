@@ -24,27 +24,42 @@ You should have received a copy of the GNU General Public License along with Sen
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-
-	<bean class="com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser" id="partOfSpeechfileParser">
-		<property name="fileName" value="${wordlist.file.location}" />
+	
+	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
+	<bean class="com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser" id="partOfSpeechfileParser" />
+
 	<bean class="com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl" id="wordListImporter">
+		<property name="wordDao" ref="wordDao" />
 		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
 		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
 		<property name="fileParser" ref="partOfSpeechfileParser" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="fileNames" value="${wordlist.file.locations}" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.etl.parsers.FrequencyFileParser" id="frequencyFileParser">
-		<property name="fileName" value="${frequency.file.location}" />
-	</bean>
+	<bean class="com.ciphertool.sentencebuilder.etl.parsers.FrequencyFileParser" id="frequencyFileParser" />
 
 	<bean class="com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl" id="frequencyListImporter">
+		<property name="wordDao" ref="wordDao" />
 		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
 		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
 		<property name="fileParser" ref="frequencyFileParser" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="fileNames" value="${frequency.file.locations}" />
+	</bean>
+	
+	<bean class="com.ciphertool.sentencebuilder.etl.parsers.NGramFileParser" id="nGramFileParser" />
+
+	<bean class="com.ciphertool.sentencebuilder.etl.importers.NGramListImporterImpl" id="nGramListImporter">
+		<property name="nGramDao" ref="nGramDao" />
+		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
+		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
+		<property name="fileParser" ref="nGramFileParser" />
+		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="fileNames" value="${nGram.file.locations}" />
 	</bean>
 
 	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">

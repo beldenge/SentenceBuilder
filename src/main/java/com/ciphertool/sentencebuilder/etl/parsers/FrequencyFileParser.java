@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -37,15 +36,13 @@ public class FrequencyFileParser implements FileParser<Word> {
 
 	private static Logger log = Logger.getLogger(FrequencyFileParser.class);
 
-	private String fileName;
-
 	/**
 	 * We are expecting the fields to be tab-delimited in the file.
 	 */
 	private static final String FIELD_DELIMITER = "\t";
 
 	@Override
-	public List<Word> parseFile() {
+	public List<Word> parseFile(String fileName) {
 		List<Word> wordsFromFile = new ArrayList<Word>();
 
 		BufferedReader input = null;
@@ -70,7 +67,7 @@ public class FrequencyFileParser implements FileParser<Word> {
 			 */
 			nextLine = input.readLine();
 
-			log.info("Parsing frequency file...");
+			log.info("Parsing frequency file " + fileName + "...");
 
 			while (nextLine != null) {
 				rowCount++;
@@ -109,14 +106,5 @@ public class FrequencyFileParser implements FileParser<Word> {
 		}
 
 		return false;
-	}
-
-	/**
-	 * @param fileName
-	 *            the fileName to set
-	 */
-	@Required
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 }

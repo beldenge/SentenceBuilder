@@ -27,7 +27,6 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.task.TaskExecutor;
 
@@ -47,6 +46,8 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	private AtomicInteger rowInsertCount = new AtomicInteger(0);
 	private int concurrencyBatchSize;
 
+	private String[] fileNames;
+
 	@Override
 	public void importFrequencyList() {
 		// Reset the counts in case this method is called again
@@ -56,8 +57,10 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 		long start = System.currentTimeMillis();
 
 		try {
-
-			List<Word> wordsFromFile = frequencyFileParser.parseFile();
+			List<Word> wordsFromFile = new ArrayList<Word>();
+			for (String fileName : fileNames) {
+				wordsFromFile.addAll(frequencyFileParser.parseFile(fileName));
+			}
 
 			log.info("Starting frequency list import...");
 
@@ -230,7 +233,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	 * @param wordDao
 	 *            the wordDao to set
 	 */
-	@Autowired
+	@Required
 	public void setWordDao(WordDao wordDao) {
 		this.wordDao = wordDao;
 	}
@@ -269,5 +272,14 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	@Required
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
+	}
+
+	/**
+	 * @param fileName
+	 *            the fileName to set
+	 */
+	@Required
+	public void setFileNames(String[] fileNames) {
+		this.fileNames = fileNames;
 	}
 }

@@ -28,144 +28,132 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.NGram;
 
-public class WordDao {
+public class NGramDao {
 	private Logger log = Logger.getLogger(getClass());
 
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
-	private static final String wordParameter = "word";
+	private static final String nGramParameter = "nGram";
 
 	/**
-	 * Returns a list of all Words, so words will be duplicated if they have multiple parts of speech.
+	 * Returns a list of all NGrams, so nGrams will be duplicated if they have multiple parts of speech.
 	 */
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public List<Word> findAll() {
+	public List<NGram> findAll() {
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery("from Word").list();
+		List<NGram> result = (List<NGram>) session.createQuery("from NGram").list();
 
 		return result;
 	}
 
 	/**
-	 * Returns a list of all unique Words, irrespective of parts of speech.
-	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public List<Word> findAllUniqueWords() {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery(
-				"select distinct new Word(id.word, frequencyWeight) from Word").list();
-
-		return result;
-	}
-
-	/**
-	 * Finds all occurrences of a particular Word by its String value.
+	 * Finds all occurrences of a particular NGram by its String value.
 	 * 
-	 * @param word
-	 *            the String value of the word to find
-	 * @return the List of matching Words
+	 * @param nGram
+	 *            the String value of the nGram to find
+	 * @return the List of matching NGrams
 	 */
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public List<Word> findByWordString(String word) {
-		if (word == null) {
-			log.warn("Attempted to find Word by null String.  Unable to continue, thus returning null.");
+	public List<NGram> findByNGramString(String nGram) {
+		if (nGram == null) {
+			log.warn("Attempted to find NGram by null String.  Unable to continue, thus returning null.");
 
 			return null;
 		}
 
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery("from Word where word = " + separator + wordParameter)
-				.setParameter(wordParameter, word).list();
+		List<NGram> nGrams = (List<NGram>) session
+				.createQuery("from NGram where nGram = " + separator + nGramParameter).setParameter(nGramParameter,
+						nGram).list();
 
-		return words;
+		return nGrams;
 	}
 
 	/**
-	 * Inserts a word.
+	 * Inserts a nGram.
 	 * 
-	 * @param word
-	 *            the Word to insert
+	 * @param nGram
+	 *            the NGram to insert
 	 * @return whether the insert was successful
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean insert(Word word) {
-		if (word == null) {
-			log.warn("Attempted to insert null Word.  Unable to continue, thus returning false.");
+	public boolean insert(NGram nGram) {
+		if (nGram == null) {
+			log.warn("Attempted to insert null NGram.  Unable to continue, thus returning false.");
 
 			return false;
 		}
 
 		Session session = sessionFactory.getCurrentSession();
-		session.save(word);
+		session.save(nGram);
 		return true;
 	}
 
 	/**
-	 * Inserts a List of Words in batch.
+	 * Inserts a List of NGrams in batch.
 	 * 
-	 * @param wordBatch
-	 *            the batch of Words to insert
+	 * @param nGramBatch
+	 *            the batch of NGrams to insert
 	 * @return whether the insert was successful
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean insertBatch(List<Word> wordBatch) {
-		if (wordBatch == null || wordBatch.isEmpty()) {
-			log.warn("Attempted to insert Words in batch which was found to be null or empty.  Unable to continue, thus returning false.");
+	public boolean insertBatch(List<NGram> nGramBatch) {
+		if (nGramBatch == null || nGramBatch.isEmpty()) {
+			log.warn("Attempted to insert NGrams in batch which was found to be null or empty.  Unable to continue, thus returning false.");
 
 			return false;
 		}
 
 		Session session = sessionFactory.getCurrentSession();
-		for (Word word : wordBatch) {
-			session.save(word);
+		for (NGram nGram : nGramBatch) {
+			session.save(nGram);
 		}
 		return true;
 	}
 
 	/**
-	 * Updates a Word.
+	 * Updates a NGram.
 	 * 
-	 * @param word
-	 *            the Word to update
+	 * @param nGram
+	 *            the NGram to update
 	 * @return whether the update was successful
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean update(Word word) {
-		if (word == null) {
-			log.warn("Attempted to update null Word.  Unable to continue, thus returning false.");
+	public boolean update(NGram nGram) {
+		if (nGram == null) {
+			log.warn("Attempted to update null NGram.  Unable to continue, thus returning false.");
 
 			return false;
 		}
 
 		Session session = sessionFactory.getCurrentSession();
-		session.update(word);
+		session.update(nGram);
 
 		return true;
 	}
 
 	/**
-	 * Updates a List of Words in batch.
+	 * Updates a List of NGrams in batch.
 	 * 
-	 * @param wordBatch
-	 *            the batch of Words
+	 * @param nGramBatch
+	 *            the batch of NGrams
 	 * @return whether the update was successful
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean updateBatch(List<Word> wordBatch) {
-		if (wordBatch == null || wordBatch.isEmpty()) {
-			log.warn("Attempted to update Words in batch which was found to be null or empty.  Unable to continue, thus returning false.");
+	public boolean updateBatch(List<NGram> nGramBatch) {
+		if (nGramBatch == null || nGramBatch.isEmpty()) {
+			log.warn("Attempted to update NGrams in batch which was found to be null or empty.  Unable to continue, thus returning false.");
 
 			return false;
 		}
 
 		Session session = sessionFactory.getCurrentSession();
-		for (Word word : wordBatch) {
-			session.update(word);
+		for (NGram nGram : nGramBatch) {
+			session.update(nGram);
 		}
 		return true;
 	}

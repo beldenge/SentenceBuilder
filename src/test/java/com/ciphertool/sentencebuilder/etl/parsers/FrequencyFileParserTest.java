@@ -20,7 +20,6 @@
 package com.ciphertool.sentencebuilder.etl.parsers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -44,26 +43,12 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 public class FrequencyFileParserTest {
 
 	@Test
-	public void testSetFilename() {
-		String fileNameToSet = "arbitraryFileName";
-		FrequencyFileParser frequencyFileParser = new FrequencyFileParser();
-		frequencyFileParser.setFileName(fileNameToSet);
-
-		Field fileNameField = ReflectionUtils.findField(FrequencyFileParser.class, "fileName");
-		ReflectionUtils.makeAccessible(fileNameField);
-		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField, frequencyFileParser);
-
-		assertSame(fileNameToSet, fileNameFromObject);
-	}
-
-	@Test
 	public void testParseFile() {
 		String filePath = "src/test/data/frequency.txt";
 
 		FrequencyFileParser frequencyFileParser = new FrequencyFileParser();
-		frequencyFileParser.setFileName(filePath);
 
-		List<Word> wordsFromFile = frequencyFileParser.parseFile();
+		List<Word> wordsFromFile = frequencyFileParser.parseFile(filePath);
 
 		Word expectedWord1 = new Word(new WordId("the", PartOfSpeechType.NONE), 1501908);
 		Word expectedWord2 = new Word(new WordId("to", PartOfSpeechType.NONE), 1156570);
@@ -77,7 +62,6 @@ public class FrequencyFileParserTest {
 	@Test
 	public void testParseFile_InvalidFileName() {
 		FrequencyFileParser frequencyFileParser = new FrequencyFileParser();
-		frequencyFileParser.setFileName("arbitraryFileName");
 
 		Logger logMock = mock(Logger.class);
 
@@ -85,7 +69,7 @@ public class FrequencyFileParserTest {
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, frequencyFileParser, logMock);
 
-		List<Word> wordsFromFile = frequencyFileParser.parseFile();
+		List<Word> wordsFromFile = frequencyFileParser.parseFile("arbitraryFileName");
 
 		assertTrue(wordsFromFile.isEmpty());
 		verify(logMock, times(1)).error(anyString(), any(FileNotFoundException.class));

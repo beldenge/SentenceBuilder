@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -124,6 +125,20 @@ public class WordListImporterImplTest {
 	}
 
 	@Test
+	public void testSetFilename() {
+		String[] fileNamesToSet = new String[] { "arbitraryFileName" };
+
+		WordListImporterImpl wordListImporterImpl = new WordListImporterImpl();
+		wordListImporterImpl.setFileNames(fileNamesToSet);
+
+		Field fileNamesField = ReflectionUtils.findField(WordListImporterImpl.class, "fileNames");
+		ReflectionUtils.makeAccessible(fileNamesField);
+		String[] fileNamesFromObject = (String[]) ReflectionUtils.getField(fileNamesField, wordListImporterImpl);
+
+		assertSame(fileNamesToSet, fileNamesFromObject);
+	}
+
+	@Test
 	public void testImportWordList() {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
@@ -160,10 +175,11 @@ public class WordListImporterImplTest {
 		wordsToReturn.add(word2);
 		wordsToReturn.add(word3);
 		PartOfSpeechFileParser fileParserMock = mock(PartOfSpeechFileParser.class);
-		when(fileParserMock.parseFile()).thenReturn(wordsToReturn);
+		when(fileParserMock.parseFile(anyString())).thenReturn(wordsToReturn);
 
 		wordListImporterImpl.setFileParser(fileParserMock);
 
+		wordListImporterImpl.setFileNames(new String[] { "arbitraryFileName" });
 		wordListImporterImpl.importWordList();
 
 		rowCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowCountField, wordListImporterImpl);
@@ -210,10 +226,11 @@ public class WordListImporterImplTest {
 		wordsToReturn.add(word2);
 		wordsToReturn.add(word3);
 		PartOfSpeechFileParser fileParserMock = mock(PartOfSpeechFileParser.class);
-		when(fileParserMock.parseFile()).thenReturn(wordsToReturn);
+		when(fileParserMock.parseFile(anyString())).thenReturn(wordsToReturn);
 
 		wordListImporterImpl.setFileParser(fileParserMock);
 
+		wordListImporterImpl.setFileNames(new String[] { "arbitraryFileName" });
 		wordListImporterImpl.importWordList();
 
 		rowCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowCountField, wordListImporterImpl);

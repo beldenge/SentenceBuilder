@@ -20,7 +20,6 @@
 package com.ciphertool.sentencebuilder.etl.parsers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -42,27 +41,14 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class PartOfSpeechFileParserTest {
-	@Test
-	public void testSetFilename() {
-		String fileNameToSet = "arbitraryFileName";
-		PartOfSpeechFileParser partOfSpeechFileParser = new PartOfSpeechFileParser();
-		partOfSpeechFileParser.setFileName(fileNameToSet);
-
-		Field fileNameField = ReflectionUtils.findField(PartOfSpeechFileParser.class, "fileName");
-		ReflectionUtils.makeAccessible(fileNameField);
-		String fileNameFromObject = (String) ReflectionUtils.getField(fileNameField, partOfSpeechFileParser);
-
-		assertSame(fileNameToSet, fileNameFromObject);
-	}
 
 	@Test
 	public void testParseFile() {
 		String filePath = "src/test/data/part-of-speech.txt";
 
 		PartOfSpeechFileParser partOfSpeechFileParser = new PartOfSpeechFileParser();
-		partOfSpeechFileParser.setFileName(filePath);
 
-		List<Word> wordsFromFile = partOfSpeechFileParser.parseFile();
+		List<Word> wordsFromFile = partOfSpeechFileParser.parseFile(filePath);
 
 		Word expectedWord1 = new Word(new WordId("stuff", PartOfSpeechType.NOUN));
 		Word expectedWord2 = new Word(new WordId("stuff", PartOfSpeechType.VERB_PARTICIPLE));
@@ -80,7 +66,6 @@ public class PartOfSpeechFileParserTest {
 	@Test
 	public void testParseFile_InvalidFileName() {
 		PartOfSpeechFileParser partOfSpeechFileParser = new PartOfSpeechFileParser();
-		partOfSpeechFileParser.setFileName("arbitraryFileName");
 
 		Logger logMock = mock(Logger.class);
 
@@ -88,7 +73,7 @@ public class PartOfSpeechFileParserTest {
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, partOfSpeechFileParser, logMock);
 
-		List<Word> wordsFromFile = partOfSpeechFileParser.parseFile();
+		List<Word> wordsFromFile = partOfSpeechFileParser.parseFile("arbitraryFileName");
 
 		assertTrue(wordsFromFile.isEmpty());
 		verify(logMock, times(1)).error(anyString(), any(FileNotFoundException.class));
