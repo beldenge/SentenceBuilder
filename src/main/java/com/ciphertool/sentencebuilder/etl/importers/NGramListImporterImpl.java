@@ -20,7 +20,9 @@
 package com.ciphertool.sentencebuilder.etl.importers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -55,9 +57,9 @@ public class NGramListImporterImpl implements NGramListImporter {
 		long start = System.currentTimeMillis();
 
 		try {
-			List<NGram> nGramsFromFile = new ArrayList<NGram>();
+			Map<String, NGram> nGramsFromFile = new HashMap<String, NGram>();
 			for (String fileName : fileNames) {
-				nGramsFromFile.addAll(nGramFileParser.parseFile(fileName));
+				addUniqueRowsToMap(nGramFileParser.parseFile(fileName), nGramsFromFile);
 			}
 
 			log.info("Starting n-gram list import...");
@@ -65,7 +67,7 @@ public class NGramListImporterImpl implements NGramListImporter {
 			List<FutureTask<Void>> futureTasks = new ArrayList<FutureTask<Void>>();
 			FutureTask<Void> futureTask = null;
 			List<NGram> threadedNGramBatch = new ArrayList<NGram>();
-			for (NGram nGram : nGramsFromFile) {
+			for (NGram nGram : nGramsFromFile.values()) {
 				threadedNGramBatch.add(nGram);
 
 				if (threadedNGramBatch.size() >= this.concurrencyBatchSize) {
@@ -110,6 +112,21 @@ public class NGramListImporterImpl implements NGramListImporter {
 		} finally {
 			log.info("Rows inserted: " + this.rowCount);
 			log.info("Time elapsed: " + (System.currentTimeMillis() - start) + "ms");
+		}
+	}
+
+	protected static void addUniqueRowsToMap(List<NGram> rowsToAdd, Map<String, NGram> map) {
+		String nextNGram;
+
+		for (NGram row : rowsToAdd) {
+			nextNGram = row.getNGram();
+			if (map.containsKey(nextNGram)) {
+				if (map.get(nextNGram).getFrequencyWeight() < row.getFrequencyWeight()) {
+					map.put(nextNGram, row);
+				}
+			} else {
+				map.put(row.getNGram(), row);
+			}
 		}
 	}
 
