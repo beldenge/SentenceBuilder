@@ -80,7 +80,7 @@ public class BasicWordMapDaoTest {
 
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
 
-		basicWordMapDao = new BasicWordMapDao(wordDaoMock);
+		basicWordMapDao = new BasicWordMapDao(wordDaoMock, -1);
 
 		verify(wordDaoMock, times(1)).findAll();
 	}
@@ -90,7 +90,7 @@ public class BasicWordMapDaoTest {
 		reset(wordDaoMock);
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
 
-		BasicWordMapDao basicWordMapDao = new BasicWordMapDao(wordDaoMock);
+		BasicWordMapDao basicWordMapDao = new BasicWordMapDao(wordDaoMock, -1);
 
 		assertEquals(10, basicWordMapDao.getPartOfSpeechWordMap().size());
 		assertEquals(10, basicWordMapDao.getLengthWordMap().size());
@@ -118,7 +118,12 @@ public class BasicWordMapDaoTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithNullWordMap() {
-		new BasicWordMapDao(null);
+		new BasicWordMapDao(null, 10);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructorWithZeroTop() {
+		new BasicWordMapDao(wordDaoMock, 0);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

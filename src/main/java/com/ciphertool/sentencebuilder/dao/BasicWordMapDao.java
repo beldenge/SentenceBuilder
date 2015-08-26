@@ -39,15 +39,22 @@ public class BasicWordMapDao implements WordMapDao {
 	private Map<Integer, ArrayList<Word>> lengthWordMap = new HashMap<Integer, ArrayList<Word>>();
 
 	/**
-	 * Constructor with autowired dependency.
+	 * Constructor with autowired dependencies.
 	 * 
 	 * @param wordDao
 	 *            the WordDao to use for populating the internal Maps
+	 * @param top
+	 *            the top number of words
 	 */
 	@Autowired
-	public BasicWordMapDao(WordDao wordDao) {
+	public BasicWordMapDao(WordDao wordDao, Integer top) {
 		if (wordDao == null) {
 			throw new IllegalArgumentException("Error constructing BasicWordMapDao.  WordDao cannot be null.");
+		}
+
+		if (top == null || top == 0) {
+			throw new IllegalArgumentException(
+					"Error constructing BasicWordMapDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
 		ArrayList<Word> allWords = new ArrayList<Word>();
@@ -56,7 +63,11 @@ public class BasicWordMapDao implements WordMapDao {
 
 		long start = System.currentTimeMillis();
 
-		allWords.addAll(wordDao.findAll());
+		if (top < 0) {
+			allWords.addAll(wordDao.findAll());
+		} else {
+			allWords.addAll(wordDao.findTopByFrequency(top));
+		}
 
 		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
 

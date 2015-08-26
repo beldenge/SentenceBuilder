@@ -117,7 +117,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 	}
 
 	/**
-	 * A concurrent task for performing a crossover of two parent Chromosomes, producing one child Chromosome.
+	 * A concurrent task for persisting a batch of Words to database.
 	 */
 	protected class BatchWordImportTask implements Callable<Void> {
 

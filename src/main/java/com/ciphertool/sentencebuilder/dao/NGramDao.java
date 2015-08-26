@@ -34,17 +34,59 @@ public class NGramDao {
 	private Logger log = Logger.getLogger(getClass());
 
 	private SessionFactory sessionFactory;
-	private static final String separator = ":";
-	private static final String nGramParameter = "nGram";
+	private static final String SEPARATOR = ":";
+	private static final String N_GRAM_PARAM = "nGram";
+	private static final String NUM_WORDS_PARAM = "numWords";
 
 	/**
-	 * Returns a list of all NGrams, so nGrams will be duplicated if they have multiple parts of speech.
+	 * Returns a list of all NGrams.
 	 */
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findAll() {
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<NGram> result = (List<NGram>) session.createQuery("from NGram").list();
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of all NGrams.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<NGram> findAllByNumWords(int numWords) {
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<NGram> result = (List<NGram>) session.createQuery(
+				"from NGram where numWords = " + SEPARATOR + NUM_WORDS_PARAM).setInteger(NUM_WORDS_PARAM, numWords)
+				.list();
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of top N NGrams.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<NGram> findTopMostFrequent(int top) {
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<NGram> result = (List<NGram>) session.createQuery("from NGram order by frequencyWeight desc")
+				.setMaxResults(top).list();
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of top N NGrams.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<NGram> findTopMostFrequentByNumWords(int numWords, int top) {
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<NGram> result = (List<NGram>) session.createQuery(
+				"from NGram where numWords = " + SEPARATOR + NUM_WORDS_PARAM + " order by frequencyWeight desc")
+				.setInteger(NUM_WORDS_PARAM, numWords).setMaxResults(top).list();
 
 		return result;
 	}
@@ -66,9 +108,8 @@ public class NGramDao {
 
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<NGram> nGrams = (List<NGram>) session
-				.createQuery("from NGram where nGram = " + separator + nGramParameter).setParameter(nGramParameter,
-						nGram).list();
+		List<NGram> nGrams = (List<NGram>) session.createQuery("from NGram where nGram = " + SEPARATOR + N_GRAM_PARAM)
+				.setParameter(N_GRAM_PARAM, nGram).list();
 
 		return nGrams;
 	}

@@ -61,7 +61,7 @@ public class UniqueWordListDaoTest {
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.findAllUniqueWords()).thenReturn(wordsToReturn);
 
-		UniqueWordListDao uniqueWordListDao = new UniqueWordListDao(wordDaoMock);
+		UniqueWordListDao uniqueWordListDao = new UniqueWordListDao(wordDaoMock, -1);
 
 		Field wordListField = ReflectionUtils.findField(UniqueWordListDao.class, "wordList");
 		ReflectionUtils.makeAccessible(wordListField);
@@ -75,7 +75,12 @@ public class UniqueWordListDaoTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithNullWordMap() {
-		new UniqueWordListDao(null);
+		new UniqueWordListDao(null, 10);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructorWithZeroTop() {
+		new UniqueWordListDao(null, 0);
 	}
 
 	@Test
@@ -83,7 +88,7 @@ public class UniqueWordListDaoTest {
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.findAllUniqueWords()).thenReturn(wordsToReturn);
 
-		UniqueWordListDao uniqueWordListDao = new UniqueWordListDao(wordDaoMock);
+		UniqueWordListDao uniqueWordListDao = new UniqueWordListDao(wordDaoMock, -1);
 
 		Word randomWord = uniqueWordListDao.findRandomWord();
 

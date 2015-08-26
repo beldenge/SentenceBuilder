@@ -76,6 +76,14 @@ public class Word {
 	}
 
 	/**
+	 * @param nGram
+	 *            the NGram
+	 */
+	public Word(NGram nGram) {
+		this(nGram.getNGram(), (int) nGram.getFrequencyWeight());
+	}
+
+	/**
 	 * @return the WordId
 	 */
 	public WordId getId() {

@@ -47,7 +47,10 @@ public class NGramListImporterImpl implements NGramListImporter {
 	private AtomicInteger rowCount = new AtomicInteger(0);
 	private int concurrencyBatchSize;
 
-	private String[] fileNames;
+	private String twoGramFileName;
+	private String threeGramFileName;
+	private String fourGramFileName;
+	private String fiveGramFileName;
 
 	@Override
 	public void importNGramList() {
@@ -57,17 +60,42 @@ public class NGramListImporterImpl implements NGramListImporter {
 		long start = System.currentTimeMillis();
 
 		try {
-			Map<String, NGram> nGramsFromFile = new HashMap<String, NGram>();
-			for (String fileName : fileNames) {
-				addUniqueRowsToMap(nGramFileParser.parseFile(fileName), nGramsFromFile);
+			Map<String, NGram> allNGrams = new HashMap<String, NGram>();
+
+			Map<String, NGram> twoGramsFromFile = new HashMap<String, NGram>();
+			addUniqueRowsToMap(nGramFileParser.parseFile(twoGramFileName), twoGramsFromFile);
+			for (NGram twoGram : twoGramsFromFile.values()) {
+				twoGram.setNumWords(2);
 			}
+			allNGrams.putAll(twoGramsFromFile);
+
+			Map<String, NGram> threeGramsFromFile = new HashMap<String, NGram>();
+			addUniqueRowsToMap(nGramFileParser.parseFile(threeGramFileName), threeGramsFromFile);
+			for (NGram threeGram : threeGramsFromFile.values()) {
+				threeGram.setNumWords(3);
+			}
+			allNGrams.putAll(threeGramsFromFile);
+
+			Map<String, NGram> fourGramsFromFile = new HashMap<String, NGram>();
+			addUniqueRowsToMap(nGramFileParser.parseFile(fourGramFileName), fourGramsFromFile);
+			for (NGram fourGram : fourGramsFromFile.values()) {
+				fourGram.setNumWords(4);
+			}
+			allNGrams.putAll(fourGramsFromFile);
+
+			Map<String, NGram> fiveGramsFromFile = new HashMap<String, NGram>();
+			addUniqueRowsToMap(nGramFileParser.parseFile(fiveGramFileName), fiveGramsFromFile);
+			for (NGram fiveGram : fiveGramsFromFile.values()) {
+				fiveGram.setNumWords(5);
+			}
+			allNGrams.putAll(fiveGramsFromFile);
 
 			log.info("Starting n-gram list import...");
 
 			List<FutureTask<Void>> futureTasks = new ArrayList<FutureTask<Void>>();
 			FutureTask<Void> futureTask = null;
 			List<NGram> threadedNGramBatch = new ArrayList<NGram>();
-			for (NGram nGram : nGramsFromFile.values()) {
+			for (NGram nGram : allNGrams.values()) {
 				threadedNGramBatch.add(nGram);
 
 				if (threadedNGramBatch.size() >= this.concurrencyBatchSize) {
@@ -131,7 +159,7 @@ public class NGramListImporterImpl implements NGramListImporter {
 	}
 
 	/**
-	 * A concurrent task for performing a crossover of two parent Chromosomes, producing one child Chromosome.
+	 * A concurrent task for persisting a batch of NGrams to database.
 	 */
 	protected class BatchNGramImportTask implements Callable<Void> {
 
@@ -238,11 +266,38 @@ public class NGramListImporterImpl implements NGramListImporter {
 	}
 
 	/**
-	 * @param fileName
-	 *            the fileName to set
+	 * @param twoGramFileName
+	 *            the twoGramFileName to set
 	 */
 	@Required
-	public void setFileNames(String[] fileNames) {
-		this.fileNames = fileNames;
+	public void setTwoGramFileName(String twoGramFileName) {
+		this.twoGramFileName = twoGramFileName;
+	}
+
+	/**
+	 * @param threeGramFileName
+	 *            the threeGramFileName to set
+	 */
+	@Required
+	public void setThreeGramFileName(String threeGramFileName) {
+		this.threeGramFileName = threeGramFileName;
+	}
+
+	/**
+	 * @param fourGramFileName
+	 *            the fourGramFileName to set
+	 */
+	@Required
+	public void setFourGramFileName(String fourGramFileName) {
+		this.fourGramFileName = fourGramFileName;
+	}
+
+	/**
+	 * @param fiveGramFileName
+	 *            the fiveGramFileName to set
+	 */
+	@Required
+	public void setFiveGramFileName(String fiveGramFileName) {
+		this.fiveGramFileName = fiveGramFileName;
 	}
 }

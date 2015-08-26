@@ -34,21 +34,32 @@ public class UniqueWordListDao implements WordListDao {
 	private List<Word> wordList = new ArrayList<Word>();
 
 	/**
-	 * Constructor requiring a WordDao dependency as its only argument.
+	 * Constructor requiring a WordDao and top number of Words.
 	 * 
 	 * @param wordDao
 	 *            the WordDao to use for populating the internal List
+	 * @param top
+	 *            the top number of words
 	 */
-	public UniqueWordListDao(WordDao wordDao) {
+	public UniqueWordListDao(WordDao wordDao, Integer top) {
 		if (wordDao == null) {
 			throw new IllegalArgumentException("Error constructing UniqueWordListDao.  WordDao cannot be null.");
+		}
+
+		if (top == null || top == 0) {
+			throw new IllegalArgumentException(
+					"Error constructing UniqueWordListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
 		log.info("Beginning fetching of words from database.");
 
 		long start = System.currentTimeMillis();
 
-		wordList.addAll(wordDao.findAllUniqueWords());
+		if (top < 0) {
+			wordList.addAll(wordDao.findAllUniqueWords());
+		} else {
+			wordList.addAll(wordDao.findTopUniqueWordsByFrequency(top));
+		}
 
 		log.info("Finished fetching words from database in " + (System.currentTimeMillis() - start) + "ms.");
 

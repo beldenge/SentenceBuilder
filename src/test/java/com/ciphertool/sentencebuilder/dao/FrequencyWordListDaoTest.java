@@ -61,7 +61,7 @@ public class FrequencyWordListDaoTest {
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.findAllUniqueWords()).thenReturn(wordsToReturn);
 
-		FrequencyWordListDao frequencyWordListDao = new FrequencyWordListDao(wordDaoMock);
+		FrequencyWordListDao frequencyWordListDao = new FrequencyWordListDao(wordDaoMock, -1);
 
 		Field wordListField = ReflectionUtils.findField(FrequencyWordListDao.class, "wordList");
 		ReflectionUtils.makeAccessible(wordListField);
@@ -78,7 +78,12 @@ public class FrequencyWordListDaoTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithNullWordMap() {
-		new FrequencyWordListDao(null);
+		new FrequencyWordListDao(null, 10);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructorWithZeroTop() {
+		new FrequencyWordListDao(mock(WordDao.class), 0);
 	}
 
 	@Test
@@ -86,7 +91,7 @@ public class FrequencyWordListDaoTest {
 		WordDao wordDaoMock = mock(WordDao.class);
 		when(wordDaoMock.findAllUniqueWords()).thenReturn(wordsToReturn);
 
-		FrequencyWordListDao frequencyWordListDao = new FrequencyWordListDao(wordDaoMock);
+		FrequencyWordListDao frequencyWordListDao = new FrequencyWordListDao(wordDaoMock, -1);
 
 		Word randomWord = frequencyWordListDao.findRandomWord();
 

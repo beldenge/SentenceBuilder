@@ -19,21 +19,38 @@
 
 package com.ciphertool.sentencebuilder.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
+
+import com.ciphertool.sentencebuilder.entities.NGram.NGramId;
 
 @Entity
 @Table(name = "n_gram")
+@IdClass(NGramId.class)
 public class NGram {
+	public static class NGramId implements Serializable {
+		private static final long serialVersionUID = -2138153969756292400L;
+
+		protected String nGram;
+
+		protected int numWords;
+	}
 
 	@Id
 	@Column(name = "n_gram")
-	protected String ngram;
+	protected String nGram;
+
+	@Id
+	@Column(name = "num_words")
+	protected int numWords;
 
 	@Column(name = "frequency_weight")
-	protected int frequencyWeight;
+	protected long frequencyWeight;
 
 	public NGram() {
 	}
@@ -41,24 +58,41 @@ public class NGram {
 	/**
 	 * Business-key constructor
 	 * 
-	 * @param ngram
-	 *            the ngram to set
+	 * @param nGram
+	 *            the nGram to set
+	 * @param numWords
+	 *            the numWords to set
 	 */
-	public NGram(String ngram) {
-		this.ngram = ngram;
+	public NGram(String nGram, int numWords) {
+		this.nGram = nGram;
+		this.numWords = numWords;
 		this.frequencyWeight = 1;
+	}
+
+	/**
+	 * @param nGram
+	 *            the nGram to set
+	 * @param frequencyWeight
+	 *            the frequencyWeight to set
+	 */
+	public NGram(String nGram, long frequencyWeight) {
+		this.nGram = nGram;
+		this.frequencyWeight = frequencyWeight;
 	}
 
 	/**
 	 * Full-args constructor
 	 * 
-	 * @param ngram
-	 *            the ngram to set
+	 * @param nGram
+	 *            the nGram to set
+	 * @param numWords
+	 *            the numWords to set
 	 * @param frequencyWeight
 	 *            the frequency weight to set
 	 */
-	public NGram(String ngram, int frequencyWeight) {
-		this.ngram = ngram;
+	public NGram(String nGram, int numWords, int frequencyWeight) {
+		this.nGram = nGram;
+		this.numWords = numWords;
 		this.frequencyWeight = frequencyWeight;
 	}
 
@@ -66,29 +100,44 @@ public class NGram {
 	 * @return the NGramId
 	 */
 	public String getNGram() {
-		return ngram;
+		return this.nGram;
 	}
 
 	/**
-	 * @param ngram
-	 *            the ngram to set
+	 * @param nGram
+	 *            the nGram to set
 	 */
-	public void setNGram(String ngram) {
-		this.ngram = ngram;
+	public void setNGram(String nGram) {
+		this.nGram = nGram;
+	}
+
+	/**
+	 * @return the numWords
+	 */
+	public int getNumWords() {
+		return this.numWords;
+	}
+
+	/**
+	 * @param numWords
+	 *            the numWords to set
+	 */
+	public void setNumWords(int numWords) {
+		this.numWords = numWords;
 	}
 
 	/**
 	 * @return the frequency weight
 	 */
-	public int getFrequencyWeight() {
-		return frequencyWeight;
+	public long getFrequencyWeight() {
+		return this.frequencyWeight;
 	}
 
 	/**
 	 * @param frequencyWeight
 	 *            the frequency weight to set
 	 */
-	public void setFrequencyWeight(int frequencyWeight) {
+	public void setFrequencyWeight(long frequencyWeight) {
 		this.frequencyWeight = frequencyWeight;
 	}
 
@@ -96,7 +145,8 @@ public class NGram {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ngram == null) ? 0 : ngram.hashCode());
+		result = prime * result + ((nGram == null) ? 0 : nGram.hashCode());
+		result = prime * result + numWords;
 		return result;
 	}
 
@@ -108,15 +158,18 @@ public class NGram {
 		if (obj == null) {
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		if (!(obj instanceof NGram)) {
 			return false;
 		}
 		NGram other = (NGram) obj;
-		if (ngram == null) {
-			if (other.ngram != null) {
+		if (nGram == null) {
+			if (other.nGram != null) {
 				return false;
 			}
-		} else if (!ngram.equals(other.ngram)) {
+		} else if (!nGram.equals(other.nGram)) {
+			return false;
+		}
+		if (numWords != other.numWords) {
 			return false;
 		}
 		return true;
@@ -124,6 +177,6 @@ public class NGram {
 
 	@Override
 	public String toString() {
-		return "NGram [ngram=" + ngram + ", frequencyWeight=" + frequencyWeight + "]";
+		return "NGram [nGram=" + nGram + ", numWords=" + numWords + ", frequencyWeight=" + frequencyWeight + "]";
 	}
 }

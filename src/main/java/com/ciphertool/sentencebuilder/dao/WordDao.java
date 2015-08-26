@@ -34,8 +34,8 @@ public class WordDao {
 	private Logger log = Logger.getLogger(getClass());
 
 	private SessionFactory sessionFactory;
-	private static final String separator = ":";
-	private static final String wordParameter = "word";
+	private static final String SEPARATOR = ":";
+	private static final String WORD_PARAM = "word";
 
 	/**
 	 * Returns a list of all Words, so words will be duplicated if they have multiple parts of speech.
@@ -50,6 +50,19 @@ public class WordDao {
 	}
 
 	/**
+	 * Returns a list of top N Words, and words can be duplicated if they have multiple parts of speech.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<Word> findTopByFrequency(int top) {
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<Word> result = (List<Word>) session.createQuery("from Word order by frequencyWeight desc").setMaxResults(
+				top).list();
+
+		return result;
+	}
+
+	/**
 	 * Returns a list of all unique Words, irrespective of parts of speech.
 	 */
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -58,6 +71,20 @@ public class WordDao {
 		@SuppressWarnings("unchecked")
 		List<Word> result = (List<Word>) session.createQuery(
 				"select distinct new Word(id.word, frequencyWeight) from Word").list();
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of top N unique Words, irrespective of parts of speech.
+	 */
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<Word> findTopUniqueWordsByFrequency(int top) {
+		Session session = sessionFactory.getCurrentSession();
+		@SuppressWarnings("unchecked")
+		List<Word> result = (List<Word>) session.createQuery(
+				"select distinct new Word(id.word, frequencyWeight) from Word order by frequencyWeight desc")
+				.setMaxResults(top).list();
 
 		return result;
 	}
@@ -79,8 +106,8 @@ public class WordDao {
 
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery("from Word where word = " + separator + wordParameter)
-				.setParameter(wordParameter, word).list();
+		List<Word> words = (List<Word>) session.createQuery("from Word where word = " + SEPARATOR + WORD_PARAM)
+				.setParameter(WORD_PARAM, word).list();
 
 		return words;
 	}

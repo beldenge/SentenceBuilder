@@ -80,7 +80,7 @@ public class IndexedWordMapDaoTest {
 
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
 
-		indexedWordMapDao = new IndexedWordMapDao(wordDaoMock);
+		indexedWordMapDao = new IndexedWordMapDao(wordDaoMock, -1);
 
 		verify(wordDaoMock, times(1)).findAll();
 	}
@@ -90,7 +90,7 @@ public class IndexedWordMapDaoTest {
 		reset(wordDaoMock);
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
 
-		IndexedWordMapDao IndexedWordMapDao = new IndexedWordMapDao(wordDaoMock);
+		IndexedWordMapDao IndexedWordMapDao = new IndexedWordMapDao(wordDaoMock, -1);
 
 		assertEquals(10, IndexedWordMapDao.getPartOfSpeechWordMap().size());
 		assertEquals(10, IndexedWordMapDao.getLengthWordMap().size());
@@ -118,7 +118,12 @@ public class IndexedWordMapDaoTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructorWithNullWordMap() {
-		new IndexedWordMapDao(null);
+		new IndexedWordMapDao(null, 10);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructorWithZeroTop() {
+		new IndexedWordMapDao(null, 0);
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
