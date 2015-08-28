@@ -32,8 +32,8 @@ import com.ciphertool.cfgreader.datastructures.Tree;
 import com.ciphertool.cfgreader.generated.ProductionType;
 import com.ciphertool.cfgreader.util.ContextFreeGrammarHelper;
 import com.ciphertool.sentencebuilder.beans.Sentence;
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.dao.WordMapDao;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class SentenceHelper {
 

@@ -26,7 +26,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 @Embeddable
 public class WordId implements Serializable {

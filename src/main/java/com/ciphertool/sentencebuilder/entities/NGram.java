@@ -56,20 +56,6 @@ public class NGram {
 	}
 
 	/**
-	 * Business-key constructor
-	 * 
-	 * @param nGram
-	 *            the nGram to set
-	 * @param numWords
-	 *            the numWords to set
-	 */
-	public NGram(String nGram, int numWords) {
-		this.nGram = nGram;
-		this.numWords = numWords;
-		this.frequencyWeight = 1;
-	}
-
-	/**
 	 * @param nGram
 	 *            the nGram to set
 	 * @param frequencyWeight
@@ -77,22 +63,6 @@ public class NGram {
 	 */
 	public NGram(String nGram, long frequencyWeight) {
 		this.nGram = nGram;
-		this.frequencyWeight = frequencyWeight;
-	}
-
-	/**
-	 * Full-args constructor
-	 * 
-	 * @param nGram
-	 *            the nGram to set
-	 * @param numWords
-	 *            the numWords to set
-	 * @param frequencyWeight
-	 *            the frequency weight to set
-	 */
-	public NGram(String nGram, int numWords, int frequencyWeight) {
-		this.nGram = nGram;
-		this.numWords = numWords;
 		this.frequencyWeight = frequencyWeight;
 	}
 

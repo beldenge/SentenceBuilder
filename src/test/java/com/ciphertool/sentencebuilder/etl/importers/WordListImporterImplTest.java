@@ -45,10 +45,10 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.etl.parsers.FileParser;
 import com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser;
 

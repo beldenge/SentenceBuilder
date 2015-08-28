@@ -17,42 +17,29 @@
  * SentenceBuilder. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.sentencebuilder.common;
+package com.ciphertool.sentencebuilder.wordgraph;
 
-public enum PartOfSpeechType {
-	NOUN('N'),
-	PLURAL('p'),
-	NOUN_PHRASE('h'),
-	VERB_PARTICIPLE('V'),
-	VERB_TRANSITIVE('t'),
-	VERB_INTRANSITIVE('i'),
-	ADJECTIVE('A'),
-	ADVERB('v'),
-	CONJUNCTION('C'),
-	PREPOSITION('P'),
-	INTERJECTION('!'),
-	PRONOUN('r'),
-	ARTICLE('D'),
-	NOMINATIVE('o'),
-	NONE('X');
+public class Match {
+	private int beginPos;
+	private int endPos;
+	private String word;
 
-	private final char symbol;
-
-	PartOfSpeechType(char symbol) {
-		this.symbol = symbol;
+	public Match(int beginPos, int endPos, String word) {
+		this.beginPos = beginPos;
+		this.endPos = endPos;
+		this.word = word;
 	}
 
-	public char getSymbol() {
-		return symbol;
+	public final int getEndPos() {
+		return endPos;
 	}
 
-	public static PartOfSpeechType getValueFromSymbol(char symbol) {
-		for (PartOfSpeechType pos : values()) {
-			if (pos.symbol == symbol) {
-				return pos;
-			}
-		}
+	public final String getWord() {
+		return word;
+	}
 
-		return null;
+	@Override
+	public String toString() {
+		return "Match [beginPos=" + beginPos + ", endPos=" + endPos + ", word=" + word + "]";
 	}
 }

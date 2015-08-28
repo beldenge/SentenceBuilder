@@ -96,7 +96,7 @@ public class NGramFileParser implements FileParser<NGram> {
 			sb.append(lineParts[i]);
 		}
 
-		String nGram = sb.toString();
+		String nGram = sb.toString().toLowerCase().replaceAll("[^a-z]", "");
 
 		if (nGram != null && !nGram.isEmpty()) {
 			nGramsFromFile.add(new NGram(nGram, frequency));

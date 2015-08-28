@@ -24,9 +24,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class HappyWordFilterTest {
 	@Test

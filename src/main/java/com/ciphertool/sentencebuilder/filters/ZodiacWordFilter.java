@@ -22,9 +22,9 @@ package com.ciphertool.sentencebuilder.filters;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class ZodiacWordFilter implements WordFilter {
 

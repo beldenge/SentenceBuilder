@@ -29,8 +29,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 /**
  * This is a lower memory utilization implementation of WordMapDao. It builds an index map using int, which is 32-bit,

@@ -26,7 +26,7 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class WordTest {
 	@Test

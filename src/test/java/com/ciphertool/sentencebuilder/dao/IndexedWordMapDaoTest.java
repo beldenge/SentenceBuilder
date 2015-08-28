@@ -34,9 +34,9 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class IndexedWordMapDaoTest {
 	private static WordDao wordDaoMock;

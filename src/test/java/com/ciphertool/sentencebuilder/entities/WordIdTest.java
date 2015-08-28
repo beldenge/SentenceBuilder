@@ -24,7 +24,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class WordIdTest {
 	@Test

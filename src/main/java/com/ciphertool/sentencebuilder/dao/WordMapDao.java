@@ -22,8 +22,8 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public interface WordMapDao {
 	/**

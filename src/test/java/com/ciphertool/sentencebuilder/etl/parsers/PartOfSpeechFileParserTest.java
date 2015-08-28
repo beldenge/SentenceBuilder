@@ -36,9 +36,9 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class PartOfSpeechFileParserTest {
 

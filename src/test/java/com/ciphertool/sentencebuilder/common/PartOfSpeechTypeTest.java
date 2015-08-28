@@ -23,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+
 public class PartOfSpeechTypeTest {
 	@Test
 	public void testGetSymbol() {
