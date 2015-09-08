@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IndexNode {
-	private String terminal;
+	private boolean isTerminal;
 	private Map<Character, IndexNode> letterMap = new HashMap<Character, IndexNode>();
 
 	/**
@@ -33,11 +33,11 @@ public class IndexNode {
 	}
 
 	/**
-	 * @param terminal
+	 * @param isTerminal
 	 */
-	public IndexNode(String terminal) {
+	public IndexNode(boolean isTerminal) {
 		super();
-		this.terminal = terminal;
+		this.isTerminal = isTerminal;
 	}
 
 	public boolean containsChild(Character c) {
@@ -53,17 +53,17 @@ public class IndexNode {
 	}
 
 	/**
-	 * @return the terminal
+	 * @return the isTerminal
 	 */
-	public String getTerminal() {
-		return terminal;
+	public boolean isTerminal() {
+		return isTerminal;
 	}
 
 	/**
-	 * @param terminal
-	 *            the terminal to set
+	 * @param isTerminal
+	 *            the isTerminal to set
 	 */
-	public void setTerminal(String terminal) {
-		this.terminal = terminal;
+	public void setIsTerminal(boolean isTerminal) {
+		this.isTerminal = isTerminal;
 	}
 }

@@ -62,24 +62,24 @@ public class UniqueNGramListDao implements NGramListDao {
 			throw new IllegalArgumentException("Error constructing UniqueNGramListDao.  NGramDao cannot be null.");
 		}
 
-		if (topTwoGrams == null || topTwoGrams == 0) {
+		if (topTwoGrams == null) {
 			throw new IllegalArgumentException(
-					"Error constructing UniqueNGramListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing UniqueNGramListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
-		if (topThreeGrams == null || topThreeGrams == 0) {
+		if (topThreeGrams == null) {
 			throw new IllegalArgumentException(
-					"Error constructing UniqueNGramListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing UniqueNGramListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
-		if (topFourGrams == null || topFourGrams == 0) {
+		if (topFourGrams == null) {
 			throw new IllegalArgumentException(
-					"Error constructing UniqueNGramListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing UniqueNGramListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
-		if (topFiveGrams == null || topFiveGrams == 0) {
+		if (topFiveGrams == null) {
 			throw new IllegalArgumentException(
-					"Error constructing UniqueNGramListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing UniqueNGramListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
 		log.info("Beginning fetching of n-grams from database.");
@@ -89,25 +89,25 @@ public class UniqueNGramListDao implements NGramListDao {
 		if (topTwoGrams < 0) {
 			twoGramList.addAll(nGramDao.findAllByNumWords(2));
 
-		} else {
+		} else if (topTwoGrams > 0) {
 			twoGramList.addAll(nGramDao.findTopMostFrequentByNumWords(2, topTwoGrams));
 		}
 
 		if (topThreeGrams < 0) {
 			threeGramList.addAll(nGramDao.findAllByNumWords(3));
-		} else {
+		} else if (topThreeGrams > 0) {
 			threeGramList.addAll(nGramDao.findTopMostFrequentByNumWords(3, topThreeGrams));
 		}
 
 		if (topFourGrams < 0) {
 			fourGramList.addAll(nGramDao.findAllByNumWords(4));
-		} else {
+		} else if (topFourGrams > 0) {
 			fourGramList.addAll(nGramDao.findTopMostFrequentByNumWords(4, topFourGrams));
 		}
 
 		if (topFiveGrams < 0) {
 			fiveGramList.addAll(nGramDao.findAllByNumWords(5));
-		} else {
+		} else if (topFiveGrams > 0) {
 			fiveGramList.addAll(nGramDao.findTopMostFrequentByNumWords(5, topFiveGrams));
 		}
 

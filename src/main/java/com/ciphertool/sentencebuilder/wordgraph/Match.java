@@ -30,6 +30,10 @@ public class Match {
 		this.word = word;
 	}
 
+	public int getBeginPos() {
+		return beginPos;
+	}
+
 	public final int getEndPos() {
 		return endPos;
 	}
