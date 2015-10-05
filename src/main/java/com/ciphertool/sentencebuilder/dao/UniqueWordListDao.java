@@ -46,9 +46,9 @@ public class UniqueWordListDao implements WordListDao {
 			throw new IllegalArgumentException("Error constructing UniqueWordListDao.  WordDao cannot be null.");
 		}
 
-		if (top == null || top == 0) {
+		if (top == null) {
 			throw new IllegalArgumentException(
-					"Error constructing UniqueWordListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing UniqueWordListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
 		log.info("Beginning fetching of words from database.");

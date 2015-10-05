@@ -78,11 +78,6 @@ public class UniqueWordListDaoTest {
 		new UniqueWordListDao(null, 10);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructorWithZeroTop() {
-		new UniqueWordListDao(null, 0);
-	}
-
 	@Test
 	public void testFindRandomWord() {
 		WordDao wordDaoMock = mock(WordDao.class);

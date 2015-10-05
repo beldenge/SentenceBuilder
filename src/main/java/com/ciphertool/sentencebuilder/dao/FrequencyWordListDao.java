@@ -45,9 +45,9 @@ public class FrequencyWordListDao implements WordListDao {
 			throw new IllegalArgumentException("Error constructing FrequencyWordListDao.  WordDao cannot be null.");
 		}
 
-		if (top == null || top == 0) {
+		if (top == null) {
 			throw new IllegalArgumentException(
-					"Error constructing FrequencyWordListDao.  Top cannot be 0.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
+					"Error constructing FrequencyWordListDao.  Top cannot be null.  Please ensure top is either set to a positive number, or to -1 to be unbounded.");
 		}
 
 		log.info("Beginning fetching of words from database.");

@@ -81,11 +81,6 @@ public class FrequencyWordListDaoTest {
 		new FrequencyWordListDao(null, 10);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructorWithZeroTop() {
-		new FrequencyWordListDao(mock(WordDao.class), 0);
-	}
-
 	@Test
 	public void testFindRandomWord() {
 		WordDao wordDaoMock = mock(WordDao.class);
