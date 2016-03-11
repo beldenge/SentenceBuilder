@@ -68,7 +68,7 @@ You should have received a copy of the GNU General Public License along with Sen
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
-			<version>3.2.1</version>
+			<version>3.2.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
