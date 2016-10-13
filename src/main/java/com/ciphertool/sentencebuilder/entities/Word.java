@@ -19,6 +19,7 @@
 
 package com.ciphertool.sentencebuilder.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,6 +29,9 @@ import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 @Document(collection = "partsOfSpeech")
 @CompoundIndex(def = "{ 'partOfSpeech': 1, 'word': 1 }")
 public class Word {
+	@Id
+	private String id;
+
 	@Indexed
 	private String word;
 
@@ -81,6 +85,20 @@ public class Word {
 	 */
 	public Word(NGram nGram) {
 		this(nGram.getNGram(), (int) nGram.getFrequencyWeight());
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	/**
