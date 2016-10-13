@@ -19,15 +19,14 @@
 
 package com.ciphertool.sentencebuilder.entities;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "nGram")
+@CompoundIndex(def = "{ 'nGram': 1, 'numWords': 1 }")
 public class NGram {
-	@Id
 	protected String nGram;
 
-	@Id
 	protected int numWords;
 
 	protected long frequencyWeight;
