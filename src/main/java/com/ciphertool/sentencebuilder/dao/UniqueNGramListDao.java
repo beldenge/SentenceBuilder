@@ -88,7 +88,6 @@ public class UniqueNGramListDao implements NGramListDao {
 
 		if (topTwoGrams < 0) {
 			twoGramList.addAll(nGramDao.findAllByNumWords(2));
-
 		} else if (topTwoGrams > 0) {
 			twoGramList.addAll(nGramDao.findTopMostFrequentByNumWords(2, topTwoGrams));
 		}

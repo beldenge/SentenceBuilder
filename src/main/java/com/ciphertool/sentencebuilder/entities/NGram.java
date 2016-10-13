@@ -21,10 +21,11 @@ package com.ciphertool.sentencebuilder.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "nGram")
-@CompoundIndex(def = "{ 'nGram': 1, 'numWords': 1 }")
+@CompoundIndex(def = "{ 'nGram': 1, 'numWords': 1 }", unique =  true, background = true)
 public class NGram {
 	@Id
 	private String id;
@@ -33,6 +34,7 @@ public class NGram {
 
 	private int numWords;
 
+	@Indexed(background = true)
 	private long frequencyWeight;
 
 	public NGram() {

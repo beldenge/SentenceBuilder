@@ -19,6 +19,10 @@
 
 package com.ciphertool.sentencebuilder.dao;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +32,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -63,7 +69,8 @@ public class WordDao {
 	 */
 	public List<Word> findAllUniqueWords() {
 		Query query = new Query();
-		query.fields().include("word").include("frequencyWeight");
+		query.fields().include("word");
+		query.fields().include("frequencyWeight");
 
 		Set<Word> result = new HashSet<Word>(mongoOperations.find(query, Word.class)); 
 
@@ -75,13 +82,11 @@ public class WordDao {
 	 * Returns a list of top N unique Words, irrespective of parts of speech.
 	 */
 	public List<Word> findTopUniqueWordsByFrequency(int top) {
-		Query query = new Query().limit(top);
-		query.fields().include("word").include("frequencyWeight");
+		Aggregation aggregation = Aggregation.newAggregation(sort(Sort.Direction.DESC, "frequencyWeight"), group("word", "frequencyWeight"), limit(top));
 
-		Set<Word> result = new HashSet<Word>(mongoOperations.find(query, Word.class)); 
+		AggregationResults<Word> result = mongoOperations.aggregate(aggregation, Word.class, Word.class); 
 
-		// We have to convert between set and list in order to achieve "distinct" functionality not supported by mongoOperations
-		return new ArrayList<Word>(result);
+		return result.getMappedResults();
 	}
 
 	/**

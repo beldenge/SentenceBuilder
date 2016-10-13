@@ -27,12 +27,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 @Document(collection = "partsOfSpeech")
-@CompoundIndex(def = "{ 'partOfSpeech': 1, 'word': 1 }")
+@CompoundIndex(def = "{ 'partOfSpeech': 1, 'word': 1 }", unique =  true, background = true)
 public class Word {
 	@Id
 	private String id;
 
-	@Indexed
+	@Indexed(background = true)
 	private String word;
 
 	private PartOfSpeechType partOfSpeech;

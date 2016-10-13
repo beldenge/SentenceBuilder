@@ -85,6 +85,6 @@ public class UniqueWordListDao implements WordListDao {
 	}
 
 	public List<Word> getTopWords(int top) {
-		return wordList.subList(0, top);
+		return wordList.subList(0, Math.min(wordList.size(), top));
 	}
 }
