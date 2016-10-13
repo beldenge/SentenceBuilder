@@ -37,7 +37,6 @@ import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class PartOfSpeechFileParserTest {
@@ -50,11 +49,11 @@ public class PartOfSpeechFileParserTest {
 
 		List<Word> wordsFromFile = partOfSpeechFileParser.parseFile(filePath);
 
-		Word expectedWord1 = new Word(new WordId("stuff", PartOfSpeechType.NOUN));
-		Word expectedWord2 = new Word(new WordId("stuff", PartOfSpeechType.VERB_PARTICIPLE));
-		Word expectedWord3 = new Word(new WordId("stuff", PartOfSpeechType.NOUN_PHRASE));
-		Word expectedWord4 = new Word(new WordId("boarding pass", PartOfSpeechType.NOUN_PHRASE));
-		Word expectedWord5 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word expectedWord1 = new Word("stuff", PartOfSpeechType.NOUN);
+		Word expectedWord2 = new Word("stuff", PartOfSpeechType.VERB_PARTICIPLE);
+		Word expectedWord3 = new Word("stuff", PartOfSpeechType.NOUN_PHRASE);
+		Word expectedWord4 = new Word("boarding pass", PartOfSpeechType.NOUN_PHRASE);
+		Word expectedWord5 = new Word("george", PartOfSpeechType.NOUN);
 
 		assertEquals(expectedWord1, wordsFromFile.get(0));
 		assertEquals(expectedWord2, wordsFromFile.get(1));
@@ -90,9 +89,9 @@ public class PartOfSpeechFileParserTest {
 		int wordCount = partOfSpeechFileParser.parseLine(line, wordsFromFile);
 		assertEquals(3, wordsFromFile.size());
 
-		Word expectedWord1 = new Word(new WordId("stuff", PartOfSpeechType.NOUN));
-		Word expectedWord2 = new Word(new WordId("stuff", PartOfSpeechType.VERB_PARTICIPLE));
-		Word expectedWord3 = new Word(new WordId("stuff", PartOfSpeechType.NOUN_PHRASE));
+		Word expectedWord1 = new Word("stuff", PartOfSpeechType.NOUN);
+		Word expectedWord2 = new Word("stuff", PartOfSpeechType.VERB_PARTICIPLE);
+		Word expectedWord3 = new Word("stuff", PartOfSpeechType.NOUN_PHRASE);
 
 		assertEquals(expectedWord1, wordsFromFile.get(0));
 		assertEquals(expectedWord2, wordsFromFile.get(1));
@@ -111,7 +110,7 @@ public class PartOfSpeechFileParserTest {
 		int wordCount = partOfSpeechFileParser.parseLine(line, wordsFromFile);
 		assertEquals(1, wordsFromFile.size());
 
-		Word expectedWord = new Word(new WordId("boarding pass", PartOfSpeechType.NOUN_PHRASE));
+		Word expectedWord = new Word("boarding pass", PartOfSpeechType.NOUN_PHRASE);
 
 		assertEquals(expectedWord, wordsFromFile.get(0));
 		assertEquals(1, wordCount);

@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class HappyWordFilterTest {
@@ -39,6 +38,6 @@ public class HappyWordFilterTest {
 		/*
 		 * Not much to test here -- this filter should return true for any Word.
 		 */
-		assertTrue(happyWordFilter.filter(new Word(new WordId("arbitraryWordThatDoesNotExist", PartOfSpeechType.NONE))));
+		assertTrue(happyWordFilter.filter(new Word("arbitraryWordThatDoesNotExist", PartOfSpeechType.NONE)));
 	}
 }

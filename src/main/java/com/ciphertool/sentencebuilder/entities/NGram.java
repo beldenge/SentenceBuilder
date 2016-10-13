@@ -19,37 +19,17 @@
 
 package com.ciphertool.sentencebuilder.entities;
 
-import java.io.Serializable;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-
-import com.ciphertool.sentencebuilder.entities.NGram.NGramId;
-
-@Entity
-@Table(name = "n_gram")
-@IdClass(NGramId.class)
+@Document(collection = "nGram")
 public class NGram {
-	public static class NGramId implements Serializable {
-		private static final long serialVersionUID = -2138153969756292400L;
-
-		protected String nGram;
-
-		protected int numWords;
-	}
-
 	@Id
-	@Column(name = "n_gram")
 	protected String nGram;
 
 	@Id
-	@Column(name = "num_words")
 	protected int numWords;
 
-	@Column(name = "frequency_weight")
 	protected long frequencyWeight;
 
 	public NGram() {

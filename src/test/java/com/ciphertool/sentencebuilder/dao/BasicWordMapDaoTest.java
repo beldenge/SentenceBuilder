@@ -35,7 +35,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class BasicWordMapDaoTest {
@@ -57,25 +56,25 @@ public class BasicWordMapDaoTest {
 	public static void setUp() {
 		wordDaoMock = mock(WordDao.class);
 
-		word1 = new Word(new WordId("I", PartOfSpeechType.NOUN));
+		word1 = new Word("I", PartOfSpeechType.NOUN);
 		wordsToReturn.add(word1);
-		word2 = new Word(new WordId("am", PartOfSpeechType.PLURAL));
+		word2 = new Word("am", PartOfSpeechType.PLURAL);
 		wordsToReturn.add(word2);
-		word3 = new Word(new WordId("the", PartOfSpeechType.NOUN_PHRASE));
+		word3 = new Word("the", PartOfSpeechType.NOUN_PHRASE);
 		wordsToReturn.add(word3);
-		word4 = new Word(new WordId("best", PartOfSpeechType.VERB_PARTICIPLE));
+		word4 = new Word("best", PartOfSpeechType.VERB_PARTICIPLE);
 		wordsToReturn.add(word4);
-		word5 = new Word(new WordId("homie", PartOfSpeechType.VERB_TRANSITIVE));
+		word5 = new Word("homie", PartOfSpeechType.VERB_TRANSITIVE);
 		wordsToReturn.add(word5);
-		word6 = new Word(new WordId("hollah", PartOfSpeechType.VERB_INTRANSITIVE));
+		word6 = new Word("hollah", PartOfSpeechType.VERB_INTRANSITIVE);
 		wordsToReturn.add(word6);
-		word7 = new Word(new WordId("seventy", PartOfSpeechType.ADJECTIVE));
+		word7 = new Word("seventy", PartOfSpeechType.ADJECTIVE);
 		wordsToReturn.add(word7);
-		word8 = new Word(new WordId("trillion", PartOfSpeechType.ADVERB));
+		word8 = new Word("trillion", PartOfSpeechType.ADVERB);
 		wordsToReturn.add(word8);
-		word9 = new Word(new WordId("benjamins", PartOfSpeechType.CONJUNCTION));
+		word9 = new Word("benjamins", PartOfSpeechType.CONJUNCTION);
 		wordsToReturn.add(word9);
-		word10 = new Word(new WordId("investment", PartOfSpeechType.PREPOSITION));
+		word10 = new Word("investment", PartOfSpeechType.PREPOSITION);
 		wordsToReturn.add(word10);
 
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
@@ -193,7 +192,7 @@ public class BasicWordMapDaoTest {
 		assertEquals(10, partOfSpeechWordMap.size());
 
 		for (Word word : wordsToReturn) {
-			assertTrue(partOfSpeechWordMap.get(word.getId().getPartOfSpeech()).contains(word));
+			assertTrue(partOfSpeechWordMap.get(word.getPartOfSpeech()).contains(word));
 		}
 	}
 
@@ -209,7 +208,7 @@ public class BasicWordMapDaoTest {
 		assertEquals(10, lengthWordMap.size());
 
 		for (Word word : wordsToReturn) {
-			assertTrue(lengthWordMap.get(word.getId().getWord().length()).contains(word));
+			assertTrue(lengthWordMap.get(word.getWord().length()).contains(word));
 		}
 	}
 

@@ -29,7 +29,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class PartOfSpeechFileParser implements FileParser<Word> {
@@ -101,7 +100,7 @@ public class PartOfSpeechFileParser implements FileParser<Word> {
 			 * The pipe character is just informational in the word list, so we don't add it as a part of speech.
 			 */
 			if (partsOfSpeech[i] != '|') {
-				wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType.getValueFromSymbol(partsOfSpeech[i])), 1));
+				wordsFromFile.add(new Word(word, PartOfSpeechType.getValueFromSymbol(partsOfSpeech[i]), 1));
 
 				wordCount++;
 			}

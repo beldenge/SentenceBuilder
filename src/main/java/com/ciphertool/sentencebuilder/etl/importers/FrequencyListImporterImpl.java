@@ -180,7 +180,7 @@ public class FrequencyListImporterImpl implements FrequencyListImporter {
 		 * Unfortunately the frequency data has mixed case, so this query may not return the results we would expect.
 		 * Rather than modify our logic here to account for this, it is better to fix the data.
 		 */
-		List<Word> wordsFromDatabase = wordDao.findByWordString(word.getId().getWord());
+		List<Word> wordsFromDatabase = wordDao.findByWordString(word.getWord());
 
 		if (wordsFromDatabase == null || wordsFromDatabase.size() == 0) {
 			log.debug("No frequency matches found in part_of_speech table for word: " + word

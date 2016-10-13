@@ -22,30 +22,25 @@ package com.ciphertool.sentencebuilder.dao;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.ciphertool.sentencebuilder.entities.NGram;
 
 public class NGramDao {
 	private Logger log = Logger.getLogger(getClass());
 
-	private SessionFactory sessionFactory;
-	private static final String SEPARATOR = ":";
-	private static final String N_GRAM_PARAM = "nGram";
-	private static final String NUM_WORDS_PARAM = "numWords";
+	private MongoOperations mongoOperations;
 
 	/**
 	 * Returns a list of all NGrams.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findAll() {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<NGram> result = (List<NGram>) session.createQuery("from NGram").list();
+		List<NGram> result = mongoOperations.findAll(NGram.class);
 
 		return result;
 	}
@@ -53,13 +48,11 @@ public class NGramDao {
 	/**
 	 * Returns a list of all NGrams.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findAllByNumWords(int numWords) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<NGram> result = (List<NGram>) session.createQuery(
-				"from NGram where numWords = " + SEPARATOR + NUM_WORDS_PARAM).setInteger(NUM_WORDS_PARAM, numWords)
-				.list();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("numWords").is(numWords));
+
+		List<NGram> result = mongoOperations.find(query,  NGram.class);
 
 		return result;
 	}
@@ -67,12 +60,9 @@ public class NGramDao {
 	/**
 	 * Returns a list of top N NGrams.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findTopMostFrequent(int top) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<NGram> result = (List<NGram>) session.createQuery("from NGram order by frequencyWeight desc")
-				.setMaxResults(top).list();
+		Query query = new Query().limit(top).with(new Sort(Sort.Direction.DESC, "frequencyWeight"));
+		List<NGram> result = mongoOperations.find(query, NGram.class); 
 
 		return result;
 	}
@@ -80,13 +70,11 @@ public class NGramDao {
 	/**
 	 * Returns a list of top N NGrams.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findTopMostFrequentByNumWords(int numWords, int top) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<NGram> result = (List<NGram>) session.createQuery(
-				"from NGram where numWords = " + SEPARATOR + NUM_WORDS_PARAM + " order by frequencyWeight desc")
-				.setInteger(NUM_WORDS_PARAM, numWords).setMaxResults(top).list();
+		Query query = new Query().limit(top).with(new Sort(Sort.Direction.DESC, "frequencyWeight"));
+		query.addCriteria(Criteria.where("numWords").is(numWords));
+
+		List<NGram> result = mongoOperations.find(query, NGram.class); 
 
 		return result;
 	}
@@ -98,7 +86,6 @@ public class NGramDao {
 	 *            the String value of the nGram to find
 	 * @return the List of matching NGrams
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<NGram> findByNGramString(String nGram) {
 		if (nGram == null) {
 			log.warn("Attempted to find NGram by null String.  Unable to continue, thus returning null.");
@@ -106,12 +93,12 @@ public class NGramDao {
 			return null;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<NGram> nGrams = (List<NGram>) session.createQuery("from NGram where nGram = " + SEPARATOR + N_GRAM_PARAM)
-				.setParameter(N_GRAM_PARAM, nGram).list();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("nGram").is(nGram));
 
-		return nGrams;
+		List<NGram> result = mongoOperations.find(query, NGram.class); 
+
+		return result;
 	}
 
 	/**
@@ -121,7 +108,6 @@ public class NGramDao {
 	 *            the NGram to insert
 	 * @return whether the insert was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(NGram nGram) {
 		if (nGram == null) {
 			log.warn("Attempted to insert null NGram.  Unable to continue, thus returning false.");
@@ -129,8 +115,8 @@ public class NGramDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		session.save(nGram);
+		mongoOperations.insert(nGram);
+
 		return true;
 	}
 
@@ -141,7 +127,6 @@ public class NGramDao {
 	 *            the batch of NGrams to insert
 	 * @return whether the insert was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insertBatch(List<NGram> nGramBatch) {
 		if (nGramBatch == null || nGramBatch.isEmpty()) {
 			log.warn("Attempted to insert NGrams in batch which was found to be null or empty.  Unable to continue, thus returning false.");
@@ -149,10 +134,8 @@ public class NGramDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		for (NGram nGram : nGramBatch) {
-			session.save(nGram);
-		}
+		mongoOperations.insert(nGramBatch, NGram.class);
+
 		return true;
 	}
 
@@ -163,7 +146,6 @@ public class NGramDao {
 	 *            the NGram to update
 	 * @return whether the update was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean update(NGram nGram) {
 		if (nGram == null) {
 			log.warn("Attempted to update null NGram.  Unable to continue, thus returning false.");
@@ -171,8 +153,14 @@ public class NGramDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		session.update(nGram);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("nGram").is(nGram.getNGram()));
+		query.addCriteria(Criteria.where("numWords").is(nGram.getNumWords()));
+		
+		Update update = new Update();
+		update.set("frequencyWeight", nGram.getFrequencyWeight());
+		
+		mongoOperations.updateFirst(query, update, NGram.class);
 
 		return true;
 	}
@@ -184,7 +172,6 @@ public class NGramDao {
 	 *            the batch of NGrams
 	 * @return whether the update was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updateBatch(List<NGram> nGramBatch) {
 		if (nGramBatch == null || nGramBatch.isEmpty()) {
 			log.warn("Attempted to update NGrams in batch which was found to be null or empty.  Unable to continue, thus returning false.");
@@ -192,19 +179,22 @@ public class NGramDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
 		for (NGram nGram : nGramBatch) {
-			session.update(nGram);
+			Query query = new Query();
+			query.addCriteria(Criteria.where("nGram").is(nGram.getNGram()));
+			query.addCriteria(Criteria.where("numWords").is(nGram.getNumWords()));
+			
+			Update update = new Update();
+			update.set("frequencyWeight", nGram.getFrequencyWeight());
+			
+			mongoOperations.updateFirst(query, update, NGram.class);
 		}
+		
 		return true;
 	}
 
-	/**
-	 * @param sessionFactory
-	 *            the SessionFactory to set
-	 */
 	@Required
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	public void setMongoTemplate(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
 }

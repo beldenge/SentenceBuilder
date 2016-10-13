@@ -22,11 +22,11 @@ You should have received a copy of the GNU General Public License along with Sen
 	<import resource="classpath*:bootstrapContext.xml" />
 
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
 	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser" id="partOfSpeechfileParser" />

@@ -37,7 +37,6 @@ import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class FrequencyFileParserTest {
@@ -50,9 +49,9 @@ public class FrequencyFileParserTest {
 
 		List<Word> wordsFromFile = frequencyFileParser.parseFile(filePath);
 
-		Word expectedWord1 = new Word(new WordId("the", PartOfSpeechType.NONE), 1501908);
-		Word expectedWord2 = new Word(new WordId("to", PartOfSpeechType.NONE), 1156570);
-		Word expectedWord3 = new Word(new WordId("a", PartOfSpeechType.NONE), 1041179);
+		Word expectedWord1 = new Word("the", PartOfSpeechType.NONE, 1501908);
+		Word expectedWord2 = new Word("to", PartOfSpeechType.NONE, 1156570);
+		Word expectedWord3 = new Word("a", PartOfSpeechType.NONE, 1041179);
 
 		assertEquals(expectedWord1, wordsFromFile.get(0));
 		assertEquals(expectedWord2, wordsFromFile.get(1));
@@ -86,7 +85,7 @@ public class FrequencyFileParserTest {
 		boolean result = frequencyFileParser.parseLine(line, wordsFromFile);
 		assertEquals(1, wordsFromFile.size());
 
-		Word expectedWord1 = new Word(new WordId("the", PartOfSpeechType.NONE), 1501908);
+		Word expectedWord1 = new Word("the", PartOfSpeechType.NONE, 1501908);
 
 		assertTrue(result);
 		assertEquals(expectedWord1, wordsFromFile.get(0));

@@ -29,7 +29,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class FrequencyFileParser implements FileParser<Word> {
@@ -100,7 +99,7 @@ public class FrequencyFileParser implements FileParser<Word> {
 		int frequency = Integer.parseInt(lineParts[1]);
 
 		if (word != null && !word.isEmpty()) {
-			wordsFromFile.add(new Word(new WordId(word, PartOfSpeechType.NONE), frequency));
+			wordsFromFile.add(new Word(word, PartOfSpeechType.NONE, frequency));
 
 			return true;
 		}

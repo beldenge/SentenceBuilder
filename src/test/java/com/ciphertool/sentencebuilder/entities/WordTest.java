@@ -31,19 +31,21 @@ import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 public class WordTest {
 	@Test
 	public void testBusinessKeyConstructor() {
-		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
-		Word word = new Word(wordIdToSet);
+		String wordStringToSet = "arbitraryWord";
+		Word word = new Word(wordStringToSet, PartOfSpeechType.NOUN);
 
-		assertSame(wordIdToSet, word.getId());
+		assertSame(wordStringToSet, word.getWord());
+		assertSame(PartOfSpeechType.NOUN, word.getPartOfSpeech());
 	}
 
 	@Test
 	public void testFullArgsConstructor() {
-		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
+		String wordStringToSet = "arbitraryWord";
 		int frequencyWeightToSet = 50;
-		Word word = new Word(wordIdToSet, frequencyWeightToSet);
+		Word word = new Word(wordStringToSet, PartOfSpeechType.NOUN, frequencyWeightToSet);
 
-		assertSame(wordIdToSet, word.getId());
+		assertSame(wordStringToSet, word.getWord());
+		assertSame(PartOfSpeechType.NOUN, word.getPartOfSpeech());
 		assertEquals(frequencyWeightToSet, word.getFrequencyWeight());
 	}
 
@@ -53,20 +55,28 @@ public class WordTest {
 		int frequencyWeightToSet = 50;
 		Word word = new Word(wordStringToSet, frequencyWeightToSet);
 
-		assertEquals(wordStringToSet, word.getId().getWord());
-		assertNull(word.getId().getPartOfSpeech());
+		assertEquals(wordStringToSet, word.getWord());
+		assertNull(word.getPartOfSpeech());
 		assertEquals(frequencyWeightToSet, word.getFrequencyWeight());
 	}
 
 	@Test
-	public void testSetId() {
-		WordId wordIdToSet = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
+	public void testSetWord() {
+		String wordStringToSet = "arbitraryWord";
 		Word word = new Word();
-		word.setId(wordIdToSet);
+		word.setWord(wordStringToSet);
 
-		assertSame(wordIdToSet, word.getId());
+		assertSame(wordStringToSet, word.getWord());
 	}
 
+	@Test
+	public void testSetPartOfSpeech() {
+		Word word = new Word();
+		word.setPartOfSpeech(PartOfSpeechType.NOUN);
+
+		assertSame(PartOfSpeechType.NOUN, word.getPartOfSpeech());
+	}
+	
 	@Test
 	public void testSetFrequencyWeight() {
 		int frequencyWeightToSet = 50;
@@ -78,27 +88,31 @@ public class WordTest {
 
 	@Test
 	public void testEquals() {
-		WordId baseWordId = new WordId("arbitraryWord", PartOfSpeechType.NOUN);
+		String wordStringToSet = "arbitraryWord";
 		int baseFrequencyWeight = 50;
 
 		Word base = new Word();
-		base.setId(baseWordId);
+		base.setWord(wordStringToSet);
+		base.setPartOfSpeech(PartOfSpeechType.NOUN);
 		base.setFrequencyWeight(baseFrequencyWeight);
 
 		Word wordEqualToBase = new Word();
-		wordEqualToBase.setId(baseWordId);
+		wordEqualToBase.setWord(wordStringToSet);
+		wordEqualToBase.setPartOfSpeech(PartOfSpeechType.NOUN);
 		wordEqualToBase.setFrequencyWeight(baseFrequencyWeight);
 
 		assertEquals(base, wordEqualToBase);
 
 		Word wordWithDifferentId = new Word();
-		wordWithDifferentId.setId(new WordId("aDifferentWord", PartOfSpeechType.NOUN));
+		wordWithDifferentId.setWord("aDifferentWord");
+		wordWithDifferentId.setPartOfSpeech(PartOfSpeechType.NOUN);
 		wordWithDifferentId.setFrequencyWeight(baseFrequencyWeight);
 
 		assertFalse(wordWithDifferentId.equals(base));
 
 		Word wordWithDifferentFrequencyWeight = new Word();
-		wordWithDifferentFrequencyWeight.setId(baseWordId);
+		wordWithDifferentFrequencyWeight.setWord(wordStringToSet);
+		wordWithDifferentFrequencyWeight.setPartOfSpeech(PartOfSpeechType.NOUN);
 		wordWithDifferentFrequencyWeight.setFrequencyWeight(baseFrequencyWeight);
 		/*
 		 * Even if the frequency weight is different, the Words should evaluate as equal

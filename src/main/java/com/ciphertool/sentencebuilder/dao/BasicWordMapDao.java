@@ -107,7 +107,7 @@ public class BasicWordMapDao implements WordMapDao {
 
 		HashMap<PartOfSpeechType, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 		for (Word w : allWords) {
-			PartOfSpeechType pos = w.getId().getPartOfSpeech();
+			PartOfSpeechType pos = w.getPartOfSpeech();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byPartOfSpeech.containsKey(pos)) {
@@ -138,7 +138,7 @@ public class BasicWordMapDao implements WordMapDao {
 		HashMap<Integer, ArrayList<Word>> byWordLength = new HashMap<Integer, ArrayList<Word>>();
 
 		for (Word w : allWords) {
-			Integer length = w.getId().getWord().length();
+			Integer length = w.getWord().length();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byWordLength.containsKey(length)) {

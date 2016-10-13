@@ -28,7 +28,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class SentenceTest {
@@ -36,9 +35,9 @@ public class SentenceTest {
 	@Test(expected = UnsupportedOperationException.class)
 	public void testWordsUnmodifiable() {
 		Sentence sentence = new Sentence();
-		sentence.appendWord(new Word(new WordId("George", PartOfSpeechType.NOUN)));
-		sentence.appendWord(new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE)));
-		sentence.appendWord(new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE)));
+		sentence.appendWord(new Word("George", PartOfSpeechType.NOUN));
+		sentence.appendWord(new Word("is", PartOfSpeechType.VERB_PARTICIPLE));
+		sentence.appendWord(new Word("awesome", PartOfSpeechType.ADJECTIVE));
 
 		List<Word> words = sentence.getWords();
 		words.remove(0); // should throw exception
@@ -54,11 +53,11 @@ public class SentenceTest {
 	public void testAppendWord() {
 		Sentence sentence = new Sentence();
 
-		Word word1 = new Word(new WordId("George", PartOfSpeechType.NOUN));
+		Word word1 = new Word("George", PartOfSpeechType.NOUN);
 		sentence.appendWord(word1);
-		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
+		Word word2 = new Word("is", PartOfSpeechType.VERB_PARTICIPLE);
 		sentence.appendWord(word2);
-		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
+		Word word3 = new Word("awesome", PartOfSpeechType.ADJECTIVE);
 		sentence.appendWord(word3);
 
 		assertEquals(3, sentence.getWords().size());
@@ -71,11 +70,11 @@ public class SentenceTest {
 	public void testRemoveWord() {
 		Sentence sentence = new Sentence();
 
-		Word word1 = new Word(new WordId("George", PartOfSpeechType.NOUN));
+		Word word1 = new Word("George", PartOfSpeechType.NOUN);
 		sentence.appendWord(word1);
-		Word word2 = new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE));
+		Word word2 = new Word("is", PartOfSpeechType.VERB_PARTICIPLE);
 		sentence.appendWord(word2);
-		Word word3 = new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE));
+		Word word3 = new Word("awesome", PartOfSpeechType.ADJECTIVE);
 		sentence.appendWord(word3);
 
 		assertEquals(3, sentence.getWords().size());
@@ -94,9 +93,9 @@ public class SentenceTest {
 	@Test
 	public void testLength() {
 		Sentence sentence = new Sentence();
-		sentence.appendWord(new Word(new WordId("George", PartOfSpeechType.NOUN)));
-		sentence.appendWord(new Word(new WordId("is", PartOfSpeechType.VERB_PARTICIPLE)));
-		sentence.appendWord(new Word(new WordId("awesome", PartOfSpeechType.ADJECTIVE)));
+		sentence.appendWord(new Word("George", PartOfSpeechType.NOUN));
+		sentence.appendWord(new Word("is", PartOfSpeechType.VERB_PARTICIPLE));
+		sentence.appendWord(new Word("awesome", PartOfSpeechType.ADJECTIVE));
 
 		assertEquals(15, sentence.length());
 	}
@@ -104,11 +103,11 @@ public class SentenceTest {
 	@Test
 	public void testToString() {
 		Sentence sentence = new Sentence();
-		sentence.appendWord(new Word(new WordId("the", PartOfSpeechType.ARTICLE)));
-		sentence.appendWord(new Word(new WordId("man", PartOfSpeechType.NOUN)));
-		sentence.appendWord(new Word(new WordId("walked", PartOfSpeechType.VERB_PARTICIPLE)));
-		sentence.appendWord(new Word(new WordId("with", PartOfSpeechType.PREPOSITION)));
-		sentence.appendWord(new Word(new WordId("God", PartOfSpeechType.NOUN)));
+		sentence.appendWord(new Word("the", PartOfSpeechType.ARTICLE));
+		sentence.appendWord(new Word("man", PartOfSpeechType.NOUN));
+		sentence.appendWord(new Word("walked", PartOfSpeechType.VERB_PARTICIPLE));
+		sentence.appendWord(new Word("with", PartOfSpeechType.PREPOSITION));
+		sentence.appendWord(new Word("God", PartOfSpeechType.NOUN));
 
 		assertEquals("The man walked with God.", sentence.toString());
 	}

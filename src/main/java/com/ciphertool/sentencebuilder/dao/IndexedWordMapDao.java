@@ -136,7 +136,7 @@ public class IndexedWordMapDao implements WordMapDao {
 		HashMap<PartOfSpeechType, ArrayList<Word>> byPartOfSpeech = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 
 		for (Word word : allWords) {
-			PartOfSpeechType pos = word.getId().getPartOfSpeech();
+			PartOfSpeechType pos = word.getPartOfSpeech();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byPartOfSpeech.containsKey(pos)) {
@@ -163,7 +163,7 @@ public class IndexedWordMapDao implements WordMapDao {
 		HashMap<Integer, ArrayList<Word>> byLength = new HashMap<Integer, ArrayList<Word>>();
 
 		for (Word w : allWords) {
-			Integer wordLength = w.getId().getWord().length();
+			Integer wordLength = w.getWord().length();
 
 			// Add the part of speech to the map if it doesn't exist
 			if (!byLength.containsKey(wordLength)) {

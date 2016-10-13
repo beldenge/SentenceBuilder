@@ -47,7 +47,6 @@ import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.dao.WordDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.etl.parsers.FileParser;
 import com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser;
@@ -167,9 +166,9 @@ public class WordListImporterImplTest {
 		wordListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		wordListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		List<Word> wordsToReturn = new ArrayList<Word>();
 		wordsToReturn.add(word1);
 		wordsToReturn.add(word2);
@@ -218,9 +217,9 @@ public class WordListImporterImplTest {
 		wordListImporterImpl.setPersistenceBatchSize(persistenceBatchSizeToSet);
 		wordListImporterImpl.setConcurrencyBatchSize(concurrencyBatchSizeToSet);
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		List<Word> wordsToReturn = new ArrayList<Word>();
 		wordsToReturn.add(word1);
 		wordsToReturn.add(word2);
@@ -259,19 +258,19 @@ public class WordListImporterImplTest {
 
 		List<Word> wordBatch = new ArrayList<Word>();
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word1, wordBatch);
 
 		verify(wordDaoMock, never()).insertBatch(anyListOf(Word.class));
 		assertEquals(1, wordBatch.size());
 
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word2, wordBatch);
 
 		verify(wordDaoMock, never()).insertBatch(anyListOf(Word.class));
 		assertEquals(2, wordBatch.size());
 
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word3, wordBatch);
 
 		rowCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowCountField, wordListImporterImpl);
@@ -327,19 +326,19 @@ public class WordListImporterImplTest {
 
 		List<Word> wordBatch = new ArrayList<Word>();
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word1, wordBatch);
 
 		verify(wordDaoMock, never()).insertBatch(anyListOf(Word.class));
 		assertEquals(1, wordBatch.size());
 
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word2, wordBatch);
 
 		verify(wordDaoMock, never()).insertBatch(anyListOf(Word.class));
 		assertEquals(2, wordBatch.size());
 
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		wordListImporterImpl.importWord(word3, wordBatch);
 
 		rowCountFromObject = (AtomicInteger) ReflectionUtils.getField(rowCountField, wordListImporterImpl);
@@ -356,9 +355,9 @@ public class WordListImporterImplTest {
 	public void testBatchWordImportTask() {
 		WordListImporterImpl wordListImporterImpl = new WordListImporterImpl();
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		List<Word> threadBatch = new ArrayList<Word>();
 		threadBatch.add(word1);
 		threadBatch.add(word2);
@@ -400,9 +399,9 @@ public class WordListImporterImplTest {
 	public void testBatchWordImportTask_LeftoversFromBatch() {
 		WordListImporterImpl wordListImporterImpl = new WordListImporterImpl();
 
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
-		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
-		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
+		Word word1 = new Word("george", PartOfSpeechType.NOUN);
+		Word word2 = new Word("elmer", PartOfSpeechType.NOUN);
+		Word word3 = new Word("belden", PartOfSpeechType.NOUN);
 		List<Word> threadBatch = new ArrayList<Word>();
 		threadBatch.add(word1);
 		threadBatch.add(word2);

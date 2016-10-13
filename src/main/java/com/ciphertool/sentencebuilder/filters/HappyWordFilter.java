@@ -24,7 +24,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public class HappyWordFilter implements WordFilter {
 
 	public boolean filter(Word word) {
-		if (word == null || word.getId() == null) {
+		if (word == null || word.getWord() == null || word.getPartOfSpeech() == null) {
 			return false;
 		}
 

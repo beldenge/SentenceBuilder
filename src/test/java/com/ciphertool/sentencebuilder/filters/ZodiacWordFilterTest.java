@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class ZodiacWordFilterTest {
@@ -36,9 +35,9 @@ public class ZodiacWordFilterTest {
 		assertFalse(zodiacWordFilter.filter(null));
 		assertFalse(zodiacWordFilter.filter(new Word()));
 
-		assertTrue(zodiacWordFilter.filter(new Word(new WordId("arbitraryWord", PartOfSpeechType.NONE))));
+		assertTrue(zodiacWordFilter.filter(new Word("arbitraryWord", PartOfSpeechType.NONE)));
 
-		assertFalse(zodiacWordFilter.filter(new Word(new WordId("ON", PartOfSpeechType.NOUN))));
-		assertFalse(zodiacWordFilter.filter(new Word(new WordId("ll", PartOfSpeechType.ADJECTIVE))));
+		assertFalse(zodiacWordFilter.filter(new Word("ON", PartOfSpeechType.NOUN)));
+		assertFalse(zodiacWordFilter.filter(new Word("ll", PartOfSpeechType.ADJECTIVE)));
 	}
 }

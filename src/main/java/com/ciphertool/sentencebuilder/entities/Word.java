@@ -19,20 +19,20 @@
 
 package com.ciphertool.sentencebuilder.entities;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "parts_of_speech")
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+
+@Document(collection = "partsOfSpeech")
 public class Word {
+	@Id
+	private String word;
 
-	@EmbeddedId
-	protected WordId id;
+	@Id
+	private PartOfSpeechType partOfSpeech;
 
-	@Column(name = "frequency_weight")
-	protected int frequencyWeight;
+	private int frequencyWeight;
 
 	public Word() {
 	}
@@ -40,24 +40,24 @@ public class Word {
 	/**
 	 * Business-key constructor
 	 * 
-	 * @param id
-	 *            the WordId to set
+	 * @param word the word String to set
+	 * @param partOfSpeech the PartOfSpeechType to set
 	 */
-	public Word(WordId id) {
-		this.id = id;
-		this.frequencyWeight = 1;
+	public Word(String word, PartOfSpeechType partOfSpeech) {
+		this(word, partOfSpeech, 1);
 	}
 
 	/**
 	 * Full-args constructor
 	 * 
-	 * @param id
-	 *            the WordId to set
+	 * @param word the word String to set
+	 * @param partOfSpeech the PartOfSpeechType to set
 	 * @param frequencyWeight
 	 *            the frequency weight to set
 	 */
-	public Word(WordId id, int frequencyWeight) {
-		this.id = id;
+	public Word(String word, PartOfSpeechType partOfSpeech, int frequencyWeight) {
+		this.word = word;
+		this.partOfSpeech = partOfSpeech;
 		this.frequencyWeight = frequencyWeight;
 	}
 
@@ -71,8 +71,7 @@ public class Word {
 	 *            the frequency weight to set
 	 */
 	public Word(String word, int frequencyWeight) {
-		this.id = new WordId(word, null);
-		this.frequencyWeight = frequencyWeight;
+		this(word, null, frequencyWeight);
 	}
 
 	/**
@@ -84,20 +83,35 @@ public class Word {
 	}
 
 	/**
-	 * @return the WordId
+	 * @return the word String
 	 */
-	public WordId getId() {
-		return id;
+	public String getWord() {
+		return word;
 	}
 
 	/**
-	 * @param id
-	 *            the WordId to set
+	 * @param word
+	 *            the word String to set
 	 */
-	public void setId(WordId id) {
-		this.id = id;
+	public void setWord(String word) {
+		this.word = word;
 	}
 
+	/**
+	 * @return the PartOfSpeechType
+	 */
+	public PartOfSpeechType getPartOfSpeech() {
+		return partOfSpeech;
+	}
+
+	/**
+	 * @param partOfSpeech
+	 *            the PartOfSpeech symbol to set
+	 */
+	public void setPartOfSpeech(PartOfSpeechType partOfSpeech) {
+		this.partOfSpeech = partOfSpeech;
+	}
+	
 	/**
 	 * @return the frequency weight
 	 */
@@ -117,7 +131,8 @@ public class Word {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((partOfSpeech == null) ? 0 : partOfSpeech.hashCode());
+		result = prime * result + ((word == null) ? 0 : word.hashCode());
 		return result;
 	}
 
@@ -133,11 +148,14 @@ public class Word {
 			return false;
 		}
 		Word other = (Word) obj;
-		if (id == null) {
-			if (other.id != null) {
+		if (partOfSpeech != other.partOfSpeech) {
+			return false;
+		}
+		if (word == null) {
+			if (other.word != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!word.equalsIgnoreCase(other.word)) {
 			return false;
 		}
 		return true;
@@ -145,6 +163,6 @@ public class Word {
 
 	@Override
 	public String toString() {
-		return "Word [id=" + id + ", frequencyWeight=" + frequencyWeight + "]";
+		return "Word [word=" + word + ", partOfSpeech=" + partOfSpeech + ", frequencyWeight=" + frequencyWeight + "]";
 	}
 }

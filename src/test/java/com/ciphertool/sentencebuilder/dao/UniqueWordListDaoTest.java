@@ -36,7 +36,6 @@ import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class UniqueWordListDaoTest {
@@ -47,11 +46,11 @@ public class UniqueWordListDaoTest {
 
 	@BeforeClass
 	public static void setUp() {
-		word1 = new Word(new WordId("programming", PartOfSpeechType.NOUN));
+		word1 = new Word("programming", PartOfSpeechType.NOUN);
 		wordsToReturn.add(word1);
-		word2 = new Word(new WordId("is", PartOfSpeechType.PLURAL));
+		word2 = new Word("is", PartOfSpeechType.PLURAL);
 		wordsToReturn.add(word2);
-		word3 = new Word(new WordId("awesome", PartOfSpeechType.NOUN_PHRASE));
+		word3 = new Word("awesome", PartOfSpeechType.NOUN_PHRASE);
 		wordsToReturn.add(word3);
 	}
 

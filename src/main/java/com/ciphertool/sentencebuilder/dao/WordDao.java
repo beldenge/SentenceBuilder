@@ -19,32 +19,31 @@
 
 package com.ciphertool.sentencebuilder.dao;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordDao {
 	private Logger log = Logger.getLogger(getClass());
 
-	private SessionFactory sessionFactory;
-	private static final String SEPARATOR = ":";
-	private static final String WORD_PARAM = "word";
+	private MongoOperations mongoOperations;
 
 	/**
 	 * Returns a list of all Words, so words will be duplicated if they have multiple parts of speech.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findAll() {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery("from Word").list();
+		List<Word> result = mongoOperations.findAll(Word.class);
 
 		return result;
 	}
@@ -52,12 +51,9 @@ public class WordDao {
 	/**
 	 * Returns a list of top N Words, and words can be duplicated if they have multiple parts of speech.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findTopByFrequency(int top) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery("from Word order by frequencyWeight desc").setMaxResults(
-				top).list();
+		Query query = new Query().limit(top).with(new Sort(Sort.Direction.DESC, "frequencyWeight"));
+		List<Word> result = mongoOperations.find(query, Word.class); 
 
 		return result;
 	}
@@ -65,28 +61,27 @@ public class WordDao {
 	/**
 	 * Returns a list of all unique Words, irrespective of parts of speech.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findAllUniqueWords() {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery(
-				"select distinct new Word(id.word, frequencyWeight) from Word").list();
+		Query query = new Query();
+		query.fields().include("word").include("frequencyWeight");
 
-		return result;
+		Set<Word> result = new HashSet<Word>(mongoOperations.find(query, Word.class)); 
+
+		// We have to convert between set and list in order to achieve "distinct" functionality not supported by mongoOperations
+		return new ArrayList<Word>(result);
 	}
 
 	/**
 	 * Returns a list of top N unique Words, irrespective of parts of speech.
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findTopUniqueWordsByFrequency(int top) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> result = (List<Word>) session.createQuery(
-				"select distinct new Word(id.word, frequencyWeight) from Word order by frequencyWeight desc")
-				.setMaxResults(top).list();
+		Query query = new Query().limit(top);
+		query.fields().include("word").include("frequencyWeight");
 
-		return result;
+		Set<Word> result = new HashSet<Word>(mongoOperations.find(query, Word.class)); 
+
+		// We have to convert between set and list in order to achieve "distinct" functionality not supported by mongoOperations
+		return new ArrayList<Word>(result);
 	}
 
 	/**
@@ -96,7 +91,6 @@ public class WordDao {
 	 *            the String value of the word to find
 	 * @return the List of matching Words
 	 */
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Word> findByWordString(String word) {
 		if (word == null) {
 			log.warn("Attempted to find Word by null String.  Unable to continue, thus returning null.");
@@ -104,10 +98,10 @@ public class WordDao {
 			return null;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Word> words = (List<Word>) session.createQuery("from Word where word = " + SEPARATOR + WORD_PARAM)
-				.setParameter(WORD_PARAM, word).list();
+		Query query = new Query();
+		query.addCriteria(Criteria.where("word").is(word));
+
+		List<Word> words = mongoOperations.find(query,  Word.class);
 
 		return words;
 	}
@@ -119,7 +113,6 @@ public class WordDao {
 	 *            the Word to insert
 	 * @return whether the insert was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(Word word) {
 		if (word == null) {
 			log.warn("Attempted to insert null Word.  Unable to continue, thus returning false.");
@@ -127,8 +120,8 @@ public class WordDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		session.save(word);
+		mongoOperations.insert(word);
+
 		return true;
 	}
 
@@ -139,7 +132,6 @@ public class WordDao {
 	 *            the batch of Words to insert
 	 * @return whether the insert was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insertBatch(List<Word> wordBatch) {
 		if (wordBatch == null || wordBatch.isEmpty()) {
 			log.warn("Attempted to insert Words in batch which was found to be null or empty.  Unable to continue, thus returning false.");
@@ -147,10 +139,8 @@ public class WordDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		for (Word word : wordBatch) {
-			session.save(word);
-		}
+		mongoOperations.insert(wordBatch, Word.class);
+		
 		return true;
 	}
 
@@ -161,7 +151,6 @@ public class WordDao {
 	 *            the Word to update
 	 * @return whether the update was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean update(Word word) {
 		if (word == null) {
 			log.warn("Attempted to update null Word.  Unable to continue, thus returning false.");
@@ -169,8 +158,14 @@ public class WordDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
-		session.update(word);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("word").is(word.getWord()));
+		query.addCriteria(Criteria.where("partOfSpeech").is(word.getPartOfSpeech()));
+		
+		Update update = new Update();
+		update.set("frequencyWeight", word.getFrequencyWeight());
+		
+		mongoOperations.updateFirst(query, update, Word.class);
 
 		return true;
 	}
@@ -182,7 +177,6 @@ public class WordDao {
 	 *            the batch of Words
 	 * @return whether the update was successful
 	 */
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean updateBatch(List<Word> wordBatch) {
 		if (wordBatch == null || wordBatch.isEmpty()) {
 			log.warn("Attempted to update Words in batch which was found to be null or empty.  Unable to continue, thus returning false.");
@@ -190,19 +184,22 @@ public class WordDao {
 			return false;
 		}
 
-		Session session = sessionFactory.getCurrentSession();
 		for (Word word : wordBatch) {
-			session.update(word);
+			Query query = new Query();
+			query.addCriteria(Criteria.where("word").is(word.getWord()));
+			query.addCriteria(Criteria.where("partOfSpeech").is(word.getPartOfSpeech()));
+			
+			Update update = new Update();
+			update.set("frequencyWeight", word.getFrequencyWeight());
+			
+			mongoOperations.updateFirst(query, update, Word.class);
 		}
+
 		return true;
 	}
 
-	/**
-	 * @param sessionFactory
-	 *            the SessionFactory to set
-	 */
 	@Required
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	public void setMongoTemplate(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
 }

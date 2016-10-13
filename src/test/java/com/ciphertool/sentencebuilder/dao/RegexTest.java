@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class RegexTest {
-	private static Logger log = Logger.getLogger(WordDaoTest.class);
+	private static Logger log = Logger.getLogger(RegexTest.class);
 
 	/**
 	 * This is a test for a potential future WordMapDao or WordListDao implementation which would select words based on

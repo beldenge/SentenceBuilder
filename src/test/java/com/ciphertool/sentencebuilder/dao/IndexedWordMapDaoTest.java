@@ -35,7 +35,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class IndexedWordMapDaoTest {
@@ -57,25 +56,25 @@ public class IndexedWordMapDaoTest {
 	public static void setUp() {
 		wordDaoMock = mock(WordDao.class);
 
-		word1 = new Word(new WordId("I", PartOfSpeechType.NOUN), 15);
+		word1 = new Word("I", PartOfSpeechType.NOUN, 15);
 		wordsToReturn.add(word1);
-		word2 = new Word(new WordId("am", PartOfSpeechType.PLURAL), 14);
+		word2 = new Word("am", PartOfSpeechType.PLURAL, 14);
 		wordsToReturn.add(word2);
-		word3 = new Word(new WordId("the", PartOfSpeechType.NOUN_PHRASE), 13);
+		word3 = new Word("the", PartOfSpeechType.NOUN_PHRASE, 13);
 		wordsToReturn.add(word3);
-		word4 = new Word(new WordId("best", PartOfSpeechType.VERB_PARTICIPLE), 12);
+		word4 = new Word("best", PartOfSpeechType.VERB_PARTICIPLE, 12);
 		wordsToReturn.add(word4);
-		word5 = new Word(new WordId("homie", PartOfSpeechType.VERB_TRANSITIVE), 11);
+		word5 = new Word("homie", PartOfSpeechType.VERB_TRANSITIVE, 11);
 		wordsToReturn.add(word5);
-		word6 = new Word(new WordId("hollah", PartOfSpeechType.VERB_INTRANSITIVE), 10);
+		word6 = new Word("hollah", PartOfSpeechType.VERB_INTRANSITIVE, 10);
 		wordsToReturn.add(word6);
-		word7 = new Word(new WordId("seventy", PartOfSpeechType.ADJECTIVE), 9);
+		word7 = new Word("seventy", PartOfSpeechType.ADJECTIVE, 9);
 		wordsToReturn.add(word7);
-		word8 = new Word(new WordId("trillion", PartOfSpeechType.ADVERB), 8);
+		word8 = new Word("trillion", PartOfSpeechType.ADVERB, 8);
 		wordsToReturn.add(word8);
-		word9 = new Word(new WordId("benjamins", PartOfSpeechType.CONJUNCTION), 7);
+		word9 = new Word("benjamins", PartOfSpeechType.CONJUNCTION, 7);
 		wordsToReturn.add(word9);
-		word10 = new Word(new WordId("investment", PartOfSpeechType.PREPOSITION), 6);
+		word10 = new Word("investment", PartOfSpeechType.PREPOSITION, 6);
 		wordsToReturn.add(word10);
 
 		when(wordDaoMock.findAll()).thenReturn(wordsToReturn);
@@ -193,7 +192,7 @@ public class IndexedWordMapDaoTest {
 		assertEquals(10, partOfSpeechWordMap.size());
 
 		for (Word word : wordsToReturn) {
-			assertTrue(partOfSpeechWordMap.get(word.getId().getPartOfSpeech()).contains(word));
+			assertTrue(partOfSpeechWordMap.get(word.getPartOfSpeech()).contains(word));
 		}
 	}
 
@@ -209,7 +208,7 @@ public class IndexedWordMapDaoTest {
 		assertEquals(10, lengthWordMap.size());
 
 		for (Word word : wordsToReturn) {
-			assertTrue(lengthWordMap.get(word.getId().getWord().length()).contains(word));
+			assertTrue(lengthWordMap.get(word.getWord().length()).contains(word));
 		}
 	}
 
@@ -231,9 +230,9 @@ public class IndexedWordMapDaoTest {
 		for (Word word : wordsToReturn) {
 			indicesFound = 0;
 
-			int index = partOfSpeechWordMap.get(word.getId().getPartOfSpeech()).indexOf(word);
+			int index = partOfSpeechWordMap.get(word.getPartOfSpeech()).indexOf(word);
 
-			for (int wordsByPartOfSpeech : partOfSpeechIndexedMap.get(word.getId().getPartOfSpeech())) {
+			for (int wordsByPartOfSpeech : partOfSpeechIndexedMap.get(word.getPartOfSpeech())) {
 				if (index == wordsByPartOfSpeech) {
 					indicesFound++;
 				}
@@ -260,9 +259,9 @@ public class IndexedWordMapDaoTest {
 		for (Word word : wordsToReturn) {
 			indicesFound = 0;
 
-			int index = lengthWordMap.get(word.getId().getWord().length()).indexOf(word);
+			int index = lengthWordMap.get(word.getWord().length()).indexOf(word);
 
-			for (int wordsByPartOfSpeech : lengthIndexedMap.get(word.getId().getWord().length())) {
+			for (int wordsByPartOfSpeech : lengthIndexedMap.get(word.getWord().length())) {
 				if (index == wordsByPartOfSpeech) {
 					indicesFound++;
 				}
