@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporter;
-import com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl;
 import com.ciphertool.sentencebuilder.etl.importers.WordListImporter;
 import com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl;
 
@@ -33,7 +31,6 @@ public class WordImportManager {
 	private static Logger log = LoggerFactory.getLogger(WordListImporterImpl.class);
 
 	private static BeanFactory beanFactory;
-	private static FrequencyListImporter frequencyListImporter;
 	private static WordListImporter wordListImporter;
 
 	/**
@@ -45,8 +42,6 @@ public class WordImportManager {
 		log.info("Spring application context created successfully!");
 
 		wordListImporter = (WordListImporterImpl) beanFactory.getBean("wordListImporter");
-
-		frequencyListImporter = (FrequencyListImporterImpl) beanFactory.getBean("frequencyListImporter");
 	}
 
 	/**
@@ -59,7 +54,5 @@ public class WordImportManager {
 		setUp();
 
 		wordListImporter.importWordList();
-
-		frequencyListImporter.importFrequencyList();
 	}
 }

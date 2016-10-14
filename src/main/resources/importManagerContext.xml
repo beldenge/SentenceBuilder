@@ -36,17 +36,6 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="fileNames" value="${wordlist.file.locations}" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.etl.parsers.FrequencyFileParser" id="frequencyFileParser" />
-
-	<bean class="com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl" id="frequencyListImporter">
-		<property name="wordDao" ref="wordDao" />
-		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
-		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
-		<property name="fileParser" ref="frequencyFileParser" />
-		<property name="taskExecutor" ref="taskExecutor" />
-		<property name="fileNames" value="${frequency.file.locations}" />
-	</bean>
-	
 	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
 		<property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />
@@ -56,5 +45,4 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="keepAliveSeconds" value="5" />
 		<property name="allowCoreThreadTimeOut" value="true" />
 	</bean>
-
 </beans>
