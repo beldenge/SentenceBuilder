@@ -27,12 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.sentencebuilder.entities.NGram;
 
 public class UniqueNGramListDao implements NGramListDao {
-	private static Logger log = Logger.getLogger(UniqueNGramListDao.class);
+	private static Logger log = LoggerFactory.getLogger(UniqueNGramListDao.class);
 
 	private List<NGram> twoGramList = new ArrayList<NGram>();
 	private List<NGram> threeGramList = new ArrayList<NGram>();

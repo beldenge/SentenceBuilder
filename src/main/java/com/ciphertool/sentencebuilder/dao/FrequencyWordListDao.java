@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class FrequencyWordListDao implements WordListDao {
-	private static Logger log = Logger.getLogger(FrequencyWordListDao.class);
+	private static Logger log = LoggerFactory.getLogger(FrequencyWordListDao.class);
 
 	private List<Word> wordList = new ArrayList<Word>();
 

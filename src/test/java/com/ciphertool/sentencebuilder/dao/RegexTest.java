@@ -25,11 +25,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RegexTest {
-	private static Logger log = Logger.getLogger(RegexTest.class);
+	private static Logger log = LoggerFactory.getLogger(RegexTest.class);
 
 	/**
 	 * This is a test for a potential future WordMapDao or WordListDao implementation which would select words based on

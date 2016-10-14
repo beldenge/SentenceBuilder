@@ -32,8 +32,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.entities.Word;

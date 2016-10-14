@@ -21,7 +21,8 @@ package com.ciphertool.sentencebuilder.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -32,7 +33,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.ciphertool.sentencebuilder.entities.NGram;
 
 public class NGramDao {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private MongoOperations mongoOperations;
 

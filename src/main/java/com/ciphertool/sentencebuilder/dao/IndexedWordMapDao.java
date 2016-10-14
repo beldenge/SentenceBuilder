@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -39,7 +40,7 @@ import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
  * @author George Belden
  */
 public class IndexedWordMapDao implements WordMapDao {
-	private static Logger log = Logger.getLogger(IndexedWordMapDao.class);
+	private static Logger log = LoggerFactory.getLogger(IndexedWordMapDao.class);
 
 	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap;
 	private Map<Integer, ArrayList<Word>> lengthWordMap;

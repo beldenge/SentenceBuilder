@@ -26,13 +26,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.sentencebuilder.entities.NGram;
 
 public class NGramFileParser implements FileParser<NGram> {
-
-	private static Logger log = Logger.getLogger(NGramFileParser.class);
+	private static Logger log = LoggerFactory.getLogger(NGramFileParser.class);
 
 	/**
 	 * We are expecting the fields to be tab-delimited in the file.

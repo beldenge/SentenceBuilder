@@ -26,7 +26,6 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class ZodiacWordFilter implements WordFilter {
-
 	private static List<Word> blacklistedWords = new ArrayList<Word>();
 
 	static {

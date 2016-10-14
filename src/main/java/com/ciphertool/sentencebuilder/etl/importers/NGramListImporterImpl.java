@@ -28,7 +28,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.task.TaskExecutor;
 
@@ -37,8 +38,7 @@ import com.ciphertool.sentencebuilder.entities.NGram;
 import com.ciphertool.sentencebuilder.etl.parsers.FileParser;
 
 public class NGramListImporterImpl implements NGramListImporter {
-
-	private static Logger log = Logger.getLogger(NGramListImporterImpl.class);
+	private static Logger log = LoggerFactory.getLogger(NGramListImporterImpl.class);
 
 	private TaskExecutor taskExecutor;
 	private FileParser<NGram> nGramFileParser;

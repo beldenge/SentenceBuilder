@@ -26,14 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class BasicWordMapDao implements WordMapDao {
-	private static Logger log = Logger.getLogger(BasicWordMapDao.class);
+	private static Logger log = LoggerFactory.getLogger(BasicWordMapDao.class);
 
 	private Map<PartOfSpeechType, ArrayList<Word>> partOfSpeechWordMap = new HashMap<PartOfSpeechType, ArrayList<Word>>();
 	private Map<Integer, ArrayList<Word>> lengthWordMap = new HashMap<Integer, ArrayList<Word>>();

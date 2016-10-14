@@ -26,14 +26,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class FrequencyFileParser implements FileParser<Word> {
-
-	private static Logger log = Logger.getLogger(FrequencyFileParser.class);
+	private static Logger log = LoggerFactory.getLogger(FrequencyFileParser.class);
 
 	/**
 	 * We are expecting the fields to be tab-delimited in the file.

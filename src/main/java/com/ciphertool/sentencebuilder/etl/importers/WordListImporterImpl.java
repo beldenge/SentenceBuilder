@@ -26,7 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.core.task.TaskExecutor;
 
@@ -35,8 +36,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.etl.parsers.FileParser;
 
 public class WordListImporterImpl implements WordListImporter {
-
-	private static Logger log = Logger.getLogger(WordListImporterImpl.class);
+	private static Logger log = LoggerFactory.getLogger(WordListImporterImpl.class);
 
 	private TaskExecutor taskExecutor;
 	private FileParser<Word> partOfSpeechFileParser;

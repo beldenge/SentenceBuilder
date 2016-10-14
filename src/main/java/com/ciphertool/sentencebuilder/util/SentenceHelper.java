@@ -24,7 +24,8 @@ import java.util.ArrayList;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.cfgreader.datastructures.Node;
@@ -36,8 +37,7 @@ import com.ciphertool.sentencebuilder.dao.WordMapDao;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class SentenceHelper {
-
-	private static Logger log = Logger.getLogger(SentenceHelper.class);
+	private static Logger log = LoggerFactory.getLogger(SentenceHelper.class);
 
 	private WordMapDao wordMapDao;
 	private ContextFreeGrammarHelper cfgHelper;
