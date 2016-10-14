@@ -25,10 +25,6 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
-		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean>
-
 	<bean class="com.ciphertool.sentencebuilder.etl.parsers.PartOfSpeechFileParser" id="partOfSpeechfileParser" />
 
 	<bean class="com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl" id="wordListImporter">
@@ -51,20 +47,6 @@ You should have received a copy of the GNU General Public License along with Sen
 		<property name="fileNames" value="${frequency.file.locations}" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.etl.parsers.NGramFileParser" id="nGramFileParser" />
-
-	<bean class="com.ciphertool.sentencebuilder.etl.importers.NGramListImporterImpl" id="nGramListImporter">
-		<property name="nGramDao" ref="nGramDao" />
-		<property name="persistenceBatchSize" value="${persistence.batchSize}" />
-		<property name="concurrencyBatchSize" value="${concurrency.batchSize}" />
-		<property name="fileParser" ref="nGramFileParser" />
-		<property name="taskExecutor" ref="taskExecutor" />
-		<property name="twoGramFileName" value="${nGram.two.file.location}" />
-		<property name="threeGramFileName" value="${nGram.three.file.location}" />
-		<property name="fourGramFileName" value="${nGram.four.file.location}" />
-		<property name="fiveGramFileName" value="${nGram.five.file.location}" />
-	</bean>
-
 	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
 		<property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />

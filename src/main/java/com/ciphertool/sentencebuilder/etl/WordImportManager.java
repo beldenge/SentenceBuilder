@@ -26,7 +26,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporter;
 import com.ciphertool.sentencebuilder.etl.importers.FrequencyListImporterImpl;
-import com.ciphertool.sentencebuilder.etl.importers.NGramListImporter;
 import com.ciphertool.sentencebuilder.etl.importers.WordListImporter;
 import com.ciphertool.sentencebuilder.etl.importers.WordListImporterImpl;
 
@@ -36,7 +35,6 @@ public class WordImportManager {
 	private static BeanFactory beanFactory;
 	private static FrequencyListImporter frequencyListImporter;
 	private static WordListImporter wordListImporter;
-	private static NGramListImporter nGramListImporter;
 
 	/**
 	 * Bootstraps the Spring application context.
@@ -49,8 +47,6 @@ public class WordImportManager {
 		wordListImporter = (WordListImporterImpl) beanFactory.getBean("wordListImporter");
 
 		frequencyListImporter = (FrequencyListImporterImpl) beanFactory.getBean("frequencyListImporter");
-
-		nGramListImporter = (NGramListImporter) beanFactory.getBean("nGramListImporter");
 	}
 
 	/**
@@ -65,7 +61,5 @@ public class WordImportManager {
 		wordListImporter.importWordList();
 
 		frequencyListImporter.importFrequencyList();
-
-		nGramListImporter.importNGramList();
 	}
 }
