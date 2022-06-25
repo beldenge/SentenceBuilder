@@ -140,7 +140,7 @@ You should have received a copy of the GNU General Public License along with Sen
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>1.9.4.RELEASE</version>
+			<version>3.3.5</version>
 		</dependency>
 	</dependencies>
 </project>
