@@ -128,7 +128,7 @@ You should have received a copy of the GNU General Public License along with Sen
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>4.3.3.RELEASE</version>
+			<version>5.2.21.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
